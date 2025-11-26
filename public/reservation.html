@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eduardo's Resort — Reservation</title>
+  <meta name="description" content="Book luxury rooms, cottages, packages, and events at Eduardo's Resort.">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary-blue': '#2B6CB0',
+            'accent-blue': '#63B3ED',
+            'warm-brown': '#C19A6B',
+            'deep-brown': '#8B5E3C',
+            'neutral-gray': '#F5F5F5',
+            'text-dark': '#2D3748',
+            'text-muted': '#718096',
+          },
+          fontFamily: {
+            'inter': ['Inter', 'sans-serif'],
+            'dancing': ['Dancing Script', 'cursive'],
+          },
+          animation: {
+            'fade-in': 'fadeIn 1s ease-out',
+            'slide-up': 'slideUp 0.8s ease-out',
+            'float': 'float 3s ease-in-out infinite',
+            'pulse': 'pulse 2s infinite'
+          },
+          keyframes: {
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+            slideUp: { '0%': { transform: 'translateY(30px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
+            float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+            pulse: { '0%': { boxShadow: '0 0 0 0 rgba(59,130,246,.5)' }, '70%': { boxShadow: '0 0 0 12px rgba(59,130,246,0)' }, '100%': { boxShadow: '0 0 0 0 rgba(59,130,246,0)' } }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    :root {
+      --primary-blue: #2B6CB0; --accent-blue: #63B3ED; --warm-brown: #C19A6B; --deep-brown: #8B5E3C;
+      --white: #FFFFFF; --neutral-gray: #F5F5F5; --text-dark: #2D3748; --text-muted: #718096;
+      --shadow: 0 4px 12px rgba(2, 8, 20, 0.08); --shadow-lg: 0 10px 30px rgba(2, 8, 20, 0.12);
+      --radius: 16px; --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    body { 
+      font-family: 'Inter', sans-serif; 
+      scroll-behavior: smooth; 
+      background: linear-gradient(to bottom, #E0F7FA, var(--white)); 
+      overflow-x: hidden; 
+    }
+
+    /* Sidebar (Right Side - Mobile) */
+    .sidebar-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,.5); z-index: 60; opacity: 0; visibility: hidden;
+      transition: all .3s ease;
+    }
+    .sidebar-overlay.open { opacity: 1; visibility: visible; }
+    .sidebar {
+      position: fixed; top: 0; right: -320px; width: 300px; height: 100%;
+      background: white; box-shadow: -8px 0 25px rgba(0,0,0,.15); z-index: 70;
+      transition: right .4s cubic-bezier(.4,0,.2,1); padding: 1.5rem;
+      display: flex; flex-direction: column;
+    }
+    .sidebar.open { right: 0; }
+    .sidebar-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-bottom: 1rem; border-bottom: 1px solid #e5e7eb; margin-bottom: 1.5rem;
+    }
+    .sidebar-nav a { display: block; padding: .75rem 0; font-weight: 500; color: #374151; text-align: center; }
+    .sidebar-nav a:hover, .sidebar-nav a.active { color: var(--primary-blue); }
+    .sidebar-actions { margin-top: auto; display: flex; flex-direction: column; gap: .75rem; }
+
+    /* Header */
+    .nav-hidden { transform: translateY(-100%); }
+    .nav-visible { transform: translateY(0); }
+
+    .search-card {
+      background: white; border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.25rem;
+      transition: var(--transition);
+    }
+    .search-card:hover { box-shadow: var(--shadow-lg); }
+
+    .item-card {
+      background: white; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+    .item-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
+
+    .carousel-container { position: relative; overflow: hidden; height: 220px; }
+    @media (min-width: 1024px) { .carousel-container { height: 180px; } }
+    .carousel-track { display: flex; transition: transform 0.5s ease; height: 100%; }
+    .carousel-slide { min-width: 100%; position: relative; }
+    .carousel-slide img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s ease; }
+    .item-card:hover .carousel-slide img { transform: scale(1.1); }
+
+    .carousel-arrow {
+      position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 36px;
+      background: rgba(255,255,255,.9); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; color: var(--primary-blue); box-shadow: 0 4px 12px rgba(0,0,0,.1); cursor: pointer; z-index: 20;
+      transition: all 0.3s ease;
+    }
+    .carousel-arrow:hover { background: white; transform: translateY(-50%) scale(1.1); }
+    .carousel-arrow.prev { left: 0.75rem; } .carousel-arrow.next { right: 0.75rem; }
+
+    .thumb-nav {
+      position: absolute; bottom: 0.5rem; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 0.25rem; background: rgba(0,0,0,.4); padding: 0.25rem; border-radius: 999px; z-index: 20;
+    }
+    .thumb { width: 2.5rem; height: 2.5rem; border-radius: 0.5rem; overflow: hidden; border: 2px solid transparent; cursor: pointer; transition: border 0.3s; }
+    .thumb.active { border-color: white; }
+
+    .summary-card {
+      background: white; border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.5rem;
+      position: sticky; top: 6rem;
+    }
+
+    .tab-btn {
+      padding: 0.5rem 1rem; border-radius: 999px; font-weight: 600; font-size: 0.875rem;
+      transition: var(--transition);
+    }
+    .tab-btn.active {
+      background: var(--primary-blue); color: white;
+    }
+    .tab-btn:not(.active):hover {
+      background: #e5e7eb;
+    }
+
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    .modal {
+      position: fixed; inset: 0; background: rgba(0,0,0,.5); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center; z-index: 50;
+      opacity: 0; visibility: hidden; transition: all 0.3s ease;
+    }
+    .modal.open { opacity: 1; visibility: visible; }
+    .modal-content {
+      background: white; border-radius: var(--radius); max-width: 28rem; width: 90%; max-height: 90vh; overflow-y: auto;
+      box-shadow: var(--shadow-lg); transform: scale(0.95); transition: transform 0.3s ease;
+    }
+    .modal.open .modal-content { transform: scale(1); }
+
+    @media (max-width: 640px) {
+      .carousel-container { height: 200px; }
+      .item-card:hover { transform: translateY(-4px); }
+    }
+  </style>
+</head>
+<body class="font-inter text-gray-800">
+
+  <!-- Sidebar Overlay -->
+  <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+  <!-- Right Sidebar (Mobile) -->
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <a href="#" class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-blue to-accent-blue flex items-center justify-center text-white font-bold text-lg">
+          Ed
+        </div>
+        <div class="text-xl font-bold text-primary-blue">Eduardo's</div>
+      </a>
+      <button id="closeSidebar" class="text-gray-600 hover:text-gray-900"><i class="fas fa-times text-xl"></i></button>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#">Home</a>
+      <a href="#">Amenities</a>
+      <a href="#" class="active">Reservation</a>
+      <a href="#">Gallery</a>
+      <a href="#">Contact</a>
+      <a href="#">About</a>
+    </nav>
+    <div class="sidebar-actions">
+      <a href="#" class="block text-center px-4 py-2 border border-primary-blue text-primary-blue rounded-lg hover:bg-blue-50 transition-colors font-medium">Login</a>
+      <a href="#" class="block text-center px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">Sign Up</a>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-sm nav-visible transition-all duration-300" id="siteHeader">
+    <div class="container mx-auto px-4 py-3">
+      <div class="flex items-center justify-between">
+        <a href="#" class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-blue to-accent-blue flex items-center justify-center text-white font-bold text-lg">
+            Ed
+          </div>
+          <div class="text-xl font-bold text-primary-blue">Eduardo's</div>
+        </a>
+        
+        <nav class="hidden md:flex space-x-8">
+          <a href="#" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Home</a>
+          <a href="#" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Amenities</a>
+          <a href="rates.html" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Rates</a>
+          <a href="#" class="font-medium text-primary-blue relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-full after:h-0.5 after:bg-primary-blue">Reservation</a>
+          <a href="#" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Gallery</a>
+          <a href="#" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Contact</a>
+          <a href="#" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">About</a>
+        </nav>
+        
+        <div class="hidden md:flex items-center space-x-4">
+          <a href="#" class="px-4 py-2 border border-primary-blue text-primary-blue rounded-lg hover:bg-blue-50 transition-colors duration-300 font-medium">Login</a>
+          <a href="#" class="px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 font-medium">Signup</a>
+        </div>
+
+        <div class="flex md:hidden items-center gap-5">
+          <button id="openSidebar" class="text-2xl text-primary-blue"><i class="fas fa-bars"></i></button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Search Section -->
+  <section class="container mx-auto px-4 py-8 max-w-7xl">
+    <div class="search-card">
+      <div class="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div>
+          <label class="text-xs text-text-muted block mb-1">Check-in – Check-out</label>
+          <button id="dateBtnDesktop" class="w-full rounded-xl border px-3 py-2.5 flex justify-between items-center text-left hover:border-primary-blue transition-colors">
+            <span id="dateDisplayDesktop" class="text-sm text-text-dark">Select Dates</span>
+            <i class="fas fa-calendar-alt text-primary-blue"></i>
+          </button>
+        </div>
+        <div>
+          <label class="text-xs text-text-muted block mb-1">Guests</label>
+          <button id="guestBtnDesktop" class="w-full rounded-xl border px-3 py-2.5 flex justify-between items-center text-left hover:border-primary-blue transition-colors">
+            <span id="guestDisplayDesktop" class="text-sm text-text-dark">2 Adults</span>
+            <i class="fas fa-user text-primary-blue"></i>
+          </button>
+        </div>
+        <div>
+          <label class="text-xs text-text-muted block mb-1">Promo Code</label>
+          <input id="promoInputDesktop" placeholder="Optional" class="w-full rounded-xl border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-blue/30 focus:border-primary-blue" />
+        </div>
+        <div class="flex items-end">
+          <button id="searchBtnDesktop" class="w-full rounded-xl py-2.5 bg-gradient-to-r from-primary-blue to-accent-blue text-white font-semibold flex items-center justify-center gap-2 hover:shadow-lg transition-all">
+            <i class="fas fa-search"></i> Search
+          </button>
+        </div>
+      </div>
+
+      <div class="md:hidden">
+        <button id="mobileModifyBtn" class="w-full py-2.5 bg-primary-blue text-white rounded-xl text-sm font-medium">
+          Modify Search
+        </button>
+        <div id="mobileSearchFields" class="mt-3 space-y-3 hidden">
+          <button id="dateBtnMobile" class="w-full rounded-xl border px-3 py-2.5 flex justify-between items-center text-left hover:border-primary-blue transition-colors">
+            <span id="dateDisplayMobile" class="text-sm text-text-dark">Select Dates</span>
+            <i class="fas fa-calendar-alt text-primary-blue"></i>
+          </button>
+          <button id="guestBtnMobile" class="w-full rounded-xl border px-3 py-2.5 flex justify-between items-center text-left hover:border-primary-blue transition-colors">
+            <span id="guestDisplayMobile" class="text-sm text-text-dark">2 Adults</span>
+            <i class="fas fa-user text-primary-blue"></i>
+          </button>
+          <input id="promoInputMobile" placeholder="Promo code" class="w-full rounded-xl border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-blue/30 focus:border-primary-blue" />
+          <div class="flex gap-2">
+            <button id="searchBtnMobile" class="flex-1 py-2.5 bg-primary-blue text-white rounded-xl font-medium">Search</button>
+            <button id="mobileDoneBtn" class="flex-1 py-2.5 rounded-xl border hover:bg-gray-50 transition-colors">Done</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Calendar Modal -->
+  <div id="calendarModal" class="modal">
+    <div class="modal-content p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-semibold">Select Dates</h3>
+        <button id="closeCalendar" class="text-gray-600 hover:text-gray-800"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="flex justify-between items-center mb-3">
+        <button id="prevMonth" class="p-2 hover:bg-gray-100 rounded-full"><i class="fas fa-chevron-left"></i></button>
+        <h4 id="monthYear" class="font-medium text-lg"></h4>
+        <button id="nextMonth" class="p-2 hover:bg-gray-100 rounded-full"><i class="fas fa-chevron-right"></i></button>
+      </div>
+      <div class="grid grid-cols-7 gap-1 text-center text-xs font-medium text-gray-600 mb-2">
+        <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
+      </div>
+      <div id="calendarDays" class="grid grid-cols-7 gap-1 text-center"></div>
+      <div class="flex justify-between items-center mt-6 pt-4 border-t">
+        <button id="clearDates" class="text-sm text-gray-600 hover:text-gray-800">Clear</button>
+        <button id="applyCalendar" class="px-5 py-2 rounded-lg bg-primary-blue text-white text-sm font-medium hover:bg-accent-blue transition-colors">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Guests Modal -->
+  <div id="guestsModal" class="modal">
+    <div class="modal-content p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-semibold">Guests</h3>
+        <button id="closeGuests" class="text-gray-600 hover:text-gray-800"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="space-y-6">
+        <div class="flex justify-between items-center">
+          <div><div class="font-medium">Adults</div><div class="text-xs text-gray-500">Age 13+</div></div>
+          <div class="flex items-center gap-3">
+            <button id="decAdults" class="w-10 h-10 rounded-full border flex items-center justify-center hover:bg-gray-100"><i class="fas fa-minus text-xs"></i></button>
+            <span id="adultsCount" class="w-8 text-center font-medium">2</span>
+            <button id="incAdults" class="w-10 h-10 rounded-full border flex items-center justify-center hover:bg-gray-100"><i class="fas fa-plus text-xs"></i></button>
+          </div>
+        </div>
+        <div class="flex justify-between items-center">
+          <div><div class="font-medium">Children</div><div class="text-xs text-gray-500">Age 2–12</div></div>
+          <div class="flex items-center gap-3">
+            <button id="decChildren" class="w-10 h-10 rounded-full border flex items-center justify-center hover:bg-gray-100"><i class="fas fa-minus text-xs"></i></button>
+            <span id="childrenCount" class="w-8 text-center font-medium">0</span>
+            <button id="incChildren" class="w-10 h-10 rounded-full border flex items-center justify-center hover:bg-gray-100"><i class="fas fa-plus text-xs"></i></button>
+          </div>
+        </div>
+      </div>
+      <button id="applyGuests" class="mt-6 w-full py-2.5 bg-primary-blue text-white rounded-lg font-medium hover:bg-accent-blue transition-colors">
+        Apply
+      </button>
+    </div>
+  </div>
+
+  <!-- View More Modal -->
+  <div id="viewMoreModal" class="modal">
+    <div class="modal-content p-6 max-w-2xl">
+      <div class="flex justify-between items-center mb-4">
+        <h3 id="modalTitle" class="text-xl font-semibold"></h3>
+        <button id="closeViewMore" class="text-gray-600 hover:text-gray-800"><i class="fas fa-times text-lg"></i></button>
+      </div>
+      <div id="modalContent" class="space-y-4"></div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 pb-16 max-w-7xl">
+    <div class="lg:flex lg:gap-8">
+      <section class="lg:w-2/3 space-y-8">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 reveal">
+          <div class="flex gap-2 flex-wrap" id="categoryTabs">
+            <button data-cat="rooms" class="tab-btn active">Rooms</button>
+            <button data-cat="cottages" class="tab-btn">Cottages</button>
+            <button data-cat="food" class="tab-btn">Food</button>
+            <button data-cat="events" class="tab-btn">Events</button>
+          </div>
+          <div class="text-sm text-text-muted">Showing: <span id="currentCategoryLabel" class="font-semibold">Rooms</span></div>
+        </div>
+        <div id="itemsContainer" class="space-y-6"></div>
+      </section>
+
+      <aside class="lg:w-1/3 mt-8 lg:mt-0">
+        <div class="summary-card">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold">Your Reservation</h3>
+            <button id="clearBooking" class="text-gray-500 hover:text-red-600"><i class="fas fa-trash-alt"></i></button>
+          </div>
+          <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4 text-sm">
+            <div class="flex justify-between items-center">
+              <span class="font-medium text-blue-900">Stay Duration</span>
+              <span id="nightsDisplay" class="font-semibold text-blue-700">—</span>
+            </div>
+            <div id="dateRangeSummary" class="text-xs text-blue-600 mt-1">Select check-in & check-out</div>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-4 mb-4 text-center text-gray-500 booking-empty">
+            <i class="fas fa-bed text-2xl mb-2"></i>
+            <div class="text-sm">No items selected</div>
+          </div>
+          <div id="bookedRooms" class="space-y-3 mb-4"></div>
+          <div class="border-t pt-4">
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-text-muted">Subtotal</span>
+              <span id="subtotal" class="font-semibold">₱0</span>
+            </div>
+            <div class="flex justify-between text-xs mb-4">
+              <span class="text-text-muted">Taxes & fees</span>
+              <span class="text-text-muted">Included</span>
+            </div>
+            <div class="border-t pt-4">
+              <div class="flex justify-between items-center mb-4">
+                <span class="text-lg font-bold">Total</span>
+                <span id="summaryTotal" class="text-2xl font-bold text-primary-blue">₱0</span>
+              </div>
+              <button id="checkoutBtn" class="w-full py-3 bg-gradient-to-r from-primary-blue to-accent-blue text-white rounded-lg font-medium hover:shadow-lg transition-all">
+                Proceed to Checkout
+              </button>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-10 after:h-0.5 after:bg-warm-brown">About Eduardo's Resort</h3>
+          <p class="text-gray-300 text-sm">
+            Eduardo's Resort blends refined design and family-first recreation — elegant spaces, playful attractions, and smooth digital booking for your perfect getaway.
+          </p>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold mb-4 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-10 after:h-0.5 after:bg-warm-brown">Contact</h3>
+          <ul class="space-y-2 text-gray-300 text-sm">
+            <li><strong>Landline:</strong> (043) 288-7153</li>
+            <li><strong>Mobile:</strong> 0921 507 4378 / 0977 845 8144 / 0928 890 6708</li>
+            <li><strong>Address:</strong> Nautical Highway Bayanan II, Calapan City, Oriental Mindoro, Philippines</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold mb-4 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-10 after:h-0.5 after:bg-warm-brown">Connect With Us</h3>
+          <div class="flex space-x-4">
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary-blue transition-colors duration-300"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary-blue transition-colors duration-300"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary-blue transition-colors duration-300"><i class="fab fa-twitter"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="pt-8 border-t border-gray-700 text-center text-gray-400 text-sm">
+        <p>© 2025 Eduardo's Resort · All Rights Reserved</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ==== DATA ====
+    const DATA = {
+      rooms: [
+        { id: 'r1', name: 'Garden Glass Villa', price: 18500, originalPrice: 25000, desc: 'Experience a perfect blend of elegance and nature...', amenities: ['Free WiFi', 'Private Hot Tub', 'Beach Access', 'Breakfast Included'], imgs: ['https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1200&q=80','https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80'], perNight: true, maxGuests: 2 },
+        { id: 'r2', name: 'Deluxe Room', price: 9500, desc: 'A comfortable, modern room with garden views...', amenities: ['Free WiFi', 'Smart TV', 'Garden View'], imgs: ['https://images.unsplash.com/photo-1584132915807-fd1f5fbc078f?auto=format&fit=crop&w=1200&q=80'], perNight: true, maxGuests: 2 },
+        { id: 'r3', name: 'Family Suite', price: 22000, desc: 'Spacious two-bedroom suite...', amenities: ['Two Bedrooms', 'Kitchenette'], imgs: ['https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80'], perNight: true, maxGuests: 6 }
+      ],
+      cottages: [
+        { id: 'c1', name: 'Beachfront Cottage', price: 8200, desc: 'Wake up to the sound of the ocean...', amenities: ['Ocean View', 'Outdoor Seating'], imgs: ['https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80'], perNight: true, maxGuests: 4 },
+        { id: 'c2', name: 'Garden Cottage', price: 7500, desc: 'A tranquil hideaway...', amenities: ['Private Cottage', 'Garden View'], imgs: ['https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80'], perNight: true, maxGuests: 3 }
+      ],
+      food: [
+        { id: 'f1', name: 'Beachfront Dinner Set', price: 1800, desc: 'Enjoy a romantic three-course dinner...', amenities: ['3-Course Dinner for Two'], imgs: ['https://images.unsplash.com/photo-1541542684-3b05a8f9c4c8?auto=format&fit=crop&w=1200&q=80'], perNight: false, maxGuests: 2 },
+        { id: 'f2', name: 'Group Buffet Package', price: 3500, desc: 'Ideal for families or large groups...', amenities: ['All-You-Can-Eat Buffet'], imgs: ['https://images.unsplash.com/photo-1541542684-3b05a8f9c4c8?auto=format&fit=crop&w=1200&q=80'], perNight: false, maxGuests: 10 }
+      ],
+      events: [
+        { id: 'e1', name: 'Small Wedding Package', price: 45000, desc: 'Celebrate your dream wedding...', amenities: ['Venue Setup', 'Full Catering'], imgs: ['https://images.unsplash.com/photo-1496417263034-38ec4f0b665a?auto=format&fit=crop&w=1200&q=80'], perNight: false, maxGuests: 50 },
+        { id: 'e2', name: 'Corporate Event', price: 30000, desc: 'Host your next company retreat...', amenities: ['Function Hall', 'AV Equipment'], imgs: ['https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80'], perNight: false, maxGuests: 100 }
+      ]
+    };
+
+    // ==== STATE ====
+    let booking = [], checkIn = null, checkOut = null, adults = 2, children = 0;
+    const itemsContainer = document.getElementById('itemsContainer');
+
+    // ==== UTILS ====
+    function nightsBetween(s, e) { return !s || !e ? 0 : Math.ceil((e - s) / 86400000); }
+    function updateNightsDisplay() {
+      const nights = nightsBetween(checkIn, checkOut);
+      document.getElementById('nightsDisplay').textContent = nights > 0 ? `${nights} night${nights > 1 ? 's' : ''}` : '—';
+      document.getElementById('dateRangeSummary').textContent = nights > 0 
+        ? `${checkIn.toLocaleDateString('en-GB', {day:'numeric', month:'short'})} – ${checkOut.toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'})}`
+        : 'Select check-in & check-out';
+      return nights;
+    }
+
+    // ==== RENDER CARD ====
+    function renderCard(item) {
+      const card = document.createElement('div');
+      card.className = 'item-card';
+      card.innerHTML = `
+        <div class="md:flex">
+          <div class="md:w-1/3 relative carousel-container overflow-hidden">
+            ${item.imgs.map((src,i)=>`<img src="${src}" alt="${item.name} - View ${i+1}" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${i===0?'opacity-100':'opacity-0'}">`).join('')}
+            <button class="carousel-arrow prev"><</button>
+            <button class="carousel-arrow next">></button>
+            <div class="thumb-nav">
+              ${item.imgs.map((_,i)=>`<div class="thumb ${i===0?'active':''}" data-idx="${i}"><img src="${item.imgs[i]}" class="w-full h-full object-cover"></div>`).join('')}
+            </div>
+          </div>
+          <div class="p-5 md:p-6 flex flex-col flex-1">
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-lg md:text-xl font-semibold">${item.name}</h3>
+              <div class="text-right">
+                ${item.originalPrice ? `<div class="text-sm text-gray-400 line-through">₱${item.originalPrice.toLocaleString()}</div>` : ''}
+                <div class="font-bold text-warm-brown text-lg">₱${item.price.toLocaleString()}${item.perNight ? '/night' : ''}</div>
+              </div>
+            </div>
+            <p class="text-sm text-gray-600 line-clamp-2">${item.desc}</p>
+            <button class="view-more-modal mt-2 text-primary-blue text-sm font-medium hover:underline">View More</button>
+            <div class="mt-auto pt-4 border-t space-y-3">
+              <div class="flex items-center gap-3">
+                <label class="text-sm text-gray-600 whitespace-nowrap">Qty:</label>
+                <select class="qty-select border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-blue/30">
+                  ${[1,2,3,4,5].map(n=>`<option value="${n}">${n}</option>`).join('')}
+                </select>
+                <label class="text-sm text-gray-600 whitespace-nowrap ml-2">Guests:</label>
+                <select class="guest-select border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-blue/30">
+                  ${Array.from({length: item.maxGuests}, (_,i) => i+1).map(n=>`<option value="${n}">${n} Guest${n>1?'s':''}</option>`).join('')}
+                </select>
+              </div>
+              <button class="book-now w-full px-5 py-2 bg-primary-blue text-white rounded-lg text-sm font-medium hover:bg-accent-blue transition-colors flex items-center justify-center gap-1">
+                Book Now <i class="fas fa-arrow-right text-xs"></i>
+              </button>
+            </div>
+          </div>
+        </div>`;
+
+      // Carousel
+      const imgs = card.querySelectorAll('img');
+      const thumbs = card.querySelectorAll('.thumb');
+      let idx = 0;
+      const show = i => {
+        imgs.forEach((im,j)=>im.style.opacity = j===i?'1':'0');
+        thumbs.forEach((t,j)=>t.classList.toggle('active', j===i));
+      };
+      card.querySelector('.prev').onclick = () => { idx = (idx - 1 + imgs.length) % imgs.length; show(idx); };
+      card.querySelector('.next').onclick = () => { idx = (idx + 1) % imgs.length; show(idx); };
+      thumbs.forEach(t => t.onclick = () => show(+t.dataset.idx));
+
+      // View More
+      card.querySelector('.view-more-modal').onclick = () => {
+        document.getElementById('modalTitle').textContent = item.name;
+        const content = document.getElementById('modalContent');
+        content.innerHTML = `
+          <p class="text-sm text-gray-600 mb-4">${item.desc}</p>
+          <div class="grid grid-cols-2 gap-3 text-sm">
+            ${item.amenities.map(a => `<div class="flex items-center gap-2"><i class="fas fa-check text-primary-blue text-xs"></i> ${a}</div>`).join('')}
+          </div>
+          <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-2">
+            ${item.imgs.map(src => `<img src="${src}" alt="${item.name}" class="w-full h-32 object-cover rounded-lg shadow-sm">`).join('')}
+          </div>`;
+        document.getElementById('viewMoreModal').classList.add('open');
+      };
+
+      // Booking with Guests
+      const qty = card.querySelector('.qty-select');
+      const guests = card.querySelector('.guest-select');
+      card.querySelector('.book-now').onclick = () => {
+        const q = +qty.value;
+        const g = +guests.value;
+        const ex = booking.find(b => b.item.id === item.id);
+        if (ex) { ex.qty += q; ex.guests = g; }
+        else booking.push({item, qty: q, guests: g});
+        updateSummary();
+      };
+
+      return card;
+    }
+
+    // ==== FINAL CHECKOUT — SAVE TO LOCALSTORAGE ====
+     document.getElementById('checkoutBtn').onclick = () => {
+    if (!checkIn || !checkOut) {
+      alert('Please select check-in and check-out dates!');
+      return;
+    }
+    if (booking.length === 0) {
+      alert('Please select at least one room or package!');
+      return;
+    }
+
+    const nights = nightsBetween(checkIn, checkOut);
+    const totalAmount = booking.reduce((sum, b) => {
+      const base = b.item.price * b.qty;
+      return sum + (b.item.perNight ? base * nights : base);
+    }, 0);
+
+    const bookingData = {
+      checkIn: checkIn.toISOString(),
+      checkOut: checkOut.toISOString(),
+      nights,
+      adults,
+      children,
+      totalGuests: adults + children,
+      totalAmount,
+      items: booking.map(b => ({
+        id: b.item.id,
+        name: b.item.name,
+        qty: b.qty,
+        guests: b.guests,
+        price: b.item.price,
+        perNight: b.item.perNight,
+        subtotal: b.item.perNight ? b.item.price * b.qty * nights : b.item.price * b.qty
+      }))
+    };
+
+    // SAVE TO LOCALSTORAGE
+    localStorage.setItem('eduardosBooking', JSON.stringify(bookingData));
+
+    // GO TO CONFIRMATION PAGE
+    window.location.href = 'confirmationbooking.html';
+  };
+
+      // ==== RENDER & SUMMARY ====
+      function renderCategory(cat) {
+        itemsContainer.innerHTML = '';
+        (DATA[cat] || []).forEach(i => itemsContainer.appendChild(renderCard(i)));
+      }
+      function updateSummary() {
+        const box = document.getElementById('bookedRooms'), sub = document.getElementById('subtotal'), tot = document.getElementById('summaryTotal');
+        const empty = document.querySelector('.booking-empty'), nights = updateNightsDisplay();
+        if (!booking.length) {
+          box.innerHTML = ''; empty.classList.remove('hidden'); sub.textContent = tot.textContent = '₱0'; return;
+        }
+        empty.classList.add('hidden');
+        let html = '', total = 0;
+        booking.forEach(b => {
+          const isNight = b.item.perNight, base = b.item.price * b.qty, line = isNight && nights ? base * nights : base;
+          total += line;
+          html += `
+            <div class="bg-gray-50 p-3 rounded-lg border flex justify-between items-start">
+              <div class="flex-1">
+                <div class="font-medium">${b.item.name}</div>
+                <div class="text-xs text-gray-500">
+                  × ${b.qty} ${isNight && nights ? `× ${nights} night${nights>1?'s':''}` : ''} 
+                  <span class="ml-2">• ${b.guests} Guest${b.guests>1?'s':''}</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 text-right">
+                <div>
+                  <div class="font-medium">₱${line.toLocaleString()}</div>
+                  ${isNight && nights ? `<div class="text-xs text-gray-500">₱${b.item.price.toLocaleString()}/night</div>` : ''}
+                </div>
+                <button class="remove-item text-red-600 hover:text-red-800 p-1" data-id="${b.item.id}"><i class="fas fa-times"></i></button>
+              </div>
+            </div>`;
+        });
+        box.innerHTML = html; sub.textContent = `₱${total.toLocaleString()}`; tot.textContent = `₱${total.toLocaleString()}`;
+        box.querySelectorAll('.remove-item').forEach(b => b.onclick = e => {
+          booking = booking.filter(x => x.item.id !== e.currentTarget.dataset.id);
+          updateSummary();
+        });
+      }
+
+    // ==== DOM LOADED ====
+    document.addEventListener('DOMContentLoaded', () => {
+      // Sidebar
+      document.getElementById('openSidebar').onclick = () => { document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('open'); };
+      document.getElementById('closeSidebar').onclick = document.getElementById('sidebarOverlay').onclick = () => {
+        document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('open');
+      };
+
+      // Tabs
+      document.querySelectorAll('#categoryTabs .tab-btn').forEach(btn => {
+        btn.onclick = () => {
+          document.querySelectorAll('#categoryTabs .tab-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          renderCategory(btn.dataset.cat);
+          document.getElementById('currentCategoryLabel').textContent = btn.textContent.trim();
+        };
+      });
+
+      // Mobile Search
+      const mobileModify = document.getElementById('mobileModifyBtn');
+      const mobileFields = document.getElementById('mobileSearchFields');
+      const mobileDone = document.getElementById('mobileDoneBtn');
+      mobileModify.onclick = () => mobileFields.classList.toggle('hidden');
+      mobileDone.onclick = () => mobileFields.classList.add('hidden');
+
+      // Modals
+      const closeModal = id => document.getElementById(id).classList.remove('open');
+      document.getElementById('closeViewMore').onclick = () => closeModal('viewMoreModal');
+      document.getElementById('viewMoreModal').onclick = e => e.target === document.getElementById('viewMoreModal') && closeModal('viewMoreModal');
+
+      // Calendar
+      const calModal = document.getElementById('calendarModal');
+      const monthYear = document.getElementById('monthYear');
+      const calendarDays = document.getElementById('calendarDays');
+      let curDate = new Date();
+      const renderCal = () => {
+        calendarDays.innerHTML = '';
+        const y = curDate.getFullYear(), m = curDate.getMonth();
+        monthYear.textContent = curDate.toLocaleString('default', {month:'long', year:'numeric'});
+        const first = new Date(y, m, 1).getDay();
+        const days = new Date(y, m+1, 0).getDate();
+        for (let i = 0; i < first; i++) calendarDays.appendChild(document.createElement('div'));
+        for (let d = 1; d <= days; d++) {
+          const btn = document.createElement('button');
+          btn.textContent = d; btn.className = 'w-9 h-9 rounded-lg text-sm hover:bg-primary-blue hover:text-white transition-colors';
+          const thisDate = new Date(y, m, d);
+          if (checkIn && thisDate.toDateString() === checkIn.toDateString()) btn.classList.add('bg-primary-blue', 'text-white');
+          if (checkOut && thisDate.toDateString() === checkOut.toDateString()) btn.classList.add('bg-primary-blue', 'text-white');
+          if (checkIn && checkOut && thisDate > checkIn && thisDate < checkOut) btn.classList.add('bg-accent-blue/20');
+          btn.onclick = () => {
+            if (!checkIn || (checkIn && checkOut)) { checkIn = thisDate; checkOut = null; }
+            else if (thisDate > checkIn) checkOut = thisDate;
+            else { checkIn = thisDate; checkOut = null; }
+            renderCal(); updateDateText(); updateSummary();
+          };
+          calendarDays.appendChild(btn);
+        }
+      };
+      const updateDateText = () => {
+        const fmt = d => d.toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'});
+        const txt = checkIn && checkOut ? `${fmt(checkIn)} – ${fmt(checkOut)}` : checkIn ? fmt(checkIn) : 'Select Dates';
+        [document.getElementById('dateDisplayDesktop'), document.getElementById('dateDisplayMobile')].forEach(el => el.textContent = txt);
+      };
+      [document.getElementById('dateBtnDesktop'), document.getElementById('dateBtnMobile')].forEach(b => b.onclick = () => { calModal.classList.add('open'); renderCal(); });
+      document.getElementById('closeCalendar').onclick = () => calModal.classList.remove('open');
+      document.getElementById('prevMonth').onclick = () => { curDate.setMonth(curDate.getMonth()-1); renderCal(); };
+      document.getElementById('nextMonth').onclick = () => { curDate.setMonth(curDate.getMonth()+1); renderCal(); };
+      document.getElementById('clearDates').onclick = () => { checkIn = checkOut = null; updateDateText(); updateSummary(); renderCal(); };
+      document.getElementById('applyCalendar').onclick = () => { calModal.classList.remove('open'); updateSummary(); };
+
+      // Guests
+      const guestDisplays = [document.getElementById('guestDisplayDesktop'), document.getElementById('guestDisplayMobile')];
+      const updateGuest = () => {
+        const txt = `${adults} Adult${adults>1?'s':''}${children?`, ${children} Child${children>1?'ren':''}`:''}`;
+        guestDisplays.forEach(el => el.textContent = txt);
+      };
+      [document.getElementById('guestBtnDesktop'), document.getElementById('guestBtnMobile')].forEach(b => b.onclick = () => document.getElementById('guestsModal').classList.add('open'));
+      document.getElementById('closeGuests').onclick = () => document.getElementById('guestsModal').classList.remove('open');
+      document.getElementById('incAdults').onclick = () => { adults++; document.getElementById('adultsCount').textContent = adults; updateGuest(); };
+      document.getElementById('decAdults').onclick = () => { if(adults>1) adults--; document.getElementById('adultsCount').textContent = adults; updateGuest(); };
+      document.getElementById('incChildren').onclick = () => { children++; document.getElementById('childrenCount').textContent = children; updateGuest(); };
+      document.getElementById('decChildren').onclick = () => { if(children>0) children--; document.getElementById('childrenCount').textContent = children; updateGuest(); };
+      document.getElementById('applyGuests').onclick = () => document.getElementById('guestsModal').classList.remove('open');
+
+      // Clear & Init
+      document.getElementById('clearBooking').onclick = () => { booking = []; updateSummary(); };
+      renderCategory('rooms'); updateSummary(); updateGuest(); updateDateText();
+
+      // Scroll Reveal
+      const observer = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }), { threshold: 0.15 });
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+      // Header Scroll
+      let lastY = window.scrollY;
+      window.addEventListener('scroll', () => {
+        const header = document.getElementById('siteHeader');
+        if (window.scrollY > lastY && window.scrollY > 100) header.classList.replace('nav-visible', 'nav-hidden');
+        else header.classList.replace('nav-hidden', 'nav-visible');
+        lastY = window.scrollY;
+      });
+    });
+  </script>
+</body>
+</html>

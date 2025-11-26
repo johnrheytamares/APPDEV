@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery | Eduardo's Resort</title>
+  <meta name="description" content="Explore stunning photos of pools, cottages, dining, and events at Eduardo's Resort.">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary-blue': '#2B6CB0',
+            'accent-blue': '#63B3ED',
+            'warm-brown': '#C19A6B',
+            'deep-brown': '#8B5E3C',
+            'neutral-gray': '#F5F5F5',
+            'text-dark': '#2D3748',
+            'text-muted': '#718096',
+          },
+          fontFamily: {
+            'inter': ['Inter', 'sans-serif'],
+            'dancing': ['Dancing Script', 'cursive'],
+          },
+          animation: {
+            'fade-in': 'fadeIn 1s ease-out',
+            'slide-up': 'slideUp 0.8s ease-out',
+            'float': 'float 3s ease-in-out infinite',
+            'pulse': 'pulse 2s infinite'
+          },
+          keyframes: {
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+            slideUp: { '0%': { transform: 'translateY(30px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
+            float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+            pulse: { '0%': { boxShadow: '0 0 0 0 rgba(59,130,246,.5)' }, '70%': { boxShadow: '0 0 0 12px rgba(59,130,246,0)' }, '100%': { boxShadow: '0 0 0 0 rgba(59,130,246,0)' } }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    :root {
+      --primary-blue: #2B6CB0; --accent-blue: #63B3ED; --warm-brown: #C19A6B; --deep-brown: #8B5E3C;
+      --white: #FFFFFF; --neutral-gray: #F5F5F5; --text-dark: #2D3748; --text-muted: #718096;
+      --shadow: 0 4px 12px rgba(2, 8, 20, 0.08); --shadow-lg: 0 10px 30px rgba(2, 8, 20, 0.12);
+      --radius: 16px; --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; background: linear-gradient(to bottom, #E0F7FA, var(--white)); overflow-x: hidden; }
+
+    /* Header */
+    header { position: sticky; top: 0; z-index: 50; background: white/95; backdrop-filter: blur(12px); box-shadow: var(--shadow); transition: transform .3s ease; }
+    .nav-hidden { transform: translateY(-100%); }
+    .nav-visible { transform: translateY(0); }
+
+    /* Hero */
+    .gallery-hero {
+      background: linear-gradient(135deg, rgba(43,108,176,.75), rgba(193,154,107,.45)), url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+      height: 320px; display: flex; align-items: center; justify-content: center; text-align: center; color: white;
+    }
+    .hero-content h1 { font-size: 3.5rem; font-family: 'Dancing Script', cursive; margin-bottom: 1rem; text-shadow: 0 3px 8px rgba(0,0,0,.4); }
+    @media (max-width: 640px) { .hero-content h1 { font-size: 2rem; } .hero-content p { font-size: 1rem; } }
+
+    /* Controls */
+    .gallery-controls {
+      background: white; padding: 2rem 1rem; box-shadow: var(--shadow); margin-bottom: 2rem;
+    }
+    .controls-container {
+      max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem;
+    }
+    @media (min-width: 768px) { .controls-container { flex-direction: row; justify-content: space-between; align-items: center; } }
+
+    .search-bar {
+      display: flex; max-width: 500px; margin: 0 auto; width: 100%;
+    }
+    .search-bar input {
+      flex: 1; padding: 0.75rem 1.25rem; border: 2px solid #e5e7eb; border-radius: 50px 0 0 50px;
+      font-size: 1rem; outline: none; transition: var(--transition);
+    }
+    .search-bar input:focus { border-color: var(--accent-blue); }
+    .search-bar button {
+      background: var(--primary-blue); color: white; border: none; padding: 0 1.5rem;
+      border-radius: 0 50px 50px 0; cursor: pointer; transition: var(--transition);
+    }
+    .search-bar button:hover { background: #1a558a; }
+
+    .filter-categories {
+      display: flex; justify-content: center; flex-wrap: wrap; gap: 0.75rem;
+    }
+    .filter-btn {
+      padding: 0.6rem 1.4rem; background: white; border: 2px solid #e5e7eb; border-radius: 50px;
+      cursor: pointer; transition: var(--transition); font-weight: 500; font-size: 0.95rem;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--primary-blue); color: white; border-color: var(--primary-blue);
+    }
+
+    /* Gallery */
+    .image-gallery { max-width: 1400px; margin: 0 auto 3rem; padding: 0 1rem; }
+    .gallery-container {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;
+    }
+    @media (min-width: 768px) { .gallery-container { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 1024px) { .gallery-container { grid-template-columns: repeat(4, 1fr); } }
+
+    .gallery-item {
+      border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+      transition: var(--transition); background: white; cursor: pointer; position: relative;
+    }
+    .gallery-item:hover {
+      transform: translateY(-10px); box-shadow: var(--shadow-lg);
+    }
+    .gallery-item img {
+      width: 100%; height: 220px; object-fit: cover; display: block; transition: transform 0.7s ease;
+    }
+    .gallery-item:hover img { transform: scale(1.08); }
+    .image-placeholder {
+      width: 100%; height: 220px; background: linear-gradient(45deg, #bee3f8, var(--accent-blue));
+      display: flex; align-items: center; justify-content: center; color: var(--primary-blue);
+      font-size: 1.4rem; font-weight: bold;
+    }
+    .image-caption {
+      padding: 1rem; text-align: center; font-weight: 600; color: var(--text-dark); font-size: 1.05rem;
+    }
+
+    /* Load More */
+    .gallery-pagination { text-align: center; margin-top: 3rem; }
+    #load-more-btn {
+      background: var(--warm-brown); color: white; border: none; padding: 1rem 2.5rem;
+      border-radius: 50px; font-weight: 600; cursor: pointer; transition: var(--transition);
+      box-shadow: var(--shadow);
+    }
+    #load-more-btn:hover {
+      background: var(--deep-brown); transform: translateY(-3px);
+    }
+
+    /* Sidebar (Mobile) */
+    .sidebar-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,.5); z-index: 60; opacity: 0; visibility: hidden;
+      transition: all .3s ease;
+    }
+    .sidebar-overlay.open { opacity: 1; visibility: visible; }
+    .sidebar {
+      position: fixed; top: 0; right: -320px; width: 300px; height: 100%;
+      background: white; box-shadow: -8px 0 25px rgba(0,0,0,.15); z-index: 70;
+      transition: right .4s cubic-bezier(.4,0,.2,1); padding: 1.5rem;
+      display: flex; flex-direction: column;
+    }
+    .sidebar.open { right: 0; }
+    .sidebar-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-bottom: 1rem; border-bottom: 1px solid #e5e7eb; margin-bottom: 1.5rem;
+    }
+    .sidebar-nav a { display: block; padding: .75rem 0; font-weight: 500; color: #374151; text-align: center; }
+    .sidebar-nav a:hover, .sidebar-nav a.active { color: var(--primary-blue); }
+    .sidebar-actions { margin-top: auto; display: flex; flex-direction: column; gap: .75rem; }
+
+    /* Chatbot Modal */
+    .chatbot-toggle {
+      position: fixed; bottom: 24px; right: 24px; z-index: 50;
+      width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+      color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 20px rgba(30,64,175,.3); cursor: pointer; transition: transform .3s ease;
+      animation: pulse 2s infinite;
+    }
+    .chatbot-toggle:hover { transform: scale(1.1); }
+    .chatbot-modal {
+      position: fixed; bottom: 100px; right: 24px; width: 360px; height: 520px;
+      background: white; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,.15);
+      overflow: hidden; transform: translateY(20px) scale(.95); opacity: 0; visibility: hidden;
+      transition: all .4s cubic-bezier(.4,0,.2,1); z-index: 49; display: flex; flex-direction: column;
+    }
+    .chatbot-modal.open { transform: translateY(0) scale(1); opacity: 1; visibility: visible; }
+    .chat-header {
+      background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+      color: white; padding: 16px 20px; font-weight: 600;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .chat-messages { flex: 1; padding: 16px; overflow-y: auto; background: #f8fafc; }
+    .message { margin-bottom: 12px; display: flex; animation: fadeIn .3s ease; }
+    .message.bot { justify-content: flex-start; }
+    .message.user { justify-content: flex-end; }
+    .bubble { max-width: 75%; padding: 10px 14px; border-radius: 18px; font-size: 14px; line-height: 1.5; }
+    .bubble.bot { background: white; border-bottom-left-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+    .bubble.user { background: var(--accent-blue); color: white; border-bottom-right-radius: 4px; }
+    .chat-input {
+      padding: 16px; background: white; border-top: 1px solid #e5e7eb;
+      display: flex; gap: 10px;
+    }
+    .chat-input input {
+      flex: 1; padding: 12px 16px; border: 1px solid #d1d5db; border-radius: 999px;
+      outline: none; font-size: 14px;
+    }
+    .chat-input input:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(59,130,246,.1); }
+    .send-btn {
+      width: 40px; height: 40px; background: var(--accent-blue); color: white;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+    .send-btn:hover { background: #2563eb; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media(max-width:480px) {
+      .chatbot-modal { width: calc(100vw - 32px); right: 16px; height: 480px; }
+      .chatbot-toggle { width: 56px; height: 56px; bottom: 16px; right: 16px; }
+      .sidebar { width: 280px; }
+    }
+  </style>
+</head>
+<body class="font-inter text-gray-800">
+
+  <!-- Sidebar Overlay -->
+  <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+  <!-- Right Sidebar (Mobile) -->
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <a href="/" class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-blue to-accent-blue flex items-center justify-center text-white font-bold text-lg">
+          Ed
+        </div>
+        <div class="text-xl font-bold text-primary-blue">Eduardo's</div>
+      </a>
+      <button id="closeSidebar" class="text-gray-600 hover:text-gray-900"><i class="fas fa-times text-xl"></i></button>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/">Home</a>
+      <a href="/amenities">Amenities</a>
+      <a href="/rates">Rates</a>
+      <a href="/gallery" class="active">Gallery</a>
+      <a href="/contact">Contact</a>
+      <a href="/about">About</a>
+    </nav>
+    <div class="sidebar-actions">
+      <a href="/login" class="block text-center px-4 py-2 border border-primary-blue text-primary-blue rounded-lg hover:bg-blue-50 transition-colors font-medium">Login</a>
+      <a href="/signup" class="block text-center px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">Sign Up</a>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="nav-visible" id="siteHeader">
+    <div class="container mx-auto px-4 py-3">
+      <div class="flex items-center justify-between">
+        <a href="/" class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-blue to-accent-blue flex items-center justify-center text-white font-bold text-lg">
+            Ed
+          </div>
+          <div class="text-xl font-bold text-primary-blue">Eduardo's</div>
+        </a>
+        
+        <nav class="hidden md:flex space-x-8">
+          <a href="/" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Home</a>
+          <a href="/amenities" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Amenities</a>
+          <a href="/rates" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Rates</a>
+          <a href="/gallery" class="font-medium text-primary-blue relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-full after:h-0.5 after:bg-primary-blue">Gallery</a>
+          <a href="/contact" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Contact</a>
+          <a href="/about" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">About</a>
+        </nav>
+        
+        <div class="hidden md:flex items-center space-x-4">
+          <a href="/login" class="px-4 py-2 border border-primary-blue text-primary-blue rounded-lg hover:bg-blue-50 transition-colors duration-300 font-medium">Login</a>
+          <a href="/signup" class="px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 font-medium">Signup</a>
+          <a href="/reservation" class="px-5 py-2 bg-warm-brown text-white rounded-full hover:bg-deep-brown transition-all duration-300 font-semibold shadow-md">Book Now</a>
+        </div>
+
+        <div class="flex md:hidden items-center gap-5">
+          <a href="/reservation" class="px-5 py-2 bg-warm-brown text-white rounded-[10px] hover:bg-deep-brown transition-all duration-300 font-semibold shadow-md text-sm">Book Now</a>
+          <button id="openSidebar" class="text-2xl text-primary-blue"><i class="fas fa-bars"></i></button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="gallery-hero">
+    <div class="hero-content">
+      <h1 class="animate-fade-in">Explore Our Gallery</h1>
+      <p class="animate-slide-up">Discover the beauty, comfort, and unforgettable moments at Eduardo's Resort.</p>
+    </div>
+  </section>
+
+  <!-- Controls -->
+  <section class="gallery-controls">
+    <div class="controls-container">
+      <div class="search-bar">
+        <input type="text" placeholder="Search images (e.g., 'pool', 'cottage')..." id="gallery-search">
+        <button type="button" aria-label="Search"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="filter-categories">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="resort">Resort</button>
+        <button class="filter-btn" data-filter="rooms">Cottages</button>
+        <button class="filter-btn" data-filter="pool">Pool</button>
+        <button class="filter-btn" data-filter="restaurant">Dining</button>
+        <button class="filter-btn" data-filter="events">Events</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section class="image-gallery">
+    <div class="gallery-container" id="gallery-container">
+      <!-- Resort -->
+      <div class="gallery-item" data-category="resort">
+        <img src="https://images.unsplash.com/photo-1586375300773-8384e3e4916f?auto=format&fit=crop&w=800&q=80" alt="Resort entrance" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="image-placeholder" style="display: none;">Resort View</div>
+        <div class="image-caption">Grand Entrance</div>
+      </div>
+      <div class="gallery-item" data-category="resort">
+        <img src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=800&q=80" alt="Tropical gardens" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="image-placeholder" style="display: none;">Tropical Gardens</div>
+        <div class="image-caption">Tropical Gardens</div>
+      </div>
+
+      <!-- Cottages -->
+      <div class="gallery-item" data-category="rooms">
+        <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=800&q=80" alt="Ocean suite" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="image-placeholder" style="display: none;">Ocean Suite</div>
+        <div class="image-caption">Ocean View Cottage</div>
+      </div>
+      <div class="gallery-item" data-category="rooms">
+        <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80" alt="Deluxe cottage" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="image-placeholder" style="display: none;">Deluxe Cottage</div>
+        <div class="image-caption">Deluxe Aircon Cottage</div>
+      </div>
+
+      <!-- Pool -->
+      <div class="gallery-item" data-category="pool">
+        <img src="https://images.unsplash.com/photo-1578662996442-48f60103fcbf?auto=format&fit=crop&w=800&q=80" alt="Olympic pool" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="image-placeholder" style="display: none;">Olympic Pool</div>
+        <div class="image-caption">Mini-Olympic Pool</div>
+      </div>
+      <div class="gallery-item" data-category="pool">
+        <img src="https://images.unsplash.com/photo-1560272564-c83b19b38190?auto=format&fit=crop&w=800&q=80" alt="Kiddie pool" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="image-placeholder" style="display: none;">Kiddie Pool</div>
+        <div class="image-caption">Kiddie Pool with Slide</div>
+      </div>
+
+      <!-- Dining -->
+      <div class="gallery-item" data-category="restaurant">
+        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=800&q=80" alt="Fine dining" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="image-placeholder" style="display: none;">Fine Dining</div>
+        <div class="image-caption">Gourmet Restaurant</div>
+      </div>
+      <div class="gallery-item" data-category="restaurant">
+        <img src="https://images.unsplash.com/photo-1517248135467-3fb27b735e36?auto=format&fit=crop&w=800&q=80" alt="Poolside bar" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="image-placeholder" style="display: none;">Poolside Bar</div>
+        <div class="image-caption">Poolside Bar</div>
+      </div>
+
+      <!-- Events -->
+      <div class="gallery-item" data-category="events">
+        <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=800&q=80" alt="Function hall" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="image-placeholder" style="display: none;">Function Hall</div>
+        <div class="image-caption">Elegant Function Hall</div>
+      </div>
+      <div class="gallery-item" data-category="events">
+        <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=80" alt="Beach wedding" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="image-placeholder" style="display: none;">Beach Wedding</div>
+        <div class="image-caption">Dream Beach Wedding</div>
+      </div>
+    </div>
+
+    <div class="gallery-pagination">
+      <button id="load-more-btn">Load More Images</button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-10 after:h-0.5 after:bg-warm-brown">About Eduardo's Resort</h3>
+          <p class="text-gray-300 text-sm">
+            Eduardo's Resort blends refined design and family-first recreation — elegant spaces, playful attractions, and smooth digital booking for your perfect getaway.
+          </p>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold mb-4 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-10 after:h-0.5 after:bg-warm-brown">Contact</h3>
+          <ul class="space-y-2 text-gray-300 text-sm">
+            <li><strong>Landline:</strong> (043) 288-7153</li>
+            <li><strong>Mobile:</strong> 0921 507 4378 / 0977 845 8144 / 0928 890 6708</li>
+            <li><strong>Address:</strong> Nautical Highway Bayanan II, Calapan City, Oriental Mindoro, Philippines</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold mb-4 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-10 after:h-0.5 after:bg-warm-brown">Connect With Us</h3>
+          <div class="flex space-x-4">
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary-blue transition-colors duration-300"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary-blue transition-colors duration-300"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary-blue transition-colors duration-300"><i class="fab fa-twitter"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="pt-8 border-t border-gray-700 text-center text-gray-400 text-sm">
+        <p>© 2025 Eduardo's Resort · All Rights Reserved</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Chatbot Toggle & Modal -->
+  <div id="chatbotToggle" class="chatbot-toggle"><i class="fas fa-robot text-2xl"></i></div>
+  <div id="chatbotModal" class="chatbot-modal">
+    <div class="chat-header">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center"><i class="fas fa-robot text-sm"></i></div>
+        <span>Eduardo's Assistant</span>
+      </div>
+      <button id="closeChatbot" class="text-white hover:text-gray-200"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="chatMessages" class="chat-messages">
+      <div class="message bot"><div class="bubble bot">Hi! Want to see more photos of our pools or cottages?</div></div>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="userInput" placeholder="Ask about gallery, booking, or amenities..."/>
+      <button id="sendBtn" class="send-btn"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <script>
+    // Mobile Sidebar
+    const openBtn = document.getElementById('openSidebar');
+    const closeBtn = document.getElementById('closeSidebar');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+
+    openBtn?.addEventListener('click', () => {
+      sidebar.classList.add('open');
+      overlay.classList.add('open');
+    });
+    closeBtn.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('open');
+    });
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('open');
+    });
+
+    // Chatbot
+    const toggleBtn = document.getElementById('chatbotToggle');
+    const modal = document.getElementById('chatbotModal');
+    const closeChat = document.getElementById('closeChatbot');
+    const sendBtn = document.getElementById('sendBtn');
+    const userInput = document.getElementById('userInput');
+    const messages = document.getElementById('chatMessages');
+
+    toggleBtn.addEventListener('click', () => modal.classList.toggle('open'));
+    closeChat.addEventListener('click', () => modal.classList.remove('open'));
+
+    function addMessage(txt, sender) {
+      const div = document.createElement('div');
+      div.className = `message ${sender}`;
+      div.innerHTML = `<div class="bubble ${sender}">${txt}</div>`;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function sendMessage() {
+      const txt = userInput.value.trim();
+      if (!txt) return;
+      addMessage(txt, 'user'); userInput.value = '';
+      setTimeout(() => {
+        const replies = [
+          "Check out our Olympic pool photos above!",
+          "Cottages are air-conditioned with private baths.",
+          "Yes! We host weddings and corporate events.",
+          "The restaurant serves Filipino fusion cuisine."
+        ];
+        addMessage(replies[Math.floor(Math.random() * replies.length)], 'bot');
+      }, 800);
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', e => e.key === 'Enter' && sendMessage());
+
+    // Header Scroll
+    let lastScrollY = window.scrollY;
+    const header = document.getElementById('siteHeader');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > lastScrollY && window.scrollY > 100) {
+        header.classList.remove('nav-visible'); header.classList.add('nav-hidden');
+      } else {
+        header.classList.remove('nav-hidden'); header.classList.add('nav-visible');
+      }
+      lastScrollY = window.scrollY;
+    });
+
+    // Filter
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        document.querySelectorAll('.gallery-item').forEach(item => {
+          const match = filter === 'all' || item.dataset.category === filter;
+          item.style.display = match ? 'block' : 'none';
+        });
+      });
+    });
+
+    // Search
+    document.getElementById('gallery-search')?.addEventListener('input', function() {
+      const query = this.value.toLowerCase();
+      document.querySelectorAll('.gallery-item').forEach(item => {
+        const text = (item.querySelector('.image-caption').textContent + ' ' + item.dataset.category).toLowerCase();
+        item.style.display = text.includes(query) ? 'block' : 'none';
+      });
+    });
+
+    // Load More
+    document.getElementById('load-more-btn')?.addEventListener('click', () => {
+      alert('More stunning images coming soon!');
+    });
+  </script>
+</body>
+</html>

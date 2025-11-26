@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rates | Eduardo's Resort</title>
+  <meta name="description" content="Explore entrance fees, room rates, cottages, function hall, and packages at Eduardo’s Resort — your perfect getaway in Calapan, Oriental Mindoro.">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet"/>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary-blue': '#2B6CB0',
+            'accent-blue': '#63B3ED',
+            'warm-brown': '#C19A6B',
+            'deep-brown': '#8B5E3C',
+            'neutral-gray': '#F5F5F5',
+            'text-dark': '#2D3748',
+            'text-muted': '#718096',
+          },
+          fontFamily: {
+            'inter': ['Inter', 'sans-serif'],
+            'dancing': ['Dancing Script', 'cursive'],
+          },
+          animation: {
+            'fade-in': 'fadeIn 1s ease-out',
+            'slide-up': 'slideUp 0.8s ease-out',
+            'float': 'float 3s ease-in-out infinite',
+            'pulse': 'pulse 2s infinite'
+          },
+          keyframes: {
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+            slideUp: { '0%': { transform: 'translateY(30px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
+            float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+            pulse: { '0%': { boxShadow: '0 0 0 0 rgba(59,130,246,.5)' }, '70%': { boxShadow: '0 0 0 12px rgba(59,130,246,0)' }, '100%': { boxShadow: '0 0 0 0 rgba(59,130,246,0)' } }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --primary-blue: #2B6CB0; --accent-blue: #63B3ED; --warm-brown: #C19A6B; --deep-brown: #8B5E3C;
+      --white: #FFFFFF; --neutral-gray: #F5F5F5; --text-dark: #2D3748; --text-muted: #718096;
+      --shadow: 0 4px 12px rgba(0,0,0,0.08); --shadow-lg: 0 10px 30px rgba(0,0,0,0.12);
+      --radius: 16px; --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to bottom, #E0F7FA, var(--white));
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    header {
+      position: sticky; top: 0; z-index: 50; background: white/95; backdrop-filter: blur(12px);
+      box-shadow: var(--shadow); transition: transform .3s ease;
+    }
+    .nav-hidden { transform: translateY(-100%); }
+    .nav-visible { transform: translateY(0); }
+
+    /* Hero */
+    .rates-hero {
+      background: linear-gradient(135deg, rgba(43,108,176,.9), rgba(193,154,107,.8)), url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1600&q=80') center/cover;
+      height: 380px; display: flex; align-items: center; justify-content: center; text-align: center; color: white;
+    }
+    .hero-content h1 {
+      font-family: 'Dancing Script', cursive; font-size: 3.5rem; margin-bottom: 1rem; text-shadow: 0 3px 8px rgba(0,0,0,.4);
+    }
+    .hero-content p { font-size: 1.2rem; max-width: 800px; margin: 0 auto; opacity: 0.95; }
+    @media (max-width: 640px) {
+      .rates-hero { height: 300px; }
+      .hero-content h1 { font-size: 2.5rem; }
+      .hero-content p { font-size: 1.1rem; }
+    }
+
+    /* Section */
+    .section { padding: 4rem 1rem; }
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    /* Tabs - 2 ROWS on MOBILE */
+    .tab-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 2.5rem;
+      border-bottom: 2px solid #e5e7eb;
+    }
+    @media (max-width: 640px) {
+      .tab-buttons {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.75rem;
+      }
+    }
+    .tab-btn {
+      padding: 0.75rem 1rem; font-weight: 500; color: var(--text-muted); border-radius: var(--radius) var(--radius) 0 0;
+      background: #f8fafc; transition: var(--transition); cursor: pointer; text-align: center; font-size: 0.9rem;
+    }
+    .tab-btn.active {
+      background: var(--primary-blue); color: white;
+    }
+    .tab-content { display: none; animation: fadeIn 0.5s ease; }
+    .tab-content.active { display: block; }
+
+    /* Universal Card */
+    .rate-card {
+      position: relative; background: white; border-radius: var(--radius); overflow: hidden;
+      box-shadow: var(--shadow); transition: var(--transition); display: flex; flex-direction: column;
+    }
+    .rate-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-6px); }
+
+    .img-placeholder {
+      height: 180px; background: #e5e7eb; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; color: #6b7280;
+    }
+    .img-placeholder i { font-size: 2.8rem; margin-bottom: 0.5rem; opacity: 0.6; }
+
+    .card-content {
+      padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column;
+    }
+    .card-content h4 {
+      font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;
+    }
+    .price {
+      font-size: 1.75rem; font-weight: 700; color: var(--warm-brown); margin: 0.5rem 0;
+    }
+    .capacity {
+      font-size: 0.875rem; color: var(--text-muted); margin-bottom: 0.75rem;
+    }
+    .features {
+      flex-grow: 1; font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1rem;
+    }
+    .book-btn {
+      margin-top: auto; background: var(--primary-blue); color: white; padding: 0.75rem;
+      border-radius: 999px; text-align: center; font-weight: 600; transition: background 0.3s;
+    }
+    .book-btn:hover { background: #1d4ed8; }
+
+    /* Table */
+    .rate-table {
+      width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.95rem;
+    }
+    .rate-table th, .rate-table td {
+      padding: 1rem 1.2rem; text-align: left; border-bottom: 1px solid #e5e7eb;
+    }
+    .rate-table th { background: #f8fafc; font-weight: 600; color: var(--text-dark); }
+    .rate-table tr:hover { background: #f8fafc; }
+
+    /* Sidebar */
+    .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,.5); z-index: 60; opacity: 0; visibility: hidden; transition: all .3s ease; }
+    .sidebar-overlay.open { opacity: 1; visibility: visible; }
+    .sidebar { position: fixed; top: 0; right: -320px; width: 300px; height: 100%; background: white; box-shadow: -8px 0 25px rgba(0,0,0,.15); z-index: 70; transition: right .4s cubic-bezier(.4,0,.2,1); padding: 1.5rem; display: flex; flex-direction: column; }
+    .sidebar.open { right: 0; }
+    .sidebar-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid #e5e7eb; margin-bottom: 1.5rem; }
+    .sidebar-nav a { display: block; padding: .75rem 0; font-weight: 500; color: #374151; text-align: center; }
+    .sidebar-nav a:hover, .sidebar-nav a.active { color: var(--primary-blue); }
+    .sidebar-actions { margin-top: auto; display: flex; flex-direction: column; gap: .75rem; }
+
+    /* Chatbot */
+    .chatbot-toggle { position: fixed; bottom: 24px; right: 24px; z-index: 50; width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(30,64,175,.3); cursor: pointer; transition: transform .3s ease; animation: pulse 2s infinite; }
+    .chatbot-toggle:hover { transform: scale(1.1); }
+    .chatbot-panel { position: fixed; bottom: 100px; right: 24px; width: 360px; height: 520px; background: white; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,.15); overflow: hidden; transform: translateY(20px) scale(.95); opacity: 0; visibility: hidden; transition: all .4s cubic-bezier(.4,0,.2,1); z-index: 49; display: flex; flex-direction: column; }
+    .chatbot-panel.open { transform: translateY(0) scale(1); opacity: 1; visibility: visible; }
+    .chat-header { background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue)); color: white; padding: 16px 20px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+    .chat-messages { flex: 1; padding: 16px; overflow-y: auto; background: #f8fafc; }
+    .message { margin-bottom: 12px; display: flex; animation: fadeIn .3s ease; }
+    .message.bot { justify-content: flex-start; }
+    .message.user { justify-content: flex-end; }
+    .bubble { max-width: 75%; padding: 10px 14px; border-radius: 18px; font-size: 14px; line-height: 1.5; }
+    .bubble.bot { background: white; border-bottom-left-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+    .bubble.user { background: var(--accent-blue); color: white; border-bottom-right-radius: 4px; }
+    .chat-input { padding: 16px; background: white; border-top: 1px solid #e5e7eb; display: flex; gap: 10px; }
+    .chat-input input { flex: 1; padding: 12px 16px; border: 1px solid #d1d5db; border-radius: 999px; outline: none; font-size: 14px; }
+    .chat-input input:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(59,130,246,.1); }
+    .send-btn { width: 40px; height: 40px; background: var(--accent-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .send-btn:hover { background: #2563eb; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media(max-width:480px) {
+      .chatbot-panel { width: calc(100vw - 32px); right: 16px; height: 480px; bottom: 80px; }
+      .chatbot-toggle { width: 52px; height: 52px; bottom: 16px; right: 16px; }
+      .sidebar { width: 280px; }
+      .tab-btn { font-size: 0.85rem; padding: 0.6rem 0.8rem; }
+    }
+  </style>
+</head>
+<body class="font-inter">
+
+  <!-- Sidebar Overlay -->
+  <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+  <!-- Right Sidebar (Mobile) -->
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <a href="/" class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-blue to-accent-blue flex items-center justify-center text-white font-bold text-lg">Ed</div>
+        <div class="text-xl font-bold text-primary-blue">Eduardo's</div>
+      </a>
+      <button id="closeSidebar" class="text-gray-600 hover:text-gray-900"><i class="fas fa-times text-xl"></i></button>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/">Home</a>
+      <a href="/aminities">Amenities</a>
+      <a href="/rates" class="active">Rates</a>
+      <a href="/gallery">Gallery</a>
+      <a href="/contact">Contact</a>
+      <a href="/about">About</a>
+    </nav>
+    <div class="sidebar-actions">
+      <a href="/login" class="block text-center px-4 py-2 border border-primary-blue text-primary-blue rounded-lg hover:bg-blue-50 transition-colors font-medium">Login</a>
+      <a href="/signup" class="block text-center px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">Sign Up</a>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="nav-visible" id="siteHeader">
+    <div class="container mx-auto px-4 py-3">
+      <div class="flex items-center justify-between">
+        <a href="/" class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-blue to-accent-blue flex items-center justify-center text-white font-bold text-lg">Ed</div>
+          <div class="text-xl font-bold text-primary-blue">Eduardo's</div>
+        </a>
+        <nav class="hidden md:flex space-x-8">
+          <a href="/" class="font-medium hover:text-primary-blue transition relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Home</a>
+          <a href="/aminities" class="font-medium hover:text-primary-blue transition relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Amenities</a>
+          <a href="/rates" class="font-medium text-primary-blue relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-full after:h-0.5 after:bg-primary-blue">Rates</a>
+          <a href="/gallery" class="font-medium hover:text-primary-blue transition relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Gallery</a>
+          <a href="/contact" class="font-medium hover:text-primary-blue transition relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Contact</a>
+          <a href="/about" class="font-medium hover:text-primary-blue transition relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">About</a>
+        </nav>
+        <div class="hidden md:flex items-center space-x-4">
+          <a href="/login" class="px-4 py-2 border border-primary-blue text-primary-blue rounded-lg hover:bg-blue-50 transition font-medium">Login</a>
+          <a href="/signup" class="px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-blue-700 transition font-medium">Signup</a>
+          <a href="/reservation" class="px-5 py-2 bg-warm-brown text-white rounded-full hover:bg-deep-brown transition font-semibold shadow-md">Book Now</a>
+        </div>
+        <div class="flex md:hidden items-center gap-3">
+          <a href="/reservation" class="px-4 py-1.5 bg-warm-brown text-white rounded-full hover:bg-deep-brown transition font-semibold shadow-md text-xs">Book Now</a>
+          <button id="openSidebar" class="text-2xl text-primary-blue"><i class="fas fa-bars"></i></button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="rates-hero">
+    <div class="hero-content">
+      <h1 class="animate-fade-in">Rates & Packages</h1>
+      <p class="animate-slide-up">Enjoy, relax, and have fun in our cool and therapeutic waters. Explore entrance fees, room rates, and exclusive packages tailored for a memorable getaway.</p>
+    </div>
+  </section>
+
+  <!-- Tabs -->
+  <section class="section bg-white">
+    <div class="container">
+      <div class="tab-buttons">
+        <div class="tab-btn active" data-tab="entrance">Entrance Fees</div>
+        <div class="tab-btn" data-tab="rooms">Rooms</div>
+        <div class="tab-btn" data-tab="cottages">Cottages</div>
+        <div class="tab-btn" data-tab="function">Function Hall</div>
+        <div class="tab-btn" data-tab="packages">Packages</div>
+      </div>
+
+      <!-- Entrance Fees -->
+      <div class="tab-content active" id="entrance">
+        <div class="rate-card">
+          <div class="img-placeholder"><i class="fas fa-ticket-alt"></i><p>Entrance</p></div>
+          <div class="card-content">
+            <h4>Day Pass & Entrance</h4>
+            <table class="rate-table">
+              <tr><th>Category</th><th>Rate</th></tr>
+              <tr><td>Adult / Teen / Child</td><td>₱200 per head</td></tr>
+              <tr><td>Senior / PWD</td><td>₱160 per head</td></tr>
+              <tr><td>Infant (≤11 mos)</td><td>FREE</td></tr>
+            </table>
+            <p class="text-xs text-text-muted">Proper swimwear required. One exit only.</p>
+            <a href="reservation.html" class="book-btn">Book Day Pass</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rooms -->
+      <div class="tab-content" id="rooms">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Deluxe Room -->
+          <div class="rate-card">
+            <div class="img-placeholder"><i class="fas fa-bed"></i><p>Deluxe Room</p></div>
+            <div class="card-content">
+              <h4>Deluxe Room</h4>
+              <p class="price">₱2,500 / night</p>
+              <p class="capacity">Good for 3 pax</p>
+              <ul class="features space-y-1 text-sm">
+                <li>• Type 1: 1 Queen + 1 Pull-Out</li>
+                <li>• Type 2: 1 Twin + 1 Single</li>
+              </ul>
+              <a href="reservation.html" class="book-btn">Book Now</a>
+            </div>
+          </div>
+
+          <!-- Family Room -->
+          <div class="rate-card">
+            <div class="img-placeholder"><i class="fas fa-home"></i><p>Family Room</p></div>
+            <div class="card-content">
+              <h4>Family Room</h4>
+              <p class="price">₱4,000 / night</p>
+              <p class="capacity">Good for 4 pax</p>
+              <ul class="features space-y-1 text-sm">
+                <li>• 1 Queen + 1 Single + 1 Pull-Out</li>
+              </ul>
+              <a href="reservation.html" class="book-btn">Book Now</a>
+            </div>
+          </div>
+
+          <!-- Studio Room -->
+          <div class="rate-card">
+            <div class="img-placeholder"><i class="fas fa-door-open"></i><p>Studio Room</p></div>
+            <div class="card-content">
+              <h4>Studio Room</h4>
+              <p class="price">₱1,000 / head</p>
+              <p class="capacity">Min 4, Max 6 pax</p>
+              <ul class="features space-y-1 text-sm">
+                <li>• 1 Queen, 1 Double Decker, 1 Single + Pull-Out</li>
+              </ul>
+              <a href="reservation.html" class="book-btn">Book Now</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cottages -->
+      <div class="tab-content" id="cottages">
+        <div class="rate-card">
+          <div class="img-placeholder"><i class="fas fa-umbrella-beach"></i><p>Cottages</p></div>
+          <div class="card-content">
+            <h4>Cottages (6 hrs)</h4>
+            <table class="rate-table">
+              <tr><th>Type</th><th>Rate</th></tr>
+              <tr><td>Front / Fountain / Top View</td><td>₱500</td></tr>
+              <tr><td>Poolside</td><td>₱1,000</td></tr>
+              <tr><td>Videoke AC</td><td>₱1,500</td></tr>
+            </table>
+            <p class="text-xs text-text-muted">Max 15 pax. No alcohol. Swimwear required.</p>
+            <a href="reservation.html" class="book-btn">Reserve Cottage</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Function Hall -->
+      <div class="tab-content" id="function">
+        <div class="rate-card">
+          <div class="img-placeholder"><i class="fas fa-building"></i><p>Function Hall</p></div>
+          <div class="card-content">
+            <h4>Function Hall</h4>
+            <p class="price">₱25,000 / 6 hrs</p>
+            <p class="capacity">Up to 70 pax</p>
+            <ul class="features space-y-1 text-sm">
+              <li>• Air-conditioned + basic setup</li>
+              <li>• Sound system + 2 mics</li>
+              <li>• Pool access included</li>
+              <li>• Extra hr: ₱1,000 | Extra pax: ₱200</li>
+            </ul>
+            <a href="reservation.html" class="book-btn">Inquire Now</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Packages -->
+      <div class="tab-content" id="packages">
+        <div class="rate-card">
+          <div class="img-placeholder"><i class="fas fa-gift"></i><p>Packages</p></div>
+          <div class="card-content">
+            <h4>Special Packages</h4>
+            <table class="rate-table">
+              <tr><th>Package</th><th>Rate</th></tr>
+              <tr><td>Day Tour</td><td>₱350 / person</td></tr>
+              <tr><td>Overnight</td><td>₱2,000 / room</td></tr>
+            </table>
+            <a href="contact.html" class="book-btn">Inquire</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Info -->
+  <section class="section bg-neutral-gray">
+    <div class="container text-center">
+      <h2 class="text-3xl font-bold text-text-dark mb-6">Contact & Reservations</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <p class="font-semibold mb-3"><i class="fas fa-phone text-primary-blue mr-2"></i> Call Us</p>
+          <p class="text-sm">(043) 288-7153</p>
+          <p class="text-sm">0928-890-6708 | 0918-322-7201</p>
+          <p class="text-sm">0921-507-4378</p>
+          <p class="text-sm mt-2"><i class="fab fa-viber text-purple-600 mr-2"></i> Viber: 0961-217-3287</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <p class="font-semibold mb-3"><i class="fas fa-envelope text-primary-blue mr-2"></i> Email & Social</p>
+          <p class="text-sm">eduardosresortreservation@gmail.com</p>
+          <p class="text-sm mt-2"><i class="fas fa-globe text-primary-blue mr-2"></i> www.eduardosresort.com</p>
+          <p class="text-sm"><i class="fab fa-facebook text-blue-600 mr-2"></i> Eduardo’s Resort</p>
+        </div>
+      </div>
+      <p class="mt-6 text-sm text-text-muted">Location: Nautical Highway, Bayanan II, Calapan City, Oriental Mindoro 5200</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-10 after:h-0.5 after:bg-warm-brown">About Eduardo's Resort</h3>
+          <p class="text-gray-300 text-sm">A family-first sanctuary blending refined design, nature, and Filipino warmth since 1998.</p>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold mb-4 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-10 after:h-0.5 after:bg-warm-brown">Contact</h3>
+          <ul class="space-y-2 text-gray-300 text-sm">
+            <li><strong>Landline:</strong> (043) 288-7153</li>
+            <li><strong>Mobile:</strong> 0921 507 4378 / 0977 845 8144</li>
+            <li><strong>Address:</strong> Nautical Highway Bayanan II, Calapan City, Oriental Mindoro</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold mb-4 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-10 after:h-0.5 after:bg-warm-brown">Connect</h3>
+          <div class="flex space-x-4">
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary-blue transition"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary-blue transition"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary-blue transition"><i class="fab fa-twitter"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="pt-8 border-t border-gray-700 text-center text-gray-400 text-sm">
+        <p>© 2025 Eduardo's Resort · All Rights Reserved</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Chatbot -->
+  <div id="chatbotToggle" class="chatbot-toggle"><i class="fas fa-robot text-2xl"></i></div>
+  <div id="chatbotPanel" class="chatbot-panel">
+    <div class="chat-header">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center"><i class="fas fa-robot text-sm"></i></div>
+        <span>Eduardo's Assistant</span>
+      </div>
+      <button id="closeChatbot" class="text-white hover:text-gray-200"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="chatMessages" class="chat-messages">
+      <div class="message bot"><div class="bubble bot">Hi! Ask about rates, rooms, or reservations!</div></div>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="userInput" placeholder="Type your message..."/>
+      <button id="sendBtn" class="send-btn"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <script>
+    // Sidebar
+    const openBtn = document.getElementById('openSidebar');
+    const closeBtn = document.getElementById('closeSidebar');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+
+    openBtn?.addEventListener('click', () => { sidebar.classList.add('open'); overlay.classList.add('open'); });
+    closeBtn.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
+    overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
+
+    // Tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Chatbot
+    const toggleBtn = document.getElementById('chatbotToggle');
+    const panel = document.getElementById('chatbotPanel');
+    const closeChat = document.getElementById('closeChatbot');
+    const sendBtn = document.getElementById('sendBtn');
+    const userInput = document.getElementById('userInput');
+    const messages = document.getElementById('chatMessages');
+
+    toggleBtn.addEventListener('click', () => panel.classList.toggle('open'));
+    closeChat.addEventListener('click', () => panel.classList.remove('open'));
+
+    function addMessage(txt, sender) {
+      const div = document.createElement('div');
+      div.className = `message ${sender}`;
+      div.innerHTML = `<div class="bubble ${sender}">${txt}</div>`;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function sendMessage() {
+      const txt = userInput.value.trim();
+      if (!txt) return;
+      addMessage(txt, 'user'); userInput.value = '';
+      setTimeout(() => {
+        const replies = [
+          "Deluxe Room: ₱2,500/night for 3 pax.",
+          "Entrance: ₱200/adult, ₱160/PWD, Free for infants.",
+          "Function Hall: ₱25,000 for 6 hours.",
+          "Book via reservation page or call us!"
+        ];
+        addMessage(replies[Math.floor(Math.random() * replies.length)], 'bot');
+      }, 800);
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', e => e.key === 'Enter' && sendMessage());
+
+    // Header Scroll
+    let lastScrollY = window.scrollY;
+    const header = document.getElementById('siteHeader');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > lastScrollY && window.scrollY > 100) {
+        header.classList.remove('nav-visible'); header.classList.add('nav-hidden');
+      } else {
+        header.classList.remove('nav-hidden'); header.classList.add('nav-visible');
+      }
+      lastScrollY = window.scrollY;
+    });
+  </script>
+</body>
+</html>

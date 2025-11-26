@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About Us | Eduardo's Resort</title>
+  <meta name="description" content="Discover the story, values, and dedicated team behind Eduardo's Resort — where family, nature, and hospitality come together.">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet"/>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary-blue': '#2B6CB0',
+            'accent-blue': '#63B3ED',
+            'warm-brown': '#C19A6B',
+            'deep-brown': '#8B5E3C',
+            'neutral-gray': '#F5F5F5',
+            'text-dark': '#2D3748',
+            'text-muted': '#718096',
+          },
+          fontFamily: {
+            'inter': ['Inter', 'sans-serif'],
+            'dancing': ['Dancing Script', 'cursive'],
+          },
+          animation: {
+            'fade-in': 'fadeIn 1s ease-out',
+            'slide-up': 'slideUp 0.8s ease-out',
+            'float': 'float 3s ease-in-out infinite',
+            'pulse': 'pulse 2s infinite'
+          },
+          keyframes: {
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+            slideUp: { '0%': { transform: 'translateY(30px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
+            float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+            pulse: { '0%': { boxShadow: '0 0 0 0 rgba(59,130,246,.5)' }, '70%': { boxShadow: '0 0 0 12px rgba(59,130,246,0)' }, '100%': { boxShadow: '0 0 0 0 rgba(59,130,246,0)' } }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --primary-blue: #2B6CB0; --accent-blue: #63B3ED; --warm-brown: #C19A6B; --deep-brown: #8B5E3C;
+      --white: #FFFFFF; --neutral-gray: #F5F5F5; --text-dark: #2D3748; --text-muted: #718096;
+      --shadow: 0 4px 12px rgba(2, 8, 20, 0.08); --shadow-lg: 0 10px 30px rgba(2, 8, 20, 0.12);
+      --radius: 16px; --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to bottom, #E0F7FA, var(--white));
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    header {
+      position: sticky; top: 0; z-index: 50; background: white/95; backdrop-filter: blur(12px);
+      box-shadow: var(--shadow); transition: transform .3s ease;
+    }
+    .nav-hidden { transform: translateY(-100%); }
+    .nav-visible { transform: translateY(0); }
+
+    /* Hero */
+    .about-hero {
+      background: linear-gradient(135deg, rgba(43,108,176,.85), rgba(193,154,107,.65)), url('https://images.unsplash.com/photo-1517248135467-3fb27b735e36?auto=format&fit=crop&w=1600&q=80') center/cover;
+      height: 400px; display: flex; align-items: center; justify-content: center; text-align: center; color: white;
+    }
+    .hero-content h1 {
+      font-family: 'Dancing Script', cursive; font-size: 3.5rem; margin-bottom: 1rem; text-shadow: 0 3px 8px rgba(0,0,0,.4);
+    }
+    .hero-content p { font-size: 1.2rem; max-width: 700px; margin: 0 auto; opacity: 0.95; }
+    @media (max-width: 640px) {
+      .about-hero { height: 320px; }
+      .hero-content h1 { font-size: 2.5rem; }
+      .hero-content p { font-size: 1.1rem; }
+    }
+
+    /* Section Padding */
+    .section { padding: 4rem 1rem; }
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    /* Image Placeholder */
+    .img-placeholder {
+      background: #e5e7eb;
+      border-radius: var(--radius);
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #6b7280;
+      font-size: 1rem;
+      box-shadow: var(--shadow);
+      min-height: 300px;
+    }
+    .img-placeholder i { font-size: 2.5rem; margin-bottom: 0.5rem; opacity: 0.5; }
+
+    /* Core Values - Shrink & Fit in 1 Row on Mobile */
+    .values-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 768px) {
+      .values-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+      }
+      .value-card {
+        padding: 1rem;
+        min-height: auto;
+      }
+      .value-card .w-16 { width: 3rem; height: 3rem; }
+      .value-card .text-xl { font-size: 1.1rem; }
+      .value-card p { font-size: 0.875rem; }
+    }
+
+    .value-card {
+      background: white; border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow);
+      transition: var(--transition); text-align: center;
+    }
+    .value-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
+
+    /* Sidebar */
+    .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,.5); z-index: 60; opacity: 0; visibility: hidden; transition: all .3s ease; }
+    .sidebar-overlay.open { opacity: 1; visibility: visible; }
+    .sidebar { position: fixed; top: 0; right: -320px; width: 300px; height: 100%; background: white; box-shadow: -8px 0 25px rgba(0,0,0,.15); z-index: 70; transition: right .4s cubic-bezier(.4,0,.2,1); padding: 1.5rem; display: flex; flex-direction: column; }
+    .sidebar.open { right: 0; }
+    .sidebar-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid #e5e7eb; margin-bottom: 1.5rem; }
+    .sidebar-nav a { display: block; padding: .75rem 0; font-weight: 500; color: #374151; text-align: center; }
+    .sidebar-nav a:hover, .sidebar-nav a.active { color: var(--primary-blue); }
+    .sidebar-actions { margin-top: auto; display: flex; flex-direction: column; gap: .75rem; }
+
+    /* Chatbot */
+    .chatbot-toggle { position: fixed; bottom: 24px; right: 24px; z-index: 50; width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(30,64,175,.3); cursor: pointer; transition: transform .3s ease; animation: pulse 2s infinite; }
+    .chatbot-toggle:hover { transform: scale(1.1); }
+    .chatbot-panel { position: fixed; bottom: 100px; right: 24px; width: 360px; height: 520px; background: white; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,.15); overflow: hidden; transform: translateY(20px) scale(.95); opacity: 0; visibility: hidden; transition: all .4s cubic-bezier(.4,0,.2,1); z-index: 49; display: flex; flex-direction: column; }
+    .chatbot-panel.open { transform: translateY(0) scale(1); opacity: 1; visibility: visible; }
+    .chat-header { background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue)); color: white; padding: 16px 20px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+    .chat-messages { flex: 1; padding: 16px; overflow-y: auto; background: #f8fafc; }
+    .message { margin-bottom: 12px; display: flex; animation: fadeIn .3s ease; }
+    .message.bot { justify-content: flex-start; }
+    .message.user { justify-content: flex-end; }
+    .bubble { max-width: 75%; padding: 10px 14px; border-radius: 18px; font-size: 14px; line-height: 1.5; }
+    .bubble.bot { background: white; border-bottom-left-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+    .bubble.user { background: var(--accent-blue); color: white; border-bottom-right-radius: 4px; }
+    .chat-input { padding: 16px; background: white; border-top: 1px solid #e5e7eb; display: flex; gap: 10px; }
+    .chat-input input { flex: 1; padding: 12px 16px; border: 1px solid #d1d5db; border-radius: 999px; outline: none; font-size: 14px; }
+    .chat-input input:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(59,130,246,.1); }
+    .send-btn { width: 40px; height: 40px; background: var(--accent-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .send-btn:hover { background: #2563eb; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media(max-width:480px) {
+      .chatbot-panel { width: calc(100vw - 32px); right: 16px; height: 480px; bottom: 80px; }
+      .chatbot-toggle { width: 52px; height: 52px; bottom: 16px; right: 16px; }
+      .sidebar { width: 280px; }
+    }
+  </style>
+</head>
+<body class="font-inter">
+
+  <!-- Sidebar Overlay -->
+  <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+  <!-- Right Sidebar (Mobile) -->
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <a href="/" class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-blue to-accent-blue flex items-center justify-center text-white font-bold text-lg">Ed</div>
+        <div class="text-xl font-bold text-primary-blue">Eduardo's</div>
+      </a>
+      <button id="closeSidebar" class="text-gray-600 hover:text-gray-900"><i class="fas fa-times text-xl"></i></button>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/">Home</a>
+      <a href="/amenities">Amenities</a>
+      <a href="/rates">Rates</a>
+      <a href="/gallery">Gallery</a>
+      <a href="/contact">Contact</a>
+      <a href="/about" class="active">About</a>
+    </nav>
+    <div class="sidebar-actions">
+      <a href="/login" class="block text-center px-4 py-2 border border-primary-blue text-primary-blue rounded-lg hover:bg-blue-50 transition-colors font-medium">Login</a>
+      <a href="/signup" class="block text-center px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">Sign Up</a>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="nav-visible" id="siteHeader">
+    <div class="container mx-auto px-4 py-3">
+      <div class="flex items-center justify-between">
+        <a href="/" class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-blue to-accent-blue flex items-center justify-center text-white font-bold text-lg">Ed</div>
+          <div class="text-xl font-bold text-primary-blue">Eduardo's</div>
+        </a>
+        <nav class="hidden md:flex space-x-8">
+          <a href="/" class="font-medium hover:text-primary-blue transition relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Home</a>
+          <a href="/amenities" class="font-medium hover:text-primary-blue transition relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Amenities</a>
+          <a href="/rates" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Rates</a>
+          <a href="/gallery" class="font-medium hover:text-primary-blue transition relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Gallery</a>
+          <a href="/contact" class="font-medium hover:text-primary-blue transition relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Contact</a>
+          <a href="/about" class="font-medium text-primary-blue relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-full after:h-0.5 after:bg-primary-blue">About</a>
+        </nav>
+        <div class="hidden md:flex items-center space-x-4">
+          <a href="/login" class="px-4 py-2 border border-primary-blue text-primary-blue rounded-lg hover:bg-blue-50 transition font-medium">Login</a>
+          <a href="/signup" class="px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-blue-700 transition font-medium">Signup</a>
+          <a href="/reservation" class="px-5 py-2 bg-warm-brown text-white rounded-full hover:bg-deep-brown transition font-semibold shadow-md">Book Now</a>
+        </div>
+        <div class="flex md:hidden items-center gap-3">
+          <a href="/reservation" class="px-4 py-1.5 bg-warm-brown text-white rounded-full hover:bg-deep-brown transition font-semibold shadow-md text-xs">Book Now</a>
+          <button id="openSidebar" class="text-2xl text-primary-blue"><i class="fas fa-bars"></i></button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="about-hero">
+    <div class="hero-content">
+      <h1 class="animate-fade-in">Our Story</h1>
+      <p class="animate-slide-up">A legacy of warmth, nature, and Filipino hospitality since 1998.</p>
+    </div>
+  </section>
+
+  <!-- History -->
+  <section class="section bg-white">
+    <div class="container grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div class="img-placeholder">
+        <i class="fas fa-image"></i>
+        <p>Add Founder Image</p>
+      </div>
+      <div class="space-y-6">
+        <h2 class="text-3xl font-bold text-text-dark">Founded with a Vision</h2>
+        <p class="text-text-muted leading-relaxed">
+          In 1998, <strong>Eduardo Mendoza</strong> transformed a quiet beachfront into a sanctuary for families seeking authentic Filipino warmth.
+        </p>
+        <p class="text-text-muted">
+          Today, we continue his legacy — blending modern comfort with the timeless beauty of Oriental Mindoro.
+        </p>
+        <div class="flex items-center gap-3 text-warm-brown font-semibold">
+          <i class="fas fa-heart"></i>
+          <span>25+ Years of Unforgettable Memories</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Values - Shrink & Fit in 1 Row on Mobile -->
+  <section class="section bg-neutral-gray">
+    <div class="container">
+      <h2 class="text-3xl font-bold text-center text-text-dark mb-8">Our Core Values</h2>
+      <div class="values-grid">
+        <div class="value-card">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary-blue to-accent-blue flex items-center justify-center text-white">
+            <i class="fas fa-leaf text-xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Sustainability</h3>
+          <p class="text-text-muted text-sm">Eco-friendly practices in every corner.</p>
+        </div>
+        <div class="value-card">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-warm-brown to-amber-600 flex items-center justify-center text-white">
+            <i class="fas fa-hands-helping text-xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Hospitality</h3>
+          <p class="text-text-muted text-sm">Warm, genuine service that feels like home.</p>
+        </div>
+        <div class="value-card">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary-blue to-accent-blue flex items-center justify-center text-white">
+            <i class="fas fa-gem text-xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Excellence</h3>
+          <p class="text-text-muted text-sm">Uncompromising quality in every detail.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Org Chart Placeholder -->
+  <section class="section bg-white">
+    <div class="container">
+      <h2 class="text-3xl font-bold text-center text-text-dark mb-8">Our Leadership</h2>
+      <div class="img-placeholder h-64">
+        <i class="fas fa-sitemap"></i>
+        <p>Add Organizational Chart</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-16 bg-gradient-to-r from-primary-blue to-accent-blue text-white">
+    <div class="container text-center">
+      <h2 class="text-3xl font-bold mb-6">Be Part of Our Story</h2>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="reservation.html" class="bg-white text-primary-blue px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">Book Your Stay</a>
+        <a href="Gallery.html" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-blue transition">View Gallery</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-10 after:h-0.5 after:bg-warm-brown">About Eduardo's Resort</h3>
+          <p class="text-gray-300 text-sm">
+            A family-first sanctuary blending refined design, nature, and Filipino warmth since 1998.
+          </p>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold mb-4 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-10 after:h-0.5 after:bg-warm-brown">Contact</h3>
+          <ul class="space-y-2 text-gray-300 text-sm">
+            <li><strong>Landline:</strong> (043) 288-7153</li>
+            <li><strong>Mobile:</strong> 0921 507 4378 / 0977 845 8144</li>
+            <li><strong>Address:</strong> Nautical Highway Bayanan II, Calapan City, Oriental Mindoro</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold mb-4 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-10 after:h-0.5 after:bg-warm-brown">Connect</h3>
+          <div class="flex space-x-4">
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary-blue transition"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary-blue transition"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary-blue transition"><i class="fab fa-twitter"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="pt-8 border-t border-gray-700 text-center text-gray-400 text-sm">
+        <p>© 2025 Eduardo's Resort · All Rights Reserved</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Chatbot -->
+  <div id="chatbotToggle" class="chatbot-toggle"><i class="fas fa-robot text-2xl"></i></div>
+  <div id="chatbotPanel" class="chatbot-panel">
+    <div class="chat-header">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center"><i class="fas fa-robot text-sm"></i></div>
+        <span>Eduardo's Assistant</span>
+      </div>
+      <button id="closeChatbot" class="text-white hover:text-gray-200"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="chatMessages" class="chat-messages">
+      <div class="message bot"><div class="bubble bot">Hi! Ask me about our history, team, or booking!</div></div>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="userInput" placeholder="Type your message..."/>
+      <button id="sendBtn" class="send-btn"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <script>
+    // Sidebar
+    const openBtn = document.getElementById('openSidebar');
+    const closeBtn = document.getElementById('closeSidebar');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+
+    openBtn?.addEventListener('click', () => { sidebar.classList.add('open'); overlay.classList.add('open'); });
+    closeBtn.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
+    overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
+
+    // Chatbot
+    const toggleBtn = document.getElementById('chatbotToggle');
+    const panel = document.getElementById('chatbotPanel');
+    const closeChat = document.getElementById('closeChatbot');
+    const sendBtn = document.getElementById('sendBtn');
+    const userInput = document.getElementById('userInput');
+    const messages = document.getElementById('chatMessages');
+
+    toggleBtn.addEventListener('click', () => panel.classList.toggle('open'));
+    closeChat.addEventListener('click', () => panel.classList.remove('open'));
+
+    function addMessage(txt, sender) {
+      const div = document.createElement('div');
+      div.className = `message ${sender}`;
+      div.innerHTML = `<div class="bubble ${sender}">${txt}</div>`;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function sendMessage() {
+      const txt = userInput.value.trim();
+      if (!txt) return;
+      addMessage(txt, 'user'); userInput.value = '';
+      setTimeout(() => {
+        const replies = [
+          "Founded in 1998 by Eduardo Mendoza!",
+          "We have 3 core values: Sustainability, Hospitality, Excellence.",
+          "Marco Reyes is our General Manager.",
+          "Yes! We offer family suites and pet-friendly rooms."
+        ];
+        addMessage(replies[Math.floor(Math.random() * replies.length)], 'bot');
+      }, 800);
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', e => e.key === 'Enter' && sendMessage());
+
+    // Header Scroll
+    let lastScrollY = window.scrollY;
+    const header = document.getElementById('siteHeader');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > lastScrollY && window.scrollY > 100) {
+        header.classList.remove('nav-visible'); header.classList.add('nav-hidden');
+      } else {
+        header.classList.remove('nav-hidden'); header.classList.add('nav-visible');
+      }
+      lastScrollY = window.scrollY;
+    });
+  </script>
+</body>
+</html>

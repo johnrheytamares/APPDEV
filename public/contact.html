@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us | Eduardo's Resort</title>
+  <meta name="description" content="Get in touch with Eduardo's Resort for bookings, inquiries, or any questions. We're here to help!">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary-blue': '#2B6CB0',
+            'accent-blue': '#63B3ED',
+            'warm-brown': '#C19A6B',
+            'deep-brown': '#8B5E3C',
+            'neutral-gray': '#F5F5F5',
+            'text-dark': '#2D3748',
+            'text-muted': '#718096',
+          },
+          fontFamily: {
+            'inter': ['Inter', 'sans-serif'],
+            'dancing': ['Dancing Script', 'cursive'],
+          },
+          animation: {
+            'fade-in': 'fadeIn 1s ease-out',
+            'slide-up': 'slideUp 0.8s ease-out',
+            'float': 'float 3s ease-in-out infinite',
+            'pulse': 'pulse 2s infinite'
+          },
+          keyframes: {
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+            slideUp: { '0%': { transform: 'translateY(30px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
+            float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+            pulse: { '0%': { boxShadow: '0 0 0 0 rgba(59,130,246,.5)' }, '70%': { boxShadow: '0 0 0 12px rgba(59,130,246,0)' }, '100%': { boxShadow: '0 0 0 0 rgba(59,130,246,0)' } }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    :root {
+      --primary-blue: #2B6CB0; --accent-blue: #63B3ED; --warm-brown: #C19A6B; --deep-brown: #8B5E3C;
+      --white: #FFFFFF; --neutral-gray: #F5F5F5; --text-dark: #2D3748; --text-muted: #718096;
+      --shadow: 0 4px 12px rgba(2, 8, 20, 0.08); --shadow-lg: 0 10px 30px rgba(2, 8, 20, 0.12);
+      --radius: 16px; --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; background: linear-gradient(to bottom, #E0F7FA, var(--white)); overflow-x: hidden; }
+
+    /* Header */
+    header { position: sticky; top: 0; z-index: 50; background: white/95; backdrop-filter: blur(12px); box-shadow: var(--shadow); transition: transform .3s ease; }
+    .nav-hidden { transform: translateY(-100%); }
+    .nav-visible { transform: translateY(0); }
+
+    /* Hero */
+    .contact-hero {
+      background: linear-gradient(135deg, rgba(43,108,176,.75), rgba(193,154,107,.45)), url('https://images.unsplash.com/photo-1517248135467-3fb27b735e36?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+      height: 320px; display: flex; align-items: center; justify-content: center; text-align: center; color: white;
+    }
+    .hero-content h1 {
+      font-size: 2.75rem;
+      font-family: 'Dancing Script', cursive;
+      margin-bottom: 0.75rem;
+      text-shadow: 0 3px 8px rgba(0,0,0,.4);
+    }
+    .hero-content p {
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+      opacity: 0.9;
+    }
+    .contact-tags { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+    .contact-tag {
+      display: flex; align-items: center; gap: .5rem;
+      background: rgba(255,255,255,.2); backdrop-filter: blur(8px);
+      padding: .5rem 1rem; border-radius: 9999px; font-size: .9375rem; font-weight: 500;
+    }
+    @media (max-width: 640px) {
+      .hero-content h1 { font-size: 2.25rem; }
+      .hero-content p { font-size: 1rem; }
+    }
+
+    /* Contact Section */
+    .contact-section { padding: 4rem 1rem; }
+    .contact-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    @media (min-width: 1024px) {
+      .contact-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .form-card {
+      background: white; border-radius: var(--radius); padding: 2rem; box-shadow: var(--shadow-lg);
+    }
+    .form-card h2 { font-size: 1.875rem; font-weight: 700; color: var(--text-dark); margin-bottom: .5rem; }
+    .form-card p { color: var(--text-muted); margin-bottom: 2rem; }
+
+    .form-group { margin-bottom: 1.5rem; }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    @media (min-width: 640px) {
+      .form-row { grid-template-columns: 1fr 1fr; }
+    }
+
+    input, select, textarea {
+      width: 100%; padding: 0.875rem 1rem; border: 1px solid #d1d5db; border-radius: 12px;
+      font-size: 1rem; outline: none; transition: var(--transition);
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(99,179,237,.2);
+    }
+    textarea { resize: vertical; min-height: 140px; }
+
+    .btn-send {
+      background: var(--warm-brown); color: white; padding: 1rem 2rem; border: none;
+      border-radius: 12px; font-weight: 600; cursor: pointer; width: 100%;
+      display: flex; align-items: center; justify-content: center; gap: .5rem;
+      transition: var(--transition); box-shadow: var(--shadow);
+    }
+    .btn-send:hover {
+      background: var(--deep-brown); transform: translateY(-2px);
+    }
+
+    /* Info Cards - Always 2 columns */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .info-card {
+      background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+      color: white;
+      border-radius: var(--radius);
+      padding: 1rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      min-height: 120px;
+    }
+    .info-card .icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.75rem;
+      font-size: 1.1rem;
+    }
+    .info-card h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .info-card p {
+      opacity: 0.9;
+      font-size: 0.8rem;
+      line-height: 1.4;
+    }
+    @media (max-width: 480px) {
+      .info-grid { gap: 0.75rem; }
+      .info-card {
+        padding: 0.875rem;
+      }
+      .info-card .icon {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+      }
+      .info-card h3 { font-size: 0.95rem; }
+      .info-card p { font-size: 0.75rem; }
+    }
+
+    .map-placeholder {
+      height: 220px;
+      background: #e5e7eb;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6b7280;
+      font-size: 1rem;
+      box-shadow: var(--shadow);
+    }
+
+    .contact-methods {
+      background: var(--neutral-gray);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+    }
+    .contact-methods h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 0.75rem;
+    }
+    .method-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .method-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(43,108,176,.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-blue);
+      font-size: 0.9rem;
+    }
+
+    /* Sidebar (Mobile) */
+    .sidebar-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,.5); z-index: 60; opacity: 0; visibility: hidden;
+      transition: all .3s ease;
+    }
+    .sidebar-overlay.open { opacity: 1; visibility: visible; }
+    .sidebar {
+      position: fixed; top: 0; right: -320px; width: 300px; height: 100%;
+      background: white; box-shadow: -8px 0 25px rgba(0,0,0,.15); z-index: 70;
+      transition: right .4s cubic-bezier(.4,0,.2,1); padding: 1.5rem;
+      display: flex; flex-direction: column;
+    }
+    .sidebar.open { right: 0; }
+    .sidebar-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-bottom: 1rem; border-bottom: 1px solid #e5e7eb; margin-bottom: 1.5rem;
+    }
+    .sidebar-nav a { display: block; padding: .75rem 0; font-weight: 500; color: #374151; text-align: center; }
+    .sidebar-nav a:hover, .sidebar-nav a.active { color: var(--primary-blue); }
+    .sidebar-actions { margin-top: auto; display: flex; flex-direction: column; gap: .75rem; }
+
+    /* Chatbot Modal */
+    .chatbot-toggle {
+      position: fixed; bottom: 24px; right: 24px; z-index: 50;
+      width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+      color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 20px rgba(30,64,175,.3); cursor: pointer; transition: transform .3s ease;
+      animation: pulse 2s infinite;
+    }
+    .chatbot-toggle:hover { transform: scale(1.1); }
+    .chatbot-modal {
+      position: fixed; bottom: 100px; right: 24px; width: 360px; height: 520px;
+      background: white; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,.15);
+      overflow: hidden; transform: translateY(20px) scale(.95); opacity: 0; visibility: hidden;
+      transition: all .4s cubic-bezier(.4,0,.2,1); z-index: 49; display: flex; flex-direction: column;
+    }
+    .chatbot-modal.open { transform: translateY(0) scale(1); opacity: 1; visibility: visible; }
+    .chat-header {
+      background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+      color: white; padding: 16px 20px; font-weight: 600;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .chat-messages { flex: 1; padding: 16px; overflow-y: auto; background: #f8fafc; }
+    .message { margin-bottom: 12px; display: flex; animation: fadeIn .3s ease; }
+    .message.bot { justify-content: flex-start; }
+    .message.user { justify-content: flex-end; }
+    .bubble { max-width: 75%; padding: 10px 14px; border-radius: 18px; font-size: 14px; line-height: 1.5; }
+    .bubble.bot { background: white; border-bottom-left-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+    .bubble.user { background: var(--accent-blue); color: white; border-bottom-right-radius: 4px; }
+    .chat-input {
+      padding: 16px; background: white; border-top: 1px solid #e5e7eb;
+      display: flex; gap: 10px;
+    }
+    .chat-input input {
+      flex: 1; padding: 12px 16px; border: 1px solid #d1d5db; border-radius: 999px;
+      outline: none; font-size: 14px;
+    }
+    .chat-input input:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(59,130,246,.1); }
+    .send-btn {
+      width: 40px; height: 40px; background: var(--accent-blue); color: white;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+    .send-btn:hover { background: #2563eb; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media(max-width:480px) {
+      .chatbot-modal {
+        width: calc(100vw - 32px);
+        right: 16px;
+        height: 480px;
+        bottom: 80px;
+      }
+      .chatbot-toggle {
+        width: 52px;
+        height: 52px;
+        bottom: 16px;
+        right: 16px;
+      }
+      .sidebar { width: 280px; }
+      .form-card, .contact-methods { padding: 1.25rem; }
+    }
+  </style>
+</head>
+<body class="font-inter text-gray-800">
+
+  <!-- Sidebar Overlay -->
+  <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+  <!-- Right Sidebar (Mobile) -->
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <a href="home4.html" class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-blue to-accent-blue flex items-center justify-center text-white font-bold text-lg">
+          Ed
+        </div>
+        <div class="text-xl font-bold text-primary-blue">Eduardo's</div>
+      </a>
+      <button id="closeSidebar" class="text-gray-600 hover:text-gray-900"><i class="fas fa-times text-xl"></i></button>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/">Home</a>
+      <a href="/amenities">Amenities</a>
+      <a href="/rates">Rates</a>
+      <a href="/gallery">Gallery</a>
+      <a href="/contact" class="active">Contact</a>
+      <a href="/about">About</a>
+    </nav>
+    <div class="sidebar-actions">
+      <a href="/login" class="block text-center px-4 py-2 border border-primary-blue text-primary-blue rounded-lg hover:bg-blue-50 transition-colors font-medium">Login</a>
+      <a href="/signup" class="block text-center px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">Sign Up</a>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="nav-visible" id="siteHeader">
+    <div class="container mx-auto px-4 py-3">
+      <div class="flex items-center justify-between">
+        <a href="/" class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-blue to-accent-blue flex items-center justify-center text-white font-bold text-lg">
+            Ed
+          </div>
+          <div class="text-xl font-bold text-primary-blue">Eduardo's</div>
+        </a>
+        
+        <nav class="hidden md:flex space-x-8">
+          <a href="/" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Home</a>
+          <a href="/amenities" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Amenities</a>
+          <a href="/rates" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Rates</a>
+          <a href="/gallery" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Gallery</a>
+          <a href="/contact" class="font-medium text-primary-blue relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-full after:h-0.5 after:bg-primary-blue">Contact</a>
+          <a href="/about" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">About</a>
+        </nav>
+        
+        <div class="hidden md:flex items-center space-x-4">
+          <a href="/login" class="px-4 py-2 border border-primary-blue text-primary-blue rounded-lg hover:bg-blue-50 transition-colors duration-300 font-medium">Login</a>
+          <a href="/signup" class="px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 font-medium">Signup</a>
+          <a href="/reservation" class="px-5 py-2 bg-warm-brown text-white rounded-full hover:bg-deep-brown transition-all duration-300 font-semibold shadow-md">Book Now</a>
+        </div>
+
+        <div class="flex md:hidden items-center gap-3">
+          <a href="/reservation" class="px-4 py-1.5 bg-warm-brown text-white rounded-full hover:bg-deep-brown transition-all duration-300 font-semibold shadow-md text-xs">Book Now</a>
+          <button id="openSidebar" class="text-2xl text-primary-blue"><i class="fas fa-bars"></i></button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="contact-hero">
+    <div class="hero-content">
+      <h1 class="animate-fade-in">Get In Touch</h1>
+      <p class="animate-slide-up">We're here to assist with bookings, inquiries, or any questions about your stay.</p>
+      <div class="contact-tags">
+        <div class="contact-tag"><i class="fas fa-phone-alt"></i><span>(043) 288-7153</span></div>
+        <div class="contact-tag"><i class="fas fa-envelope"></i><span>info@eduardoresort.com</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="contact-section">
+    <div class="contact-grid">
+      <!-- Contact Form -->
+      <div class="form-card">
+        <h2>Send Us a Message</h2>
+        <p>We'll respond within 24 hours.</p>
+        <form id="contactForm">
+          <div class="form-row">
+            <div class="form-group">
+              <input type="text" id="name" placeholder="Full Name" required>
+            </div>
+            <div class="form-group">
+              <input type="email" id="email" placeholder="Email Address" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <input type="tel" id="phone" placeholder="Phone Number">
+            </div>
+            <div class="form-group">
+              <select id="subject" required>
+                <option value="">Select Subject</option>
+                <option>Booking Inquiry</option>
+                <option>Reservation</option>
+                <option>General Question</option>
+                <option>Feedback</option>
+                <option>Complaint</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <textarea id="message" placeholder="Your Message..." required></textarea>
+          </div>
+          <button type="submit" class="btn-send">
+            <span>Send Message</span> <i class="fas fa-paper-plane"></i>
+          </button>
+        </form>
+      </div>
+
+      <!-- Contact Info -->
+      <div>
+        <div class="info-grid">
+          <div class="info-card">
+            <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
+            <h3>Location</h3>
+            <p>Nautical Highway Bayanan II, Calapan City, Oriental Mindoro, Philippines</p>
+          </div>
+          <div class="info-card" style="background: linear-gradient(135deg, var(--warm-brown), #d4a574);">
+            <div class="icon"><i class="fas fa-clock"></i></div>
+            <h3>Hours</h3>
+            <p>24/7 Front Desk</p>
+            <p>Restaurant: 6AM - 11PM</p>
+          </div>
+        </div>
+
+        <div class="map-placeholder mt-6">
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1590.25514554911!2d121.16796624914198!3d13.358207851080001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33bceeada8b79937%3A0xfc0dbcdcb9ffd431!2sEduardo%27s%20Resort!5e0!3m2!1sen!2sph!4v1760877039190!5m2!1sen!2sph"
+            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+
+        <div class="contact-methods mt-6">
+          <h3>Other Ways to Reach Us</h3>
+          <div class="method-item">
+            <div class="method-icon"><i class="fas fa-phone"></i></div>
+            <div>
+              <p class="font-medium">Phone</p>
+              <p class="text-sm text-gray-600">(043) 288-7153</p>
+            </div>
+          </div>
+          <div class="method-item">
+            <div class="method-icon"><i class="fas fa-mobile-alt"></i></div>
+            <div>
+              <p class="font-medium">Mobile</p>
+              <p class="text-sm text-gray-600">0921 507 4378 / 0977 845 8144</p>
+            </div>
+          </div>
+          <div class="method-item">
+            <div class="method-icon"><i class="fas fa-envelope"></i></div>
+            <div>
+              <p class="font-medium">Email</p>
+              <p class="text-sm text-gray-600">info@eduardoresort.com</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-10 after:h-0.5 after:bg-warm-brown">About Eduardo's Resort</h3>
+          <p class="text-gray-300 text-sm">
+            Eduardo's Resort blends refined design and family-first recreation — elegant spaces, playful attractions, and smooth digital booking for your perfect getaway.
+          </p>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold mb-4 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-10 after:h-0.5 after:bg-warm-brown">Contact</h3>
+          <ul class="space-y-2 text-gray-300 text-sm">
+            <li><strong>Landline:</strong> (043) 288-7153</li>
+            <li><strong>Mobile:</strong> 0921 507 4378 / 0977 845 8144 / 0928 890 6708</li>
+            <li><strong>Address:</strong> Nautical Highway Bayanan II, Calapan City, Oriental Mindoro, Philippines</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold mb-4 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-10 after:h-0.5 after:bg-warm-brown">Connect With Us</h3>
+          <div class="flex space-x-4">
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary-blue transition-colors duration-300"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary-blue transition-colors duration-300"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary-blue transition-colors duration-300"><i class="fab fa-twitter"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="pt-8 border-t border-gray-700 text-center text-gray-400 text-sm">
+        <p>© 2025 Eduardo's Resort · All Rights Reserved</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Chatbot Toggle & Modal -->
+  <div id="chatbotToggle" class="chatbot-toggle"><i class="fas fa-robot text-2xl"></i></div>
+  <div id="chatbotModal" class="chatbot-modal">
+    <div class="chat-header">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center"><i class="fas fa-robot text-sm"></i></div>
+        <span>Eduardo's Assistant</span>
+      </div>
+      <button id="closeChatbot" class="text-white hover:text-gray-200"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="chatMessages" class="chat-messages">
+      <div class="message bot"><div class="bubble bot">Hi! Need help with booking or directions?</div></div>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="userInput" placeholder="Ask about contact, booking, or amenities..."/>
+      <button id="sendBtn" class="send-btn"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <script>
+    // Mobile Sidebar
+    const openBtn = document.getElementById('openSidebar');
+    const closeBtn = document.getElementById('closeSidebar');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+
+    openBtn?.addEventListener('click', () => {
+      sidebar.classList.add('open');
+      overlay.classList.add('open');
+    });
+    closeBtn.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('open');
+    });
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('open');
+    });
+
+    // Contact Form
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const submitBtn = this.querySelector('.btn-send');
+  const originalText = submitBtn.innerHTML;
+  
+  // Loading state
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<span>Sending...</span> <i class="fas fa-spinner fa-spin"></i>';
+
+  const formData = {
+    name: document.getElementById('name').value.trim(),
+    email: document.getElementById('email').value.trim(),
+    phone: document.getElementById('phone').value.trim(),
+    subject: document.getElementById('subject').value,
+    message: document.getElementById('message').value.trim()
+  };
+
+try {
+  const response = await fetch('http://localhost:3000/api/contact', {
+    method: 'POST',
+    headers: { 
+      'Content-Type': 'application/json' 
+    },
+    body: JSON.stringify(formData)   // ← ISA LANG! WALANG "body: true"
+  });
+
+  const data = await response.json();
+
+  if (response.ok) {
+    alert(`Thank you, ${formData.name}! Your message has been sent successfully!`);
+    document.getElementById('contactForm').reset(); // or this.reset() if inside form
+  } else {
+    alert(data.error || 'Something went wrong. Please try again.');
+  }
+
+} catch (err) {
+  console.error(err);
+  alert('No connection. Make sure server is running!');
+} finally {
+  submitBtn.disabled = false;
+  submitBtn.innerHTML = originalText;
+}
+    });
+
+    // Chatbot
+    const toggleBtn = document.getElementById('chatbotToggle');
+    const modal = document.getElementById('chatbotModal');
+    const closeChat = document.getElementById('closeChatbot');
+    const sendBtn = document.getElementById('sendBtn');
+    const userInput = document.getElementById('userInput');
+    const messages = document.getElementById('chatMessages');
+
+    toggleBtn.addEventListener('click', () => modal.classList.toggle('open'));
+    closeChat.addEventListener('click', () => modal.classList.remove('open'));
+
+    function addMessage(txt, sender) {
+      const div = document.createElement('div');
+      div.className = `message ${sender}`;
+      div.innerHTML = `<div class="bubble ${sender}">${txt}</div>`;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function sendMessage() {
+      const txt = userInput.value.trim();
+      if (!txt) return;
+      addMessage(txt, 'user'); userInput.value = '';
+      setTimeout(() => {
+        const replies = [
+          "You can reach us at (043) 288-7153 or via email!",
+          "Our address: Nautical Highway Bayanan II, Calapan City",
+          "Yes! We offer airport transfers — just let us know your flight details.",
+          "Check-in: 3 PM, Check-out: 11 AM"
+        ];
+        addMessage(replies[Math.floor(Math.random() * replies.length)], 'bot');
+      }, 800);
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', e => e.key === 'Enter' && sendMessage());
+
+    // Header Scroll
+    let lastScrollY = window.scrollY;
+    const header = document.getElementById('siteHeader');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > lastScrollY && window.scrollY > 100) {
+        header.classList.remove('nav-visible'); header.classList.add('nav-hidden');
+      } else {
+        header.classList.remove('nav-hidden'); header.classList.add('nav-visible');
+      }
+      lastScrollY = window.scrollY;
+    });
+  </script>
+</body>
+</html>

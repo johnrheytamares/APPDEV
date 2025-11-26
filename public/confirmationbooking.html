@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete Booking | Eduardo's Resort</title>
+  <meta name="description" content="Enter details and pay to confirm your reservation.">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary-blue': '#2B6CB0',
+            'accent-blue': '#63B3ED',
+            'warm-brown': '#C19A6B',
+            'deep-brown': '#8B5E3C',
+            'neutral-gray': '#F5F5F5',
+            'text-dark': '#2D3748',
+            'text-muted': '#718096',
+          },
+          fontFamily: {
+            'inter': ['Inter', sans-serif],
+            'dancing': ['Dancing Script', 'cursive'],
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    :root {
+      --primary-blue: #2B6CB0; --accent-blue: #63B3ED; --warm-brown: #C19A6B; --deep-brown: #8B5E3C;
+      --white: #FFFFFF; --neutral-gray: #F5F5F5; --text-dark: #2D3748; --text-muted: #718096;
+      --shadow: 0 4px 12px rgba(2, 8, 20, 0.08); --shadow-lg: 0 10px 30px rgba(2, 8, 20, 0.12);
+      --radius: 16px; --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    body { 
+      font-family: 'Inter', sans-serif; 
+      background: linear-gradient(to bottom, #E0F7FA, var(--white)); 
+      overflow-x: hidden; 
+    }
+
+    /* Card */
+    .section-card {
+      background: white; border-radius: var(--radius); padding: 1rem;
+      box-shadow: var(--shadow); border: 1px solid rgba(43, 108, 176, 0.1);
+      transition: var(--transition);
+    }
+    @media (min-width: 640px) {
+      .section-card { padding: 1.5rem; }
+    }
+    @media (min-width: 768px) {
+      .section-card { padding: 2rem; border-radius: 20px; }
+    }
+
+    /* Input */
+    .form-input {
+      width: 100%; padding: 0.75rem 0.875rem; border: 2px solid #E8F0EB;
+      border-radius: 10px; font-size: 1rem; transition: all 0.3s ease;
+      background: rgba(248, 250, 249, 0.8);
+    }
+    @media (min-width: 640px) {
+      .form-input { padding: 0.875rem 1rem; }
+    }
+    @media (min-width: 768px) {
+      .form-input { padding: 1rem 1.25rem; border-radius: 12px; }
+    }
+
+    /* Button */
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+      color: white; padding: 0.875rem 1rem; border: none; border-radius: 12px;
+      font-weight: 600; transition: var(--transition); box-shadow: 0 4px 15px rgba(43,108,176,.3);
+      width: 100%; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      position: relative;
+    }
+    @media (min-width: 640px) {
+      .btn-primary { padding: 1rem 1.5rem; }
+    }
+    @media (min-width: 768px) {
+      .btn-primary { padding: 1rem 2rem; }
+    }
+
+    /* Loading State */
+    .btn-loading {
+      pointer-events: none;
+      opacity: 0.8;
+    }
+    .btn-loading .btn-text { opacity: 0; }
+    .btn-loading::after {
+      content: '';
+      position: absolute; width: 1.25rem; height: 1.25rem;
+      border: 2px solid transparent; border-top-color: white; border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Payment Option */
+    .payment-option {
+      border: 2px solid transparent; border-radius: 12px; padding: 0.875rem; cursor: pointer;
+      transition: all 0.3s ease; background: #f8fafc; display: flex; align-items: center; justify-content: space-between;
+    }
+    .payment-option.selected {
+      border-color: var(--primary-blue); background: rgba(43,108,176,0.05);
+    }
+    .payment-option .check-icon { display: none; }
+    .payment-option.selected .check-icon { display: block; }
+
+    /* Counter */
+    .counter-btn {
+      width: 2rem; height: 2rem; border-radius: 9999px; border: 2px solid var(--primary-blue);
+      color: var(--primary-blue); display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; transition: all 0.3s ease;
+    }
+    .counter-btn:hover {
+      background: var(--primary-blue); color: white;
+    }
+
+    .reveal { opacity: 0; transform: translateY(15px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    .mobile-grid { display: grid; gap: 0.75rem; }
+    @media (min-width: 640px) { .mobile-grid { gap: 1rem; } }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 50;
+      display: flex; align-items: center; justify-content: center; padding: 1rem;
+    }
+    .modal-content {
+      background: white; border-radius: 1.5rem; width: 100%; max-width: 20rem; padding: 1.5rem;
+      box-shadow: var(--shadow-lg); text-align: center;
+    }
+    @media (min-width: 640px) {
+      .modal-content { padding: 2rem; max-width: 24rem; }
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-white/95 backdrop-blur-md border-b border-blue-50 sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-3">
+      <div class="flex items-center justify-between">
+        <a href="#" class="flex items-center space-x-2">
+          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-primary-blue to-accent-blue flex items-center justify-center text-white font-bold text-base">
+            Ed
+          </div>
+          <div class="text-lg font-bold text-primary-blue">Eduardo's</div>
+        </a>
+        <div class="text-xs text-text-muted font-medium hidden sm:block">
+          Complete Booking
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="container mx-auto px-4 py-5 max-w-7xl">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Left: Forms -->
+      <div class="space-y-5">
+        <!-- Guest Info -->
+        <div class="section-card reveal">
+          <h2 class="text-lg font-bold text-text-dark mb-3 flex items-center gap-2">
+            <i class="fas fa-user-circle text-primary-blue text-lg"></i>
+            Guest Information
+          </h2>
+          <div class="mobile-grid grid-cols-1 sm:grid-cols-2">
+            <div>
+              <label class="block text-xs font-medium text-text-muted mb-1.5">First Name *</label>
+              <input type="text" class="form-input" placeholder="Juan" id="firstName">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted mb-1.5">Last Name *</label>
+              <input type="text" class="form-input" placeholder="Dela Cruz" id="lastName">
+            </div>
+          </div>
+          <div class="mt-4 grid grid-cols-3 gap-3 text-center">
+            <div>
+              <label class="block text-xs font-medium text-text-muted mb-1.5">Adults</label>
+              <div class="flex items-center justify-center gap-2 bg-neutral-gray rounded-xl p-2">
+                <button id="decAdults" class="counter-btn"><i class="fas fa-minus"></i></button>
+                <span id="adultsCount" class="font-semibold text-sm w-6">2</span>
+                <button id="incAdults" class="counter-btn"><i class="fas fa-plus"></i></button>
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted mb-1.5">Children</label>
+              <div class="flex items-center justify-center gap-2 bg-neutral-gray rounded-xl p-2">
+                <button id="decChildren" class="counter-btn"><i class="fas fa-minus"></i></button>
+                <span id="childrenCount" class="font-semibold text-sm w-6">0</span>
+                <button id="incChildren" class="counter-btn"><i class="fas fa-plus"></i></button>
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted mb-1.5">Arrival</label>
+              <select class="form-input text-sm" id="arrivalTime">
+                <option>2 PM</option>
+                <option selected>3 PM</option>
+                <option>4 PM</option>
+                <option>5 PM</option>
+              </select>
+            </div>
+          </div>
+          <div class="mt-4">
+            <label class="block text-xs font-medium text-text-muted mb-1.5">Special Requests</label>
+            <textarea class="form-input h-20 text-sm" placeholder="Late check-in, dietary needs..." id="specialRequests"></textarea>
+          </div>
+        </div>
+
+        <!-- Contact & Billing -->
+        <div class="section-card reveal">
+          <h2 class="text-lg font-bold text-text-dark mb-3 flex items-center gap-2">
+            <i class="fas fa-address-book text-primary-blue text-lg"></i>
+            Contact & Billing
+          </h2>
+          <div class="mobile-grid grid-cols-1">
+            <div>
+              <label class="block text-xs font-medium text-text-muted mb-1.5">Phone Number *</label>
+              <div class="flex gap-2">
+                <span class="flex items-center justify-center w-16 bg-gray-100 rounded-l-xl border border-r-0 border-gray-300 text-sm font-medium">+63</span>
+                <input type="tel" class="form-input rounded-l-none flex-1" placeholder="912 345 6789" id="phone">
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted mb-1.5">Email *</label>
+              <input type="email" class="form-input" placeholder="juan@example.com" id="email">
+            </div>
+          </div>
+          <div class="mt-4 mobile-grid grid-cols-1">
+            <div>
+              <label class="block text-xs font-medium text-text-muted mb-1.5">Street Address *</label>
+              <input type="text" class="form-input" placeholder="123 Resort St." id="address">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted mb-1.5">City *</label>
+              <input type="text" class="form-input" placeholder="Calapan" id="city">
+            </div>
+          </div>
+          <div class="mt-4 mobile-grid grid-cols-1 sm:grid-cols-2">
+            <div>
+              <label class="block text-xs font-medium text-text-muted mb-1.5">Country *</label>
+              <select class="form-input text-sm">
+                <option>Philippines</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted mb-1.5">Postal Code *</label>
+              <input type="text" class="form-input" placeholder="5200" id="postal">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Summary + Payment -->
+      <div class="space-y-5">
+        <!-- Summary -->
+        <div class="section-card reveal">
+          <div class="flex justify-between items-center mb-3">
+            <h2 class="text-lg font-bold text-text-dark">Booking Summary</h2>
+            <a href="reservation.html" class="text-primary-blue text-xs font-medium flex items-center gap-1 hover:underline">
+              <i class="fas fa-edit"></i> Edit
+            </a>
+          </div>
+          <div id="bookedItems" class="space-y-2 text-sm">
+            <!-- Dynamic -->
+          </div>
+          <div class="border-t pt-3 mt-4 space-y-1.5 text-sm">
+            <div class="flex justify-between">
+              <span class="text-text-muted">Subtotal</span>
+              <span id="subtotal">₱0</span>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="text-text-muted">Taxes & Fees</span>
+              <span>Included</span>
+            </div>
+            <div class="border-t pt-2 flex justify-between items-center">
+              <span class="font-bold text-base">Total</span>
+              <span id="total" class="text-xl font-bold text-primary-blue">₱0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment -->
+        <div class="section-card reveal">
+          <h2 class="text-lg font-bold text-text-dark mb-3">Payment Method</h2>
+          <div class="space-y-2.5">
+            <div class="payment-option" data-method="paymaya">
+              <div class="flex items-center">
+                <div class="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center mr-3">
+                  <i class="fas fa-mobile-alt text-green-600 text-lg"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="font-medium text-text-dark text-sm">PayMaya</div>
+                  <div class="text-xs text-text-muted">E-wallet</div>
+                </div>
+              </div>
+              <i class="fas fa-check-circle text-primary-blue text-lg check-icon"></i>
+            </div>
+            <div class="payment-option" data-method="gcash">
+              <div class="flex items-center">
+                <div class="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center mr-3">
+                  <i class="fas fa-wallet text-green-600 text-lg"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="font-medium text-text-dark text-sm">GCash</div>
+                  <div class="text-xs text-text-muted">E-wallet</div>
+                </div>
+              </div>
+              <i class="fas fa-check-circle text-primary-blue text-lg check-icon"></i>
+            </div>
+            <div class="payment-option" data-method="bank">
+              <div class="flex items-center">
+                <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center mr-3">
+                  <i class="fas fa-university text-blue-600 text-lg"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="font-medium text-text-dark text-sm">Bank Transfer</div>
+                  <div class="text-xs text-text-muted">BDO, BPI, etc.</div>
+                </div>
+              </div>
+              <i class="fas fa-check-circle text-primary-blue text-lg check-icon"></i>
+            </div>
+          </div>
+
+          <div class="mt-4 flex items-start">
+            <input type="checkbox" id="terms" class="w-4 h-4 text-primary-blue border-gray-300 rounded focus:ring-primary-blue mt-0.5 mr-2">
+            <label for="terms" class="text-xs text-text-muted leading-tight">
+              I agree to the <a href="#" class="text-primary-blue hover:underline font-medium">Terms & Conditions</a>
+            </label>
+          </div>
+
+          <button id="payBtn" class="btn-primary mt-4 text-sm">
+            <span class="btn-text"><i class="fas fa-lock"></i> Pay Now & Confirm</span>
+          </button>
+
+          <div class="text-center mt-3 text-xs text-text-muted">
+            <i class="fas fa-undo-alt mr-1"></i> Free cancellation until 24 hrs before
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Confirmation Modal -->
+  <div id="confirmationModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
+        <i class="fas fa-check text-3xl text-green-600"></i>
+      </div>
+      <h3 class="text-xl font-bold text-text-dark mb-2">Payment Confirmed!</h3>
+      <p class="text-sm text-text-muted mb-5">Your booking is secured. A confirmation email has been sent to <span id="modalEmail" class="font-medium text-text-dark"></span>.</p>
+      <div class="space-y-2">
+        <a href="confirmation.html" class="block w-full py-2.5 bg-primary-blue text-white rounded-lg font-medium text-sm hover:bg-accent-blue transition">
+          View Booking Details
+        </a>
+        <a href="home4.html" class="block w-full py-2.5 border border-primary-blue text-primary-blue rounded-lg font-medium text-sm hover:bg-blue-50 transition">
+          Back to Home
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Load booking
+    const bookingData = JSON.parse(localStorage.getItem('eduardosBooking') || '{}');
+    const { items = [], checkIn, checkOut, selectedPayment = 'paymaya' } = bookingData;
+
+    // Summary
+    const bookedItems = document.getElementById('bookedItems');
+    const subtotalEl = document.getElementById('subtotal');
+    const totalEl = document.getElementById('total');
+    let subtotal = 0;
+
+    items.forEach(b => {
+      const nights = b.item.perNight && checkIn && checkOut ? 
+        Math.ceil((new Date(checkOut) - new Date(checkIn)) / 86400000) : 1;
+      const lineTotal = b.item.price * b.qty * (b.item.perNight ? nights : 1);
+      subtotal += lineTotal;
+
+      const div = document.createElement('div');
+      div.className = 'flex justify-between items-start p-2 bg-blue-50 rounded-lg text-xs';
+      div.innerHTML = `
+        <div class="flex-1">
+          <div class="font-medium">${b.item.name}</div>
+          <div class="text-text-muted text-xs">
+            ×${b.qty} • ${b.guests} Guest${b.guests>1?'s':''}${b.item.perNight ? ` • ${nights} night${nights>1?'s':''}` : ''}
+          </div>
+        </div>
+        <div class="text-right ml-2">
+          <div class="font-medium">₱${lineTotal.toLocaleString()}</div>
+          ${b.item.perNight ? `<div class="text-text-muted text-xs">₱${b.item.price.toLocaleString()}/night</div>` : ''}
+        </div>
+      `;
+      bookedItems.appendChild(div);
+    });
+
+    subtotalEl.textContent = `₱${subtotal.toLocaleString()}`;
+    totalEl.textContent = `₱${subtotal.toLocaleString()}`;
+
+    // Payment selection
+    document.querySelectorAll('.payment-option').forEach(opt => {
+      if (opt.dataset.method === selectedPayment) opt.classList.add('selected');
+      opt.onclick = () => {
+        document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        localStorage.setItem('eduardoBooking', JSON.stringify({ ...bookingData, selectedPayment: opt.dataset.method }));
+      };
+    });
+
+    // Counters
+    ['Adults', 'Children'].forEach(type => {
+      const inc = document.getElementById(`inc${type}`);
+      const dec = document.getElementById(`dec${type}`);
+      const count = document.getElementById(`${type.toLowerCase()}Count`);
+      inc.onclick = () => count.textContent = +count.textContent + 1;
+      dec.onclick = () => { if (+count.textContent > (type === 'Adults' ? 1 : 0)) count.textContent = +count.textContent - 1; };
+    });
+
+    // Pay with loading
+    const payBtn = document.getElementById('payBtn');
+    payBtn.onclick = () => {
+      const req = ['firstName','lastName','phone','email','address','city','postal'];
+      for (const id of req) if (!document.getElementById(id).value.trim()) return alert('Fill all required fields.');
+      if (!document.getElementById('terms').checked) return alert('Agree to terms.');
+
+      // Show loading
+      payBtn.classList.add('btn-loading');
+
+      // Simulate payment processing (2.5s)
+      setTimeout(() => {
+        const final = {
+          ...bookingData,
+          guest: {
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value,
+            adults: +document.getElementById('adultsCount').textContent,
+            children: +document.getElementById('childrenCount').textContent,
+            arrivalTime: document.getElementById('arrivalTime').value,
+            specialRequests: document.getElementById('specialRequests').value,
+            phone: document.getElementById('phone').value,
+            email: document.getElementById('email').value,
+            address: document.getElementById('address').value,
+            city: document.getElementById('city').value,
+            postal: document.getElementById('postal').value
+          },
+          selectedPayment: document.querySelector('.payment-option.selected').dataset.method,
+          total: subtotal,
+          bookingId: 'EDU' + Date.now().toString().slice(-6)
+        };
+        localStorage.setItem('eduardoFinalBooking', JSON.stringify(final));
+        localStorage.removeItem('eduardoBooking');
+
+        // Show confirmation
+        document.getElementById('modalEmail').textContent = final.guest.email;
+        document.getElementById('confirmationModal').classList.remove('hidden');
+      }, 2500);
+    };
+
+    // Reveal
+    const observer = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    }), { threshold: 0.05 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

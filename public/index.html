@@ -350,7 +350,7 @@
         </nav>
         <div class="flex items-center space-x-4">
           <a href="/login" class="hidden md:block px-4 py-2 border border-primary-blue text-primary-blue rounded-lg hover:bg-blue-50 transition-colors duration-300 font-medium">Login</a>
-          <a href="/registration" class="hidden md:block px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 font-medium">Signup</a>
+          <a href="/signup" class="hidden md:block px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 font-medium">Signup</a>
           <button id="openSidebar" class="md:hidden text-2xl text-primary-blue"><i class="fas fa-bars"></i></button>
         </div>
       </div>
@@ -371,12 +371,12 @@
           and a personal smart assistant to plan your stay.
         </p>
         <div class="flex flex-wrap justify-center gap-3 sm:gap-4">
-          <a href="reservation.html" class="px-4 sm:px-6 md:px-8 py-2 sm:py-3 bg-warm-brown text-white font-semibold rounded-lg hover:bg-deep-brown transition-colors duration-300 shadow-md text-sm sm:text-base">
+          <a href="/reservation" class="px-4 sm:px-6 md:px-8 py-2 sm:py-3 bg-warm-brown text-white font-semibold rounded-lg hover:bg-deep-brown transition-colors duration-300 shadow-md text-sm sm:text-base">
             Book Your Escape
           </a>
-          <button id="openVrTour" class="px-4 sm:px-6 md:px-8 py-2 sm:py-3 border border-primary-blue text-primary-blue font-semibold rounded-lg hover:bg-blue-50 transition-colors duration-300 text-sm sm:text-base flex items-center gap-2">
+          <!-- <button id="openVrTour" class="px-4 sm:px-6 md:px-8 py-2 sm:py-3 border border-primary-blue text-primary-blue font-semibold rounded-lg hover:bg-blue-50 transition-colors duration-300 text-sm sm:text-base flex items-center gap-2">
             <i class="fas fa-vr-cardboard"></i> Virtual Tour
-          </button>
+          </button> -->
         </div>
       </div>
     </section>
@@ -787,7 +787,7 @@ async function sendMessage() {
   messages.appendChild(typing);
 
   try {
-    const response = await fetch('/api/chat', {  // ← FIXED NA ‘TO!
+    const response = await fetch('/api/resort/chat', {  // ← FIXED NA ‘TO!
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message: txt })

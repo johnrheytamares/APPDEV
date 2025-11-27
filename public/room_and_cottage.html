@@ -388,7 +388,7 @@
     </div>
 
     <div class="logout-container">
-      <a href="#" class="nav-link">
+      <a href="/logout" class="nav-link">
         <i class="fas fa-sign-out-alt nav-icon"></i>
         <span class="nav-text">Logout</span>
       </a>
@@ -596,6 +596,10 @@
       <div class="modal-body">
         <div class="form-row">
           <div class="form-group">
+            <label for="roomNumber">Room Number</label>
+            <input type="text" id="roomNumber" class="form-control" placeholder="e.g., 101">
+          </div>
+          <div class="form-group">
             <label for="roomName">Room Name</label>
             <input type="text" id="roomName" class="form-control" placeholder="e.g., Ocean View Suite">
           </div>
@@ -606,6 +610,13 @@
               <option>Deluxe Room</option>
               <option>Suite</option>
               <option>Cottage</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="categoryType">Category Type</label>
+            <select id="categoryType" class="form-control">
+              <option value="room">Room</option>
+              <option value="cottage">Cottage</option>
             </select>
           </div>
         </div>
@@ -774,11 +785,10 @@
   </div>
 
   <!-- Sidebar + Page JS -->
-  <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const API = '/api/admin/rooms';
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const API_BASE = '/api/admin/rooms';  // ← TAMA NA ‘TO KAPAG SAME SERVER!
   let rooms = [];
-  let editingId = null;
 
   const roomGrid = document.getElementById('roomGrid');
   const addRoomBtn = document.getElementById('addRoomBtn');
@@ -786,206 +796,181 @@ document.addEventListener('DOMContentLoaded', () => {
   const roomModal = document.getElementById('roomModal');
   const modalTitle = document.getElementById('roomModalTitle');
 
-  // Form fields
-  const inputs = {
-    name: document.getElementById('roomName'),
-    type: document.getElementById('roomType'),
-    capacity: document.getElementById('roomCapacity'),
-    price: document.getElementById('roomPrice'),
-    description: document.getElementById('roomDescription'),
-    promoSwitch: document.getElementById('promoSwitch'),
-    status: document.getElementById('roomStatus')
-  };
-
-  // Load rooms
   async function loadRooms() {
     try {
-      const res = await fetch(API);
+      const res = await fetch(API_BASE);
+      if (!res.ok) throw new Error('Failed');
       rooms = await res.json();
+
+      // Normalize images
+      rooms.forEach(room => {
+        if (typeof room.images === 'string') {
+          try { room.images = JSON.parse(room.images); }
+          catch { room.images = []; }
+        }
+        if (!Array.isArray(room.images)) room.images = [];
+      });
+
       renderRooms();
       updateStats();
     } catch (err) {
-      alert("Server offline. Using demo data.");
-      rooms = [
-        { id: 1, name: "Beachfront Cottage", category: "cottage", price: 8500, max_guests: 4, description: "Direct beach access", images: [{ url: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600", is_primary: 1 }] },
-        { id: 2, name: "Deluxe Room", category: "room", price: 4500, max_guests: 2, description: "Modern comfort", images: [{ url: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600", is_primary: 1 }] }
-      ];
-      renderRooms();
+      alert('Check if server is running on port 3000');
+      console.error(err);
     }
   }
 
   function renderRooms() {
-    roomGrid.innerHTML = rooms.length === 0 
-      ? `<p class="text-center col-span-full py-12 text-gray-500">No rooms yet. Add your first one!</p>`
-      : rooms.map(room => {
-          const img = room.images.find(i => i.is_primary) || room.images[0];
-          return `
-            <div class="room-card" data-id="${room.id}">
-              <div class="room-image" style="background-image:url('${img?.url || '/images/placeholder.jpg'}')">
-                ${room.original_price ? '<div class="room-promo">Limited Offer</div>' : ''}
+    if (rooms.length === 0) {
+      roomGrid.innerHTML = `<p class="text-center text-gray-500 py-10 text-xl">No rooms found. Add one now!</p>`;
+      return;
+    }
+
+    roomGrid.innerHTML = rooms.map(room => {
+      const firstImg = room.images.length > 0 
+        ? room.images[0] 
+        : 'https://via.placeholder.com/600x400?text=No+Image';
+
+      return `
+        <div class="room-card" data-id="${room.id}">
+          <div class="room-image" style="background-image:url('${firstImg}')">
+            ${room.status === 'maintenance' ? '<div class="room-promo bg-orange-600">MAINTENANCE</div>' : ''}
+          </div>
+          <div class="room-details">
+            <div class="room-header">
+              <div>
+                <div class="room-title">${room.name || room.room_name || 'Unnamed Room'}</div>
+                <div class="room-type capitalize text-sm">${room.category || room.room_type || 'standard'}</div>
+                ${room.room_number ? `<div class="text-xs text-gray-500 mt-1">#${room.room_number}</div>` : ''}
               </div>
-              <div class="room-details">
-                <div class="room-header">
-                  <div>
-                    <div class="room-title">${room.name}</div>
-                    <div class="room-type">${room.category}</div>
-                  </div>
-                  <div class="room-price">₱${Number(room.price).toLocaleString()}<span>/night</span></div>
-                </div>
-                <p>${room.description || 'No description'}</p>
-                <div class="room-features">
-                  <div><i class="fas fa-user-friends"></i> ${room.max_guests} Guests</div>
-                  <div><i class="fas fa-image"></i> ${room.images.length} Photos</div>
-                </div>
-                <div class="room-actions">
-                  <button class="btn btn-sm btn-outline edit-room"><i class="fas fa-edit"></i> Edit</button>
-                  <button class="btn btn-sm btn-outline view-images"><i class="fas fa-images"></i> Images</button>
-                  <button class="btn btn-sm btn-danger delete-room"><i class="fas fa-trash"></i> Delete</button>
-                </div>
+              <div class="room-price text-right">
+                <div class="text-xl font-bold">₱${Number(room.price || room.price_per_night || 0).toLocaleString()}</div>
+                <span class="text-sm text-gray-500">/night</span>
               </div>
             </div>
-          `;
-        }).join('');
+            <p class="text-gray-600 text-sm mt-2">${room.description || room.room_description || room.category_label || 'No description available.'}</p>
+            <div class="room-features text-sm text-gray-600 mt-3">
+              <span><i class="fas fa-user-friends"></i> ${room.max_guests || room.capacity || 2} Guests</span>
+              <span class="ml-4"><i class="fas fa-image"></i> ${room.images.length} Photos</span>
+              <span class="ml-4"><i class="fas fa-circle ${room.available === 1 ? 'text-green-500' : 'text-red-500'}"></i> ${room.status || (room.available === 1 ? 'Available' : 'Occupied')}</span>
+            </div>
+            <div class="room-actions mt-4">
+              <button class="btn btn-sm btn-outline edit-room"><i class="fas fa-edit"></i> Edit</button>
+              <button class="btn btn-sm btn-danger delete-room"><i class="fas fa-trash"></i> Delete</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
   }
 
   function updateStats() {
     document.getElementById('totalRooms').textContent = rooms.length;
-    document.getElementById('availableRooms').textContent = rooms.filter(r => !r.status || r.status === 'available').length;
+    document.getElementById('availableRooms').textContent = rooms.filter(r => r.available === 1).length;
+    document.getElementById('occupiedRooms').textContent = rooms.filter(r => r.status === 'occupied' || r.available === 0).length;
+    document.getElementById('maintenanceRooms').textContent = rooms.filter(r => r.status === 'maintenance').length;
   }
 
-  // Open modal
+  // Open Modal
   function openModal(room = null) {
     editingId = room?.id || null;
-    modalTitle.textContent = room ? 'Edit Room/Cottage' : 'Add New Room/Cottage';
+    modalTitle.textContent = room ? 'Edit Room' : 'Add New Room';
 
-    inputs.name.value = room?.name || '';
-    inputs.type.value = room?.category || 'room';
-    inputs.capacity.value = room?.max_guests || 2;
-    inputs.price.value = room?.price || '';
-    inputs.description.value = room?.description || '';
-    inputs.promoSwitch.checked = !!room?.original_price;
-
-    // Image preview
-    const preview = document.getElementById('imagePreview') || createPreviewDiv();
-    preview.innerHTML = room?.images?.map(img => `
-      <div class="relative" data-img-id="${img.id}">
-        <img src="${img.url}" class="w-24 h-24 object-cover rounded-lg border">
-        <button type="button" class="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 text-xs remove-img">×</button>
-      </div>
-    `).join('') || '';
+    document.getElementById('roomNumber').value = room?.room_number || '';
+    document.getElementById('roomName').value = room?.name || room?.room_name || '';
+    document.getElementById('roomType').value = room?.category || room?.room_type || 'standard room';
+    document.getElementById('categoryType').value = room?.category_type || 'room';
+    document.getElementById('roomCapacity').value = room?.max_guests || room?.capacity || 2;
+    document.getElementById('roomPrice').value = room?.price || room?.price_per_night || '';
+    document.getElementById('roomDescription').value = room?.description || room?.room_description || '';
+    document.getElementById('roomStatus').value = room?.status || (room?.available === 1 ? 'available' : 'occupied');
 
     roomModal.classList.add('show');
   }
 
-  function createPreviewDiv() {
-    const div = document.createElement('div');
-    div.id = 'imagePreview';
-    div.className = 'flex flex-wrap gap-3 mt-4';
-    document.querySelector('#roomModal .image-upload').appendChild(div);
-    return div;
-  }
+  let editingId = null;
 
-  // Save room
+  // Save Room
   saveRoomBtn.onclick = async () => {
-    const formData = new FormData();
-    formData.append('name', inputs.name.value.trim());
-    formData.append('category', inputs.type.value);
-    formData.append('price', inputs.price.value);
-    formData.append('max_guests', inputs.capacity.value || 2);
-    formData.append('description', inputs.description.value.trim());
-    formData.append('original_price', inputs.promoSwitch.checked ? Math.round(inputs.price.value * 1.4) : null);
+    const data = {
+      category_type: document.getElementById('categoryType').value, 
+      room_number: document.getElementById('roomNumber').value.trim(),
+      name: document.getElementById('roomName').value.trim(),
+      category: document.getElementById('roomType').value,
+      max_guests: parseInt(document.getElementById('roomCapacity').value) || 2,
+      price: parseFloat(document.getElementById('roomPrice').value) || 0,
+      description: document.getElementById('roomDescription').value.trim(),
+      status: document.getElementById('roomStatus').value
+    };
 
-    // Deleted images
-    const deleted = [];
-    document.querySelectorAll('.remove-img').forEach(btn => {
-      const div = btn.closest('div');
-      if (div.dataset.imgId) deleted.push(div.dataset.imgId);
-    });
-    if (deleted.length) formData.append('delete_images', JSON.stringify(deleted));
-
-    // New images
-    const fileInput = document.querySelector('#roomImagesInput') || createFileInput();
-    if (fileInput.files.length) {
-      for (const file of fileInput.files) formData.append('images', file);
-    }
-
-    const method = editingId ? 'PUT' : 'POST';
-    const url = editingId ? `${API}/${editingId}` : API;
+    if (!data.name || !data.price) return alert('Name and Price required!');
 
     try {
-      const res = await fetch(url, { method, body: formData });
-      const data = await res.json();
+      const method = editingId ? 'PUT' : 'POST';
+      const url = editingId ? `${API_BASE}/update/${editingId}` : `${API_BASE}/create`;
+
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
       if (res.ok) {
-        alert(editingId ? "Updated!" : "Added!");
+        alert(editingId ? 'Updated!' : 'Created!');
         roomModal.classList.remove('show');
         loadRooms();
       } else {
-        alert("Error: " + data.error);
+        alert('Save failed');
       }
     } catch (err) {
-      alert("Save failed!");
+      alert('Network error');
     }
   };
 
-  function createFileInput() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.multiple = true;
-    input.accept = 'image/*';
-    input.id = 'roomImagesInput';
-    input.style.display = 'none';
-    document.querySelector('#roomModal .image-upload').appendChild(input);
-    return input;
-  }
-
-  // Event delegation
-  roomGrid.onclick = async (e) => {
+  // Edit & Delete
+  roomGrid.onclick = e => {
     const card = e.target.closest('.room-card');
     if (!card) return;
-    const id = card.dataset.id;
-    const room = rooms.find(r => r.id == id);
+    const room = rooms.find(r => r.id == card.dataset.id);
 
     if (e.target.closest('.edit-room')) openModal(room);
     if (e.target.closest('.delete-room')) {
-      if (confirm('Delete this room permanently?')) {
-        await fetch(`${API}/${id}`, { method: 'DELETE' });
-        loadRooms();
+      if (confirm('Delete forever?')) {
+        fetch(`${API_BASE}/delete/${room.id}`, { method: 'DELETE' })
+          .then(() => loadRooms());
       }
     }
   };
 
   addRoomBtn.onclick = () => openModal();
 
-  // Close modals
-  document.querySelectorAll('[data-close]').forEach(btn => {
-    btn.onclick = () => document.getElementById(btn.dataset.close).classList.remove('show');
-  });
+  // Close modal
+  document.querySelectorAll('[data-close]').forEach(b => 
+    b.onclick = () => document.getElementById(b.dataset.close).classList.remove('show')
+  );
 
-  // Image upload trigger
-  document.addEventListener('click', e => {
-    if (e.target.closest('.image-upload') && !e.target.closest('#imagePreview')) {
-      const input = document.getElementById('roomImagesInput') || createFileInput();
-      input.click();
-      input.onchange = () => {
-        const preview = document.getElementById('imagePreview') || createPreviewDiv();
-        [...input.files].forEach(file => {
-          const reader = new FileReader();
-          reader.onload = ev => {
-            preview.innerHTML += `
-              <div class="relative">
-                <img src="${ev.target.result}" class="w-24 h-24 object-cover rounded-lg border">
-                <button type="button" class="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 text-xs remove-img">×</button>
-              </div>
-            `;
-          };
-          reader.readAsDataURL(file);
-        });
-      };
-    }
-  });
-
+  // START
   loadRooms();
 });
 </script>
+
+  <!-- Sidebar Toggle JS -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const sidebar = document.getElementById('sidebar');
+      const mainContent = document.getElementById('mainContent');
+      const sidebarToggle = document.getElementById('sidebarToggle');
+      const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+      const overlay = document.querySelector('.overlay');
+
+      function toggleSidebar() {
+        sidebar.classList.toggle('hidden');
+        overlay.classList.toggle('active');
+      }
+
+      sidebarToggle.onclick = toggleSidebar;
+      mobileMenuBtn.onclick = toggleSidebar;
+      overlay.onclick = toggleSidebar;
+    });
+  </script>
 </body>
 </html>

@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 
 
 // ==================== REGISTER ====================
+// ==================== REGISTER ====================
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -18,9 +19,9 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'Password must be at least 6 characters' });
     }
 
-    // Check if email exists
-    const [existing] = await pool.query('SELECT * FROM users WHERE Email = ?', [email]);
-    if (existing.length > 0) {
+    // FIXED: Correct way to check existing email
+    const [rows] = await pool.query('SELECT 1 FROM users WHERE Email = ? LIMIT 1', [email]);
+    if (rows.length > 0) {
       return res.status(400).json({ error: 'Email already registered' });
     }
 
@@ -30,7 +31,7 @@ router.post('/register', async (req, res) => {
 
     // Split name
     const nameParts = name.trim().split(' ');
-    const firstName = nameParts[0];
+    const firstName = nameParts[0] || '';
     const lastName = nameParts.slice(1).join(' ') || '';
 
     // Insert user
@@ -40,24 +41,32 @@ router.post('/register', async (req, res) => {
       [firstName, lastName, email, hashedPassword]
     );
 
-    // Auto-login after register
-    const [newUser] = await pool.query('SELECT * FROM users WHERE UserID = ?', [result.insertId]);
+    // Get the new user (FIXED din ‘to)
+    const [userRows] = await pool.query(
+      'SELECT UserID, FirstName, LastName, Email, role FROM users WHERE UserID = ?',
+      [result.insertId]
+    );
+    const newUser = userRows[0];
 
+    // Auto login via session
     req.session.user = {
-      UserID: newUser[0].UserID,
-      name: `${newUser[0].FirstName} ${newUser[0].LastName}`,
-      email: newUser[0].Email,
-      role: newUser[0].role
+      UserID: newUser.UserID,
+      name: `${newUser.FirstName} ${newUser.LastName}`.trim(),
+      email: newUser.Email,
+      role: newUser.role || 'customer'
     };
 
-    res.json({
+    return res.json({
       message: 'Account created successfully!',
       user: req.session.user
     });
 
   } catch (err) {
-    console.error('REGISTER ERROR:', err);
-    res.status(500).json({ error: 'Server error' });
+    console.error('REGISTER ERROR:', err.message);
+    return res.status(500).json({ 
+      error: 'Server error', 
+      details: err.message  // ← makikita mo rin sa console kung ano talaga ang error
+    });
   }
 });
 

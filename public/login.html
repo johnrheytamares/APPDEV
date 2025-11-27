@@ -326,7 +326,7 @@
     </div>
     <nav class="sidebar-nav">
       <a href="/">Home</a>
-      <a href="/aminities">Amenities</a>
+      <a href="/amenities">Amenities</a>
       <a href="/rates">Rates</a>
       <a href="Gallery">Gallery</a>
       <a href="/contact">Contact</a>
@@ -334,7 +334,7 @@
     </nav>
     <div class="sidebar-actions">
       <a href="/login" class="block text-center px-4 py-2 border border-primary-blue text-primary-blue rounded-lg hover:bg-blue-50 transition-colors font-medium">Login</a>
-      <a href="/registration" class="block text-center px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">Sign Up</a>
+      <a href="/signup" class="block text-center px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">Sign Up</a>
     </div>
   </div>
 
@@ -350,7 +350,7 @@
         </a>
         <nav class="hidden md:flex space-x-8">
           <a href="/" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Home</a>
-          <a href="/aminities" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Amenities</a>
+          <a href="/amenities" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Amenities</a>
           <a href="/rates" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Rates</a>
           <a href="/gallery" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Gallery</a>
           <a href="/contact" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Contact</a>
@@ -358,7 +358,7 @@
         </nav>
         <div class="flex items-center space-x-4">
           <a href="/login" class="hidden md:block px-4 py-2 border border-primary-blue text-primary-blue rounded-lg hover:bg-blue-50 transition-colors duration-300 font-medium">Login</a>
-          <a href="/registration" class="hidden md:block px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 font-medium">Signup</a>
+          <a href="/signup" class="hidden md:block px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 font-medium">Signup</a>
           <button id="openSidebar" class="md:hidden text-2xl text-primary-blue"><i class="fas fa-bars"></i></button>
         </div>
       </div>
@@ -402,7 +402,7 @@
           </button>
           
           <div class="form-footer">
-            <p>Don’t have an account? <a href="signup.html">Create one</a></p>
+            <p>Don’t have an account? <a href="registration.html">Create one</a></p>
           </div>
         </form>
       </div>
@@ -448,9 +448,9 @@
 
         // Redirect based sa role
         if (data.user.role === 'admin') {
-          window.location.href = 'admin-dashboard.html';
+          window.location.href = 'admindashboard.html';
         } else {
-          window.location.href = 'index.html'; // o home4.html
+          window.location.href = 'admindashboard.html'; // o home4.html
         }
       } else {
         alert(data.error || 'Invalid email or password');

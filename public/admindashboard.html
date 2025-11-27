@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SereneStay | Admin Dashboard</title>
+
+  <!-- Icons & Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Charts & PDF -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #2B6CB0;
+      --primary-light: #63B3ED;
+      --primary-lighter: #E8F0EB;
+      --accent: #C2A68C;
+      --accent-light: #F5F1EC;
+      --text-dark: #1A2E28;
+      --text-light: #6B8A7E;
+      --bg-light: #F8F7F4;
+      --white: #FFFFFF;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      height: 100vh;
+    }
+
+    .font-serif { font-family: 'Playfair Display', serif; }
+
+    /* ---------- SIDEBAR (Template) ---------- */
+    .overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(3px); z-index: 40; opacity: 0; visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .overlay.active { opacity: 1; visibility: visible; }
+
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: 260px;
+      height: 100vh;
+      background-color: var(--primary);
+      color: white;
+      z-index: 50;
+      overflow: hidden;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+      transform: translateX(-100%);
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar.active { transform: translateX(0); }
+
+    @media (min-width: 768px) {
+      .sidebar { transform: translateX(0) !important; }
+      .sidebar.collapsed { width: 70px; }
+    }
+
+    .sidebar-header {
+      padding: 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo-container { display: flex; align-items: center; gap: 0.75rem; }
+    .logo-icon {
+      width: 2.5rem; height: 2.5rem;
+      background: rgba(255,255,255,0.1);
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-text { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 600; }
+
+    .collapse-btn {
+      color: white; opacity: 0.7; padding: 0.5rem; border-radius: 0.5rem;
+      transition: all 0.3s;
+    }
+    .collapse-btn:hover { background: rgba(255,255,255,0.1); opacity: 1; }
+    .collapse-btn.collapsed { transform: rotate(180deg); }
+
+    .user-info {
+      padding: 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .user-avatar {
+      width: 3rem; height: 3rem;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-container { flex: 1; overflow-y: auto; padding: 0.75rem; }
+    .nav-list { padding: 0; margin: 0; list-style: none; }
+    .nav-item { margin-bottom: 0.25rem; }
+
+    .nav-link {
+      display: flex; align-items: center;
+      padding: 0.75rem 1.25rem;
+      color: rgba(255,255,255,0.9);
+      text-decoration: none;
+      font-size: 0.9375rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+    .nav-link:hover { background: rgba(255,255,255,0.1); color: white; }
+    .nav-link.active { background: rgba(255,255,255,0.1); }
+
+    .nav-icon { width: 1.25rem; text-align: center; }
+    .nav-text { margin-left: 0.75rem; opacity: 1; transition: opacity 0.2s ease 0.1s; }
+
+    .sidebar.collapsed .nav-text,
+    .sidebar.collapsed .logo-text,
+    .sidebar.collapsed .user-info > div { opacity: 0; visibility: hidden; width: 0; margin: 0; padding: 0; overflow: hidden; }
+    .sidebar.collapsed .logo-text { display: none; }
+
+    .logout-container { padding: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1); }
+
+    /* ---------- MAIN CONTENT (Template) ---------- */
+    .main-content {
+      margin-left: 0;
+      min-height: 100vh;
+      background-color: var(--bg-light);
+      transition: margin-left 0.3s ease;
+      padding: 0.75rem;
+    }
+    @media (min-width: 768px) {
+      .main-content { margin-left: 260px; padding: 1.5rem; }
+      .main-content.shifted { margin-left: 70px; }
+    }
+
+    .page-header {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      padding: 1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header-left { display: flex; align-items: center; gap: 0.75rem; }
+    .mobile-menu-btn { font-size: 1.25rem; color: #374151; }
+
+    .header-title h1 { margin: 0; font-size: 1.25rem; font-weight: 700; color: #111827; }
+    .header-title p { margin: 0; font-size: 0.875rem; color: #6B7280; }
+
+    .header-right { display: flex; align-items: center; gap: 0.75rem; }
+    .notification-bell {
+      position: relative; padding: 0.5rem; border-radius: 50%;
+      color: #6B7280; transition: background 0.2s;
+    }
+    .notification-bell:hover { background: #F3F4F6; }
+    .notification-badge {
+      position: absolute; top: 0.25rem; right: 0.25rem;
+      width: 0.5rem; height: 0.5rem; background: #EF4444; border-radius: 50%;
+    }
+    .user-initial {
+      width: 2.25rem; height: 2.25rem;
+      background: var(--primary-light);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 500;
+      font-size: 0.875rem;
+    }
+
+    /* ---------- DASHBOARD SPECIFIC STYLES ---------- */
+    .stats-grid { display: grid; gap: 1rem; margin-bottom: 1.5rem; }
+    @media (min-width: 768px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 767px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
+
+    .stat-card {
+      background: linear-gradient(135deg, white 0%, #f8fdf9 100%);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      border-left: 4px solid var(--primary-light);
+      transition: transform 0.2s;
+    }
+    .stat-card:hover { transform: translateY(-2px); }
+    .stat-card.revenue   { border-left-color: var(--success); }
+    .stat-card.bookings  { border-left-color: var(--primary-light); }
+    .stat-card.occupancy { border-left-color: var(--accent); }
+    .stat-card.guests    { border-left-color: var(--warning); }
+
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.625rem 1rem;
+      border-radius: 0.625rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s;
+    }
+    .btn:hover { background: #1f332d; }
+
+    .dashboard-card {
+      background: var(--white);
+      border-radius: 1rem;
+      box-shadow: 0 4px 20px rgba(45,74,67,0.08);
+      border: 1px solid rgba(125,161,142,0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .dashboard-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(45,74,67,0.12); }
+
+    .progress-bar {
+      height: 8px; border-radius: 4px; background: var(--primary-lighter); overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; border-radius: 4px;
+      background: linear-gradient(90deg, var(--primary-light) 0%, var(--primary) 100%);
+      transition: width 0.6s ease;
+    }
+
+    .quick-action {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 1rem; border-radius: 0.75rem; transition: all 0.3s ease; text-align: center;
+      font-size: 0.875rem; font-weight: 500;
+    }
+    .quick-action:hover { transform: translateY(-2px); }
+
+    .mobile-cards { display: block; }
+    @media (min-width: 426px) { .mobile-cards { display: none; } }
+    .desktop-table { display: none; }
+    @media (min-width: 426px) { .desktop-table { display: block; } }
+
+    .booking-card {
+      background: white; border-radius: 0.75rem; padding: 1rem;
+      margin-bottom: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border: 1px solid rgba(125,161,142,0.1);
+    }
+    .booking-card .label { font-size: 0.75rem; color: var(--text-light); }
+    .booking-card .value { font-weight: 600; color: var(--text-dark); }
+
+    .modal {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      display: flex; align-items: center; justify-content: center;
+      visibility: hidden; opacity: 0; transition: all 0.3s ease; z-index: 999;
+    }
+    .modal.show { visibility: visible; opacity: 1; }
+    .modal-content {
+      background: white; border-radius: 1rem; padding: 1.5rem;
+      width: 92%; max-width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Overlay -->
+  <div class="overlay"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-container">
+        <div class="logo-icon"><i class="fas fa-spa"></i></div>
+        <span class="logo-text">Reservision</span>
+      </div>
+      <button id="sidebarToggle" class="md:hidden">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+
+    <div class="user-info">
+      <div class="user-avatar"><i class="fas fa-user"></i></div>
+      <div>
+        <div class="font-medium">Admin User</div>
+        <div class="text-xs opacity-70">Super Administrator</div>
+      </div>
+    </div>
+
+    <div class="nav-container">
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a href="admin.html" class="nav-link active">
+            <i class="fas fa-tachometer-alt nav-icon"></i>
+            <span class="nav-text">Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="reservation_management.html" class="nav-link">
+            <i class="fas fa-calendar-check nav-icon"></i>
+            <span class="nav-text">Reservations</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="room_and_cottage.html" class="nav-link">
+            <i class="fas fa-bed nav-icon"></i>
+            <span class="nav-text">Rooms & Cottages</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="aminities.html" class="nav-link">
+            <i class="fas fa-concierge-bell nav-icon"></i>
+            <span class="nav-text">Amenities</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="usermangement.html" class="nav-link">
+            <i class="fas fa-users nav-icon"></i>
+            <span class="nav-text">User Management</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="reports_analysis.html" class="nav-link">
+            <i class="fas fa-chart-bar nav-icon"></i>
+            <span class="nav-text">Reports & Analytics</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="contentmanagement.html" class="nav-link">
+            <i class="fas fa-cog nav-icon"></i>
+            <span class="nav-text">Site Configuration</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="vr360_setup.html" class="nav-link">
+            <i class="fas fa-vr-cardboard nav-icon"></i>
+            <span class="nav-text">VR 360° Setup</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="feedback.html" class="nav-link">
+            <i class="fas fa-headset nav-icon"></i>
+            <span class="nav-text">Feedback & Support</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="logout-container">
+      <a href="login2.html" class="nav-link">
+        <i class="fas fa-sign-out-alt nav-icon"></i>
+        <span class="nav-text">Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content" id="mainContent">
+    <!-- Header -->
+    <header class="page-header">
+      <div class="header-left">
+        <button id="mobileMenuBtn" class="mobile-menu-btn md:hidden">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="header-title">
+          <h1>Dashboard</h1>
+          <p>Welcome back, Admin</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <button class="notification-bell">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge"></span>
+        </button>
+        <div class="user-initial">A</div>
+      </div>
+    </header>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card revenue">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-xs text-gray-500 font-medium">Total Revenue</p>
+            <h3 class="text-xl font-bold text-gray-800 mt-1">₱1.25M</h3>
+            <p class="text-success text-xs font-medium mt-1 flex items-center">
+              <i class="fas fa-arrow-up mr-1"></i>12.5%
+            </p>
+          </div>
+          <div class="p-2 rounded-lg bg-green-50 text-green-600">
+            <i class="fas fa-dollar-sign"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card bookings">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-xs text-gray-500 font-medium">Active Bookings</p>
+            <h3 class="text-xl font-bold text-gray-800 mt-1">42</h3>
+            <p class="text-[#7DA18E] text-xs font-medium mt-1 flex items-center">
+              <i class="fas fa-calendar-check mr-1"></i>8 today
+            </p>
+          </div>
+          <div class="p-2 rounded-lg bg-blue-50 text-blue-600">
+            <i class="fas fa-calendar-alt"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card occupancy">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-xs text-gray-500 font-medium">Occupancy</p>
+            <h3 class="text-xl font-bold text-gray-800 mt-1">78%</h3>
+            <p class="text-[#C2A68C] text-xs font-medium mt-1 flex items-center">
+              <i class="fas fa-bed mr-1"></i>12 available
+            </p>
+          </div>
+          <div class="p-2 rounded-lg bg-amber-50 text-amber-600">
+            <i class="fas fa-chart-pie"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card guests">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-xs text-gray-500 font-medium">Total Guests</p>
+            <h3 class="text-xl font-bold text-gray-800 mt-1">126</h3>
+            <p class="text-warning text-xs font-medium mt-1 flex items-center">
+              <i class="fas fa-users mr-1"></i>24 arriving
+            </p>
+          </div>
+          <div class="p-2 rounded-lg bg-purple-50 text-purple-600">
+            <i class="fas fa-user-friends"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-col gap-3 mb-6 md:flex-row md:justify-end">
+      <button id="reportBtn" class="btn"><i class="fas fa-chart-line"></i> Booking Trends</button>
+      <button id="exportBtn" class="btn"><i class="fas fa-file-export"></i> Export Data</button>
+    </div>
+
+    <!-- Charts & Recent Activity -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+      <div class="dashboard-card p-5 lg:col-span-2">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-lg font-bold text-gray-800">Revenue Overview</h2>
+          <div class="flex space-x-1">
+            <button class="text-xs px-3 py-1 rounded-full bg-[#E8F0EB] text-[#2D4A43] font-medium">Monthly</button>
+            <button class="text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-600 font-medium">Quarterly</button>
+            <button class="text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-600 font-medium">Yearly</button>
+          </div>
+        </div>
+        <div class="chart-container" style="height:280px;">
+          <canvas id="revenueChart"></canvas>
+        </div>
+      </div>
+
+      <div class="dashboard-card p-5">
+        <h2 class="text-lg font-bold text-gray-800 mb-4">Recent Activity</h2>
+        <div class="space-y-3 text-sm">
+          <div class="flex items-start space-x-3">
+            <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600 mt-1">
+              <i class="fas fa-check text-xs"></i>
+            </div>
+            <div>
+              <p class="font-medium text-gray-800">New booking confirmed</p>
+              <p class="text-xs text-gray-500">Mahogany Villa • 2 guests</p>
+              <p class="text-xs text-gray-400">10 min ago</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mt-1">
+              <i class="fas fa-user text-xs"></i>
+            </div>
+            <div>
+              <p class="font-medium text-gray-800">Guest checked in</p>
+              <p class="text-xs text-gray-500">Ocean View Suite • Maria S.</p>
+              <p class="text-xs text-gray-400">1 hour ago</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Room Occupancy & Quick Actions -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div class="dashboard-card p-5">
+        <h2 class="text-lg font-bold text-gray-800 mb-4">Room Occupancy</h2>
+        <div class="space-y-3">
+          <div>
+            <div class="flex justify-between text-xs text-gray-600 mb-1">
+              <span>Mahogany Villas</span><span>85%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:85%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-xs text-gray-600 mb-1">
+              <span>Ocean View Suites</span><span>72%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:72%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-xs text-gray-600 mb-1">
+              <span>Garden Cottages</span><span>64%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:64%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-card p-5">
+        <h2 class="text-lg font-bold text-gray-800 mb-4">Quick Actions</h2>
+        <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
+          <a href="#" class="quick-action bg-[#E8F0EB] text-[#2D4A43] hover:bg-[#2D4A43] hover: text-white">
+            <i class="fas fa-plus-circle text-xl mb-1"></i><span>New Booking</span>
+          </a>
+          <a href="#" class="quick-action bg-green-50 text-green-600 hover:bg-green-600 hover:text-white">
+            <i class="fas fa-bed text-xl mb-1"></i><span>Manage Rooms</span>
+          </a>
+          <a href="#" class="quick-action bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white">
+            <i class="fas fa-chart-bar text-xl mb-1"></i><span>View Reports</span>
+          </a>
+          <a href="#" class="quick-action bg-purple-50 text-purple-600 hover:bg-purple-600 hover:text-white">
+            <i class="fas fa-cog text-xl mb-1"></i><span>Settings</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Cards -->
+    <div class="mobile-cards">
+      <h2 class="text-lg font-bold text-gray-800 mb-3">Recent Bookings</h2>
+      <div class="booking-card">
+        <div class="flex justify-between items-start mb-2">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-[#7DA18E] flex items-center justify-center text-white text-sm font-medium">JS</div>
+            <div>
+              <div class="font-medium text-gray-800">John Smith</div>
+              <div class="text-xs text-gray-500">john@example.com</div>
+            </div>
+          </div>
+          <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-700">Confirmed</span>
+        </div>
+        <div class="grid grid-cols-2 gap-2 text-sm">
+          <div><span class="label">Room</span><div class="value">Mahogany Villa</div></div>
+          <div><span class="label">Amount</span><div class="value">₱32,200</div></div>
+          <div><span class="label">Check-in</span><div class="value">Oct 25</div></div>
+          <div><span class="label">Check-out</span><div class="value">Oct 27</div></div>
+        </div>
+      </div>
+      <div class="booking-card">
+        <div class="flex justify-between items-start mb-2">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-[#C2A68C] flex items-center justify-center text-white text-sm font-medium">MS</div>
+            <div>
+              <div class="font-medium text-gray-800">Maria Santos</div>
+              <div class="text-xs text-gray-500">maria@example.com</div>
+            </div>
+          </div>
+          <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-700">Checked In</span>
+        </div>
+        <div class="grid grid-cols-2 gap-2 text-sm">
+          <div><span class="label">Room</span><div class="value">Ocean View Suite</div></div>
+          <div><span class="label">Amount</span><div class="value">₱15,500</div></div>
+          <div><span class="label">Check-in</span><div class="value">Today</div></div>
+          <div><span class="label">Check-out</span><div class="value">Oct 26</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Desktop Table -->
+    <div class="desktop-table dashboard-card p-5 overflow-x-auto">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-bold text-gray-800">Recent Bookings</h2>
+        <a href="#" class="text-[#2D4A43] text-sm hover:underline">View All</a>
+      </div>
+      <table class="w-full min-w-[600px]">
+        <thead>
+          <tr class="text-left text-xs font-medium text-gray-500 border-b">
+            <th class="pb-3 px-2">Guest</th>
+            <th class="pb-3 px-2">Room</th>
+            <th class="pb-3 px-2">Check-In</th>
+            <th class="pb-3 px-2">Check-Out</th>
+            <th class="pb-3 px-2">Status</th>
+            <th class="pb-3 px-2">Amount</th>
+            <th class="pb-3 px-2">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y">
+          <tr class="hover:bg-gray-50">
+            <td class="py-3 px-2">
+              <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 rounded-full bg-[#7DA18E] flex items-center justify-center text-white text-xs">JS</div>
+                <div class="text-sm">
+                  <div class="font-medium">John Smith</div>
+                  <div class="text-xs text-gray-500">john@example.com</div>
+                </div>
+              </div>
+            </td>
+            <td class="py-3 px-2 text-sm">Mahogany Villa</td>
+            <td class="py-3 px-2 text-sm">Oct 25</td>
+            <td class="py-3 px-2 text-sm">Oct 27</td>
+            <td class="py-3 px-2"><span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-700">Confirmed</span></td>
+            <td class="py-3 px-2 text-sm font-medium">₱32,200</td>
+            <td class="py-3 px-2"><button class="text-[#2D4A43] hover:text-[#1A2E28]"><i class="fas fa-edit"></i></button></td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="py-3 px-2">
+              <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 rounded-full bg-[#C2A68C] flex items-center justify-center text-white text-xs">MS</div>
+                <div class="text-sm">
+                  <div class="font-medium">Maria Santos</div>
+                  <div class="text-xs text-gray-500">maria@example.com</div>
+                </div>
+              </div>
+            </td>
+            <td class the="py-3 px-2 text-sm">Ocean View Suite</td>
+            <td class="py-3 px-2 text-sm">Today</td>
+            <td class="py-3 px-2 text-sm">Oct 26</td>
+            <td class="py-3 px-2"><span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-700">Checked In</span></td>
+            <td class="py-3 px-2 text-sm font-medium">₱15,500</td>
+            <td class="py-3 px-2"><button class="text-[#2D4A43] hover:text-[#1A2E28]"><i class="fas fa-edit"></i></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Modal -->
+  <div id="reportModal" class="modal">
+    <div class="modal-content">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-bold text-[#2D4A43]">Booking Trends Report</h2>
+        <button id="closeModal" class="text-gray-500 hover:text-gray-700">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      <canvas id="bookingTrendsChart" height="250"></canvas>
+    </div>
+  </div>
+
+  <!-- Sidebar + Dashboard JS -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const sidebar = document.getElementById('sidebar');
+      const mainContent = document.getElementById('mainContent');
+      const overlay = document.querySelector('.overlay');
+      const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+      const sidebarToggle = document.getElementById('sidebarToggle');
+      const collapseBtn = document.getElementById('collapseBtn');
+
+      // Mobile open/close
+      [mobileMenuBtn, sidebarToggle].forEach(btn => {
+        btn?.addEventListener('click', () => {
+          sidebar.classList.toggle('active');
+          overlay.classList.toggle('active');
+        });
+      });
+      overlay.addEventListener('click', () => {
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+      });
+
+      // Desktop collapse
+      collapseBtn?.addEventListener('click', () => {
+        sidebar.classList.toggle('collapsed');
+        mainContent.classList.toggle('shifted');
+        collapseBtn.classList.toggle('collapsed');
+      });
+
+      // Close mobile menu on resize
+      window.addEventListener('resize', () => {
+        if (window.innerWidth >= 768) {
+          sidebar.classList.remove('active');
+          overlay.classList.remove('active');
+        }
+      });
+
+      // Swipe support
+      let startX = 0, isDragging = false;
+      const EDGE = 60, MIN_SWIPE = 80;
+      document.addEventListener('touchstart', e => {
+        startX = e.touches[0].clientX;
+        isDragging = startX <= EDGE || sidebar.classList.contains('active');
+      }, { passive: true });
+      document.addEventListener('touchmove', e => {
+        if (!isDragging) return;
+        const delta = e.touches[0].clientX - startX;
+        if (Math.abs(delta) > 10) e.preventDefault();
+      }, { passive: false });
+      document.addEventListener('touchend', e => {
+        if (!isDragging) return;
+        const delta = e.changedTouches[0].clientX - startX;
+        if (Math.abs(delta) >= MIN_SWIPE) {
+          if (delta > 0 && startX <= EDGE) {
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+          } else if (delta < 0 && sidebar.classList.contains('active')) {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+          }
+        }
+        isDragging = false;
+      });
+
+      /* ---------- Dashboard Specific JS ---------- */
+      // Revenue Chart
+      const revenueCtx = document.getElementById('revenueChart')?.getContext('2d');
+      if (revenueCtx) {
+        new Chart(revenueCtx, {
+          type: 'line',
+          data: {
+            labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+            datasets: [{
+              data: [650,590,800,810,860,850,930,1020,980,1240,1150,1300],
+              borderColor: '#2D4A43',
+              backgroundColor: 'rgba(45,74,67,0.1)',
+              fill: true,
+              tension: 0.4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              y: { beginAtZero: true, ticks: { callback: v => '₱' + v + 'K' } },
+              x: { grid: { display: false } }
+            }
+          }
+        });
+      }
+
+      // Modal + Booking Trends Chart
+      const modal = document.getElementById('reportModal');
+      document.getElementById('reportBtn')?.addEventListener('click', () => {
+        modal.classList.add('show');
+        const ctx = document.getElementById('bookingTrendsChart').getContext('2d');
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: ['Jan','Feb','Mar','Apr','May','Jun'],
+            datasets: [{ data: [32,45,50,60,58,70], backgroundColor: '#2D4A43', borderRadius: 6 }]
+          },
+          options: { responsive: true, plugins: { legend: { display: false } } }
+        });
+      });
+      document.getElementById('closeModal')?.addEventListener('click', () => modal.classList.remove('show'));
+      window.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('show'); });
+
+      // Export PDF
+      document.getElementById('exportBtn')?.addEventListener('click', () => {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.text("SereneStay Booking Report", 14, 15);
+        doc.autoTable({ html: '.desktop-table table' });
+        doc.save("serenestay_bookings.pdf");
+      });
+    });
+  </script>
+</body>
+</html>

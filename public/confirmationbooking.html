@@ -377,127 +377,146 @@
   </div>
 
   <script>
-    // Load booking
-    const bookingData = JSON.parse(localStorage.getItem('eduardosBooking') || '{}');
-    const { items = [], checkIn, checkOut, selectedPayment = 'paymaya' } = bookingData;
+  // Load booking data
+  const bookingData = JSON.parse(localStorage.getItem('eduardosBooking') || '{}');
+  const { items = [], checkIn, checkOut, selectedPayment = 'gcash' } = bookingData;
 
-    // Summary
-    const bookedItems = document.getElementById('bookedItems');
-    const subtotalEl = document.getElementById('subtotal');
-    const totalEl = document.getElementById('total');
-    let subtotal = 0;
+  // Render summary
+  const bookedItems = document.getElementById('bookedItems');
+  const subtotalEl = document.getElementById('subtotal');
+  const totalEl = document.getElementById('total');
+  let subtotal = 0;
 
-    items.forEach(b => {
-      const nights = b.item.perNight && checkIn && checkOut ? 
-        Math.ceil((new Date(checkOut) - new Date(checkIn)) / 86400000) : 1;
-      const lineTotal = b.item.price * b.qty * (b.item.perNight ? nights : 1);
-      subtotal += lineTotal;
+  items.forEach(b => {
+    const nights = b.item.perNight && checkIn && checkOut 
+      ? Math.ceil((new Date(checkOut) - new Date(checkIn)) / 86400000) 
+      : 1;
+    const lineTotal = b.item.price * b.qty * (b.item.perNight ? nights : 1);
+    subtotal += lineTotal;
 
-      const div = document.createElement('div');
-      div.className = 'flex justify-between items-start p-2 bg-blue-50 rounded-lg text-xs';
-      div.innerHTML = `
-        <div class="flex-1">
-          <div class="font-medium">${b.item.name}</div>
-          <div class="text-text-muted text-xs">
-            ×${b.qty} • ${b.guests} Guest${b.guests>1?'s':''}${b.item.perNight ? ` • ${nights} night${nights>1?'s':''}` : ''}
-          </div>
+    const div = document.createElement('div');
+    div.className = 'flex justify-between items-start p-2 bg-blue-50 rounded-lg text-xs';
+    div.innerHTML = `
+      <div class="flex-1">
+        <div class="font-medium">${b.item.name}</div>
+        <div class="text-text-muted text-xs">
+          ×${b.qty} • ${b.guests} Guest${b.guests > 1 ? 's' : ''}${b.item.perNight ? ` • ${nights} night${nights > 1 ? 's' : ''}` : ''}
         </div>
-        <div class="text-right ml-2">
-          <div class="font-medium">₱${lineTotal.toLocaleString()}</div>
-          ${b.item.perNight ? `<div class="text-text-muted text-xs">₱${b.item.price.toLocaleString()}/night</div>` : ''}
-        </div>
-      `;
-      bookedItems.appendChild(div);
-    });
+      </div>
+      <div class="text-right ml-2">
+        <div class="font-medium">₱${lineTotal.toLocaleString()}</div>
+        ${b.item.perNight ? `<div class="text-text-muted text-xs">₱${b.item.price.toLocaleString()}/night</div>` : ''}
+      </div>
+    `;
+    bookedItems.appendChild(div);
+  });
 
-    subtotalEl.textContent = `₱${subtotal.toLocaleString()}`;
-    totalEl.textContent = `₱${subtotal.toLocaleString()}`;
+  subtotalEl.textContent = `₱${subtotal.toLocaleString()}`;
+  totalEl.textContent = `₱${subtotal.toLocaleString()}`;
 
-    // Payment selection
-    document.querySelectorAll('.payment-option').forEach(opt => {
-      if (opt.dataset.method === selectedPayment) opt.classList.add('selected');
-      opt.onclick = () => {
-        document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
-        opt.classList.add('selected');
-        localStorage.setItem('eduardoBooking', JSON.stringify({ ...bookingData, selectedPayment: opt.dataset.method }));
-      };
-    });
+  // Payment selection
+  document.querySelectorAll('.payment-option').forEach(opt => {
+    if (opt.dataset.method === selectedPayment) opt.classList.add('selected');
+    opt.onclick = () => {
+      document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      localStorage.setItem('eduardosBooking', JSON.stringify({ ...bookingData, selectedPayment: opt.dataset.method }));
+    };
+  });
 
-    // Counters
-    ['Adults', 'Children'].forEach(type => {
-      const inc = document.getElementById(`inc${type}`);
-      const dec = document.getElementById(`dec${type}`);
-      const count = document.getElementById(`${type.toLowerCase()}Count`);
-      inc.onclick = () => count.textContent = +count.textContent + 1;
-      dec.onclick = () => { if (+count.textContent > (type === 'Adults' ? 1 : 0)) count.textContent = +count.textContent - 1; };
-    });
+  // Counters
+  ['Adults', 'Children'].forEach(type => {
+    const inc = document.getElementById(`inc${type}`);
+    const dec = document.getElementById(`dec${type}`);
+    const count = document.getElementById(`${type.toLowerCase()}Count`);
+    inc.onclick = () => count.textContent = +count.textContent + 1;
+    dec.onclick = () => {
+      if (+count.textContent > (type === 'Adults' ? 1 : 0)) {
+        count.textContent = +count.textContent - 1;
+      }
+    };
+  });
 
-    // Pay with loading
-    const payBtn = document.getElementById('payBtn');
-    payBtn.onclick = () => {
-      const req = ['firstName','lastName','phone','email','address','city','postal'];
-      for (const id of req) if (!document.getElementById(id).value.trim()) return alert('Fill all required fields.');
-      if (!document.getElementById('terms').checked) return alert('Agree to terms.');
+  // PAY BUTTON — FIXED NA TALAGA ‘TO!
+  const payBtn = document.getElementById('payBtn');
+  payBtn.onclick = async () => {
+    // Validation
+    const required = ['firstName', 'lastName','phone','email','address','city','postal'];
+    for (const id of required) {
+      if (!document.getElementById(id).value.trim()) {
+        alert('Please fill all required fields!');
+        return;
+      }
+    }
+    if (!document.getElementById('terms').checked) {
+      alert('Please agree to the Terms & Conditions');
+      return;
+    }
 
-      // Show loading
-      payBtn.classList.add('btn-loading');
+    // Show loading
+    payBtn.classList.add('btn-loading');
+    payBtn.disabled = true;
 
-      // Simulate payment processing (2.5s)
-payBtn.onclick = async () => {
-  const req = ['firstName','lastName','phone','email','address','city','postal'];
-  for (const id of req) if (!document.getElementById(id).value.trim()) return alert('Fill all required fields.');
-  if (!document.getElementById('terms').checked) return alert('Agree to terms.');
+    // Build final data
+    const finalBooking = {
+      ...bookingData,
+      guest: {
+        firstName: document.getElementById('firstName').value.trim(),
+        lastName: document.getElementById('lastName').value.trim(),
+        fullName: document.getElementById('firstName').value.trim() + ' ' + document.getElementById('lastName').value.trim(),
+        adults: +document.getElementById('adultsCount').textContent,
+        children: +document.getElementById('childrenCount').textContent,
+        arrivalTime: document.getElementById('arrivalTime').value,
+        specialRequests: document.getElementById('specialRequests').value || '',
+        phone: '+63' + document.getElementById('phone').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        address: document.getElementById('address').value.trim() + ', ' + 
+                 document.getElementById('city').value.trim() + ' ' + 
+                 document.getElementById('postal').value.trim(),
+      },
+      selectedPayment: document.querySelector('.payment-option.selected')?.dataset.method || 'gcash',
+      total: subtotal,
+      bookingId: 'EDU' + Date.now().toString().slice(-8)
+    };
 
-  payBtn.classList.add('btn-loading');
+    try {
+      const res = await fetch('http://localhost:3000/api/bookings/create', {  // FIXED: booking, hindi bookinsg
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(finalBooking)
+      });
 
-  const final = {
-    ...bookingData,
-    guest: {
-      firstName: document.getElementById('firstName').value.trim(),
-      lastName: document.getElementById('lastName').value.trim(),
-      fullName: document.getElementById('firstName').value.trim() + ' ' + document.getElementById('last reçuName').value.trim(),
-      adults: +document.getElementById('adultsCount').textContent,
-      children: +document.getElementById('childrenCount').textContent,
-      arrivalTime: document.getElementById('arrivalTime').value,
-      specialRequests: document.getElementById('specialRequests').value,
-      phone: '+63' + document.getElementById('phone').value.trim(),
-      email: document.getElementById('email').value.trim(),
-      address: document.getElementById('address').value.trim() + ', ' + document.getElementById('city').value.trim() + ' ' + document.getElementById('postal').value.trim(),
-    },
-    selectedPayment: document.querySelector('.payment-option.selected').dataset.method,
-    total: subtotal,
-    bookingId: 'EDU' + Date.now().toString().slice(-8)
+      const result = await res.json();
+
+      if (res.ok) {
+        localStorage.removeItem('eduardosBooking');
+        document.getElementById('modalEmail').textContent = finalBooking.guest.email;
+        document.getElementById('confirmationModal').classList.remove('hidden');
+        console.log('SUCCESS! Booking ID:', result.bookingId);
+      } else {
+        alert(result.error || 'Booking failed');
+        payBtn.classList.remove('btn-loading');
+        payBtn.disabled = false;
+      }
+    } catch (err) {
+      console.error('Connection error:', err);
+      alert('Cannot connect to server. Is backend running?');
+      payBtn.classList.remove('btn-loading');
+      payBtn.disabled = false;
+    }
   };
 
-  try {
-    const res = await fetch('http://localhost:3000/api/booking/create', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(final)
+  // Reveal animation
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
     });
+  }, { threshold: 0.05 });
 
-    const result = await res.json();
-
-    if (res.ok) {
-      localStorage.removeItem('eduardosBooking');
-      document.getElementById('modalEmail').textContent = final.guest.email;
-      document.getElementById('confirmationModal').classList.remove('hidden');
-      console.log('Booking ID:', result.bookingId);
-    } else {
-      alert(result.error || 'Booking failed. Please try again.');
-      payBtn.classList.remove('btn-loading');
-    }
-  } catch (err) {
-    alert('No connection to server. Please check your internet.');
-    payBtn.classList.remove('btn-loading');
-  }};
-};
-
-    // Reveal
-    const observer = new IntersectionObserver(es => es.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
-    }), { threshold: 0.05 });
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-  </script>
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
 </body>
 </html>

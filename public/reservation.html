@@ -170,7 +170,7 @@
   <!-- Right Sidebar (Mobile) -->
   <div id="sidebar" class="sidebar">
     <div class="sidebar-header">
-      <a href="#" class="flex items-center space-x-3">
+      <a href="/" class="flex items-center space-x-3">
         <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-blue to-accent-blue flex items-center justify-center text-white font-bold text-lg">
           Ed
         </div>
@@ -179,16 +179,16 @@
       <button id="closeSidebar" class="text-gray-600 hover:text-gray-900"><i class="fas fa-times text-xl"></i></button>
     </div>
     <nav class="sidebar-nav">
-      <a href="#">Home</a>
-      <a href="#">Amenities</a>
-      <a href="#" class="active">Reservation</a>
-      <a href="#">Gallery</a>
-      <a href="#">Contact</a>
-      <a href="#">About</a>
+      <a href="/">Home</a>
+      <a href="/amenities">Amenities</a>
+      <a href="/reservation" class="active">Reservation</a>
+      <a href="/gallery">Gallery</a>
+      <a href="/contact">Contact</a>
+      <a href="/about">About</a>
     </nav>
     <div class="sidebar-actions">
-      <a href="#" class="block text-center px-4 py-2 border border-primary-blue text-primary-blue rounded-lg hover:bg-blue-50 transition-colors font-medium">Login</a>
-      <a href="#" class="block text-center px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">Sign Up</a>
+      <a href="/login" class="block text-center px-4 py-2 border border-primary-blue text-primary-blue rounded-lg hover:bg-blue-50 transition-colors font-medium">Login</a>
+      <a href="/registration" class="block text-center px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">Sign Up</a>
     </div>
   </div>
 
@@ -196,30 +196,24 @@
   <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-sm nav-visible transition-all duration-300" id="siteHeader">
     <div class="container mx-auto px-4 py-3">
       <div class="flex items-center justify-between">
-        <a href="#" class="flex items-center space-x-3">
+        <a href="/" class="flex items-center space-x-3">
           <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-blue to-accent-blue flex items-center justify-center text-white font-bold text-lg">
             Ed
           </div>
           <div class="text-xl font-bold text-primary-blue">Eduardo's</div>
         </a>
-        
         <nav class="hidden md:flex space-x-8">
-          <a href="#" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Home</a>
-          <a href="#" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Amenities</a>
-          <a href="rates.html" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Rates</a>
-          <a href="#" class="font-medium text-primary-blue relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-full after:h-0.5 after:bg-primary-blue">Reservation</a>
-          <a href="#" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Gallery</a>
-          <a href="#" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Contact</a>
-          <a href="#" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">About</a>
+          <a href="/" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Home</a>
+          <a href="/amenities" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Amenities</a>
+          <a href="/rates" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Rates</a>
+          <a href="/gallery" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Gallery</a>
+          <a href="/contact" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">Contact</a>
+          <a href="/about" class="font-medium hover:text-primary-blue transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-primary-blue after:transition-all after:duration-300 hover:after:w-full">About</a>
         </nav>
-        
-        <div class="hidden md:flex items-center space-x-4">
-          <a href="#" class="px-4 py-2 border border-primary-blue text-primary-blue rounded-lg hover:bg-blue-50 transition-colors duration-300 font-medium">Login</a>
-          <a href="#" class="px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 font-medium">Signup</a>
-        </div>
-
-        <div class="flex md:hidden items-center gap-5">
-          <button id="openSidebar" class="text-2xl text-primary-blue"><i class="fas fa-bars"></i></button>
+        <div class="flex items-center space-x-4">
+          <a href="/login" class="hidden md:block px-4 py-2 border border-primary-blue text-primary-blue rounded-lg hover:bg-blue-50 transition-colors duration-300 font-medium">Login</a>
+          <a href="/registration" class="hidden md:block px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 font-medium">Signup</a>
+          <button id="openSidebar" class="md:hidden text-2xl text-primary-blue"><i class="fas fa-bars"></i></button>
         </div>
       </div>
     </div>
@@ -350,8 +344,7 @@
           <div class="flex gap-2 flex-wrap" id="categoryTabs">
             <button data-cat="rooms" class="tab-btn active">Rooms</button>
             <button data-cat="cottages" class="tab-btn">Cottages</button>
-            <button data-cat="food" class="tab-btn">Food</button>
-            <button data-cat="events" class="tab-btn">Events</button>
+
           </div>
           <div class="text-sm text-text-muted">Showing: <span id="currentCategoryLabel" class="font-semibold">Rooms</span></div>
         </div>
@@ -434,311 +427,382 @@
   </footer>
 
   <script>
-    // ==== DATA ====
-    const DATA = {
-      rooms: [
-        { id: 'r1', name: 'Garden Glass Villa', price: 18500, originalPrice: 25000, desc: 'Experience a perfect blend of elegance and nature...', amenities: ['Free WiFi', 'Private Hot Tub', 'Beach Access', 'Breakfast Included'], imgs: ['https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1200&q=80','https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80'], perNight: true, maxGuests: 2 },
-        { id: 'r2', name: 'Deluxe Room', price: 9500, desc: 'A comfortable, modern room with garden views...', amenities: ['Free WiFi', 'Smart TV', 'Garden View'], imgs: ['https://images.unsplash.com/photo-1584132915807-fd1f5fbc078f?auto=format&fit=crop&w=1200&q=80'], perNight: true, maxGuests: 2 },
-        { id: 'r3', name: 'Family Suite', price: 22000, desc: 'Spacious two-bedroom suite...', amenities: ['Two Bedrooms', 'Kitchenette'], imgs: ['https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80'], perNight: true, maxGuests: 6 }
-      ],
-      cottages: [
-        { id: 'c1', name: 'Beachfront Cottage', price: 8200, desc: 'Wake up to the sound of the ocean...', amenities: ['Ocean View', 'Outdoor Seating'], imgs: ['https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80'], perNight: true, maxGuests: 4 },
-        { id: 'c2', name: 'Garden Cottage', price: 7500, desc: 'A tranquil hideaway...', amenities: ['Private Cottage', 'Garden View'], imgs: ['https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80'], perNight: true, maxGuests: 3 }
-      ],
-      food: [
-        { id: 'f1', name: 'Beachfront Dinner Set', price: 1800, desc: 'Enjoy a romantic three-course dinner...', amenities: ['3-Course Dinner for Two'], imgs: ['https://images.unsplash.com/photo-1541542684-3b05a8f9c4c8?auto=format&fit=crop&w=1200&q=80'], perNight: false, maxGuests: 2 },
-        { id: 'f2', name: 'Group Buffet Package', price: 3500, desc: 'Ideal for families or large groups...', amenities: ['All-You-Can-Eat Buffet'], imgs: ['https://images.unsplash.com/photo-1541542684-3b05a8f9c4c8?auto=format&fit=crop&w=1200&q=80'], perNight: false, maxGuests: 10 }
-      ],
-      events: [
-        { id: 'e1', name: 'Small Wedding Package', price: 45000, desc: 'Celebrate your dream wedding...', amenities: ['Venue Setup', 'Full Catering'], imgs: ['https://images.unsplash.com/photo-1496417263034-38ec4f0b665a?auto=format&fit=crop&w=1200&q=80'], perNight: false, maxGuests: 50 },
-        { id: 'e2', name: 'Corporate Event', price: 30000, desc: 'Host your next company retreat...', amenities: ['Function Hall', 'AV Equipment'], imgs: ['https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80'], perNight: false, maxGuests: 100 }
-      ]
-    };
+// ==================== STATE ====================
+  let booking = [], checkIn = null, checkOut = null, adults = 2, children = 0;
+  let allItems = { rooms: [], cottages: [], food: [], events: [] };
+  const itemsContainer = document.getElementById('itemsContainer');
 
-    // ==== STATE ====
-    let booking = [], checkIn = null, checkOut = null, adults = 2, children = 0;
-    const itemsContainer = document.getElementById('itemsContainer');
+  // ==================== FETCH & GROUP ITEMS ====================
+  async function fetchItems() {
+    try {
+      const res = await fetch('/api/admin/rooms');
+      if (!res.ok) throw new Error(`Server error: ${res.status}`);
+      const data = await res.json();
 
-    // ==== UTILS ====
-    function nightsBetween(s, e) { return !s || !e ? 0 : Math.ceil((e - s) / 86400000); }
-    function updateNightsDisplay() {
-      const nights = nightsBetween(checkIn, checkOut);
-      document.getElementById('nightsDisplay').textContent = nights > 0 ? `${nights} night${nights > 1 ? 's' : ''}` : '—';
-      document.getElementById('dateRangeSummary').textContent = nights > 0 
-        ? `${checkIn.toLocaleDateString('en-GB', {day:'numeric', month:'short'})} – ${checkOut.toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'})}`
-        : 'Select check-in & check-out';
-      return nights;
+      // FIXED FILTERING — BASED SA EXACTONG DATA MO!
+      allItems.rooms = data.filter(item => {
+      const cat = (item.category || '').toString().toLowerCase().trim();
+      return cat.includes('room') || cat.includes('deluxe') || cat === 'standard';
+      });
+
+      allItems.cottages = data.filter(item => {
+        const cat = (item.category || '').toString().toLowerCase().trim();
+        return cat.includes('cottage');
+      });
+
+      renderCategory('rooms');
+      document.querySelector('[data-cat="rooms"]').classList.add('active');
+      document.getElementById('currentCategoryLabel').textContent = 'Rooms';
+    } catch (err) {
+      console.error('Failed to load items:', err);
+      itemsContainer.innerHTML = `<div class="text-center py-20 text-red-600">Connection error. Please try again.</div>`;
     }
+  }
 
-    // ==== RENDER CARD ====
-    function renderCard(item) {
-      const card = document.createElement('div');
-      card.className = 'item-card';
-      card.innerHTML = `
-        <div class="md:flex">
-          <div class="md:w-1/3 relative carousel-container overflow-hidden">
-            ${item.imgs.map((src,i)=>`<img src="${src}" alt="${item.name} - View ${i+1}" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${i===0?'opacity-100':'opacity-0'}">`).join('')}
-            <button class="carousel-arrow prev"><</button>
-            <button class="carousel-arrow next">></button>
+  // ==================== RENDER CARD ====================
+  function renderCard(item) {
+    const card = document.createElement('div');
+    card.className = 'item-card reveal';
+
+    // Fix images — kung null or walang laman, placeholder muna
+    const images = Array.isArray(item.images) && item.images.length > 0 
+      ? item.images 
+      : ['https://via.placeholder.com/800x600/2B6CB0/ffffff?text=No+Image+Yet'];
+
+    card.innerHTML = `
+      <div class="md:flex">
+        <div class="md:w-1/3 relative carousel-container bg-gray-200">
+          ${images.map((src, i) => `
+            <img src="${src.startsWith('http') ? src : '/images/rooms/' + src}" 
+                 alt="${item.name}" 
+                 class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${i===0?'opacity-100':'opacity-0'}">
+          `).join('')}
+          ${images.length > 1 ? `
+            <button class="carousel-arrow prev">&lt;</button>
+            <button class="carousel-arrow next">&gt;</button>
             <div class="thumb-nav">
-              ${item.imgs.map((_,i)=>`<div class="thumb ${i===0?'active':''}" data-idx="${i}"><img src="${item.imgs[i]}" class="w-full h-full object-cover"></div>`).join('')}
+              ${images.map((_, i) => `
+                <div class="thumb ${i===0?'active':''}" data-idx="${i}">
+                  <img src="${images[i].startsWith('http') ? images[i] : '/images/rooms/' + images[i]}" class="w-full h-full object-cover">
+                </div>
+              `).join('')}
             </div>
-          </div>
-          <div class="p-5 md:p-6 flex flex-col flex-1">
-            <div class="flex justify-between items-start mb-2">
-              <h3 class="text-lg md:text-xl font-semibold">${item.name}</h3>
-              <div class="text-right">
-                ${item.originalPrice ? `<div class="text-sm text-gray-400 line-through">₱${item.originalPrice.toLocaleString()}</div>` : ''}
-                <div class="font-bold text-warm-brown text-lg">₱${item.price.toLocaleString()}${item.perNight ? '/night' : ''}</div>
-              </div>
-            </div>
-            <p class="text-sm text-gray-600 line-clamp-2">${item.desc}</p>
-            <button class="view-more-modal mt-2 text-primary-blue text-sm font-medium hover:underline">View More</button>
-            <div class="mt-auto pt-4 border-t space-y-3">
-              <div class="flex items-center gap-3">
-                <label class="text-sm text-gray-600 whitespace-nowrap">Qty:</label>
-                <select class="qty-select border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-blue/30">
-                  ${[1,2,3,4,5].map(n=>`<option value="${n}">${n}</option>`).join('')}
-                </select>
-                <label class="text-sm text-gray-600 whitespace-nowrap ml-2">Guests:</label>
-                <select class="guest-select border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-blue/30">
-                  ${Array.from({length: item.maxGuests}, (_,i) => i+1).map(n=>`<option value="${n}">${n} Guest${n>1?'s':''}</option>`).join('')}
-                </select>
-              </div>
-              <button class="book-now w-full px-5 py-2 bg-primary-blue text-white rounded-lg text-sm font-medium hover:bg-accent-blue transition-colors flex items-center justify-center gap-1">
-                Book Now <i class="fas fa-arrow-right text-xs"></i>
-              </button>
-            </div>
-          </div>
-        </div>`;
+          ` : ''}
+        </div>
 
-      // Carousel
-      const imgs = card.querySelectorAll('img');
+        <div class="p-5 md:p-6 flex flex-col flex-1">
+          <div class="flex justify-between items-start mb-3">
+            <h3 class="text-xl font-bold text-primary-blue">${item.name}</h3>
+            <div class="text-right">
+              ${item.original_price ? `<div class="text-sm text-gray-400 line-through">₱${Number(item.original_price).toLocaleString()}</div>` : ''}
+              <div class="text-2xl font-bold text-warm-brown">₱${Number(item.price).toLocaleString()}${item.per_night ? '/night' : ''}</div>
+            </div>
+          </div>
+
+          <p class="text-gray-600 mb-3 line-clamp-3">${item.description || 'No description available.'}</p>
+          <button class="view-more-modal text-primary-blue font-medium hover:underline text-sm mb-4">View More →</button>
+
+          <div class="mt-auto pt-4 border-t">
+            <div class="flex flex-wrap items-center gap-4 mb-4 text-sm">
+              <div class="flex items-center gap-2">
+                <span class="text-gray-600">Qty:</span>
+                <select class="qty-select border rounded-lg px-4 py-2">
+                  ${[1,2,3,4,5].map(n => `<option value="${n}">${n}</option>`).join('')}
+                </select>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-gray-600">Guests:</span>
+                <select class="guest-select border rounded-lg px-4 py-2">
+                  ${Array.from({length: item.max_guests || 6}, (_,i) => `<option value="${i+1}">${i+1} Guest${i>0?'s':''}</option>`).join('')}
+                </select>
+              </div>
+            </div>
+
+            <button class="book-now w-full py-3 bg-gradient-to-r from-primary-blue to-accent-blue text-white rounded-lg font-bold hover:shadow-xl transition-all flex items-center justify-center gap-2 text-lg">
+              <i class="fas fa-calendar-check"></i> Book Now
+            </button>
+          </div>
+        </div>
+      </div>`;
+
+    // Carousel logic
+    if (images.length > 1) {
+      const imgs = card.querySelectorAll('.carousel-container img');
       const thumbs = card.querySelectorAll('.thumb');
       let idx = 0;
       const show = i => {
-        imgs.forEach((im,j)=>im.style.opacity = j===i?'1':'0');
-        thumbs.forEach((t,j)=>t.classList.toggle('active', j===i));
+        imgs.forEach((im, j) => im.style.opacity = j === i ? '1' : '0');
+        thumbs.forEach((t, j) => t.classList.toggle('active', j === i));
       };
       card.querySelector('.prev').onclick = () => { idx = (idx - 1 + imgs.length) % imgs.length; show(idx); };
       card.querySelector('.next').onclick = () => { idx = (idx + 1) % imgs.length; show(idx); };
       thumbs.forEach(t => t.onclick = () => show(+t.dataset.idx));
+    }
 
-      // View More
-      card.querySelector('.view-more-modal').onclick = () => {
-        document.getElementById('modalTitle').textContent = item.name;
-        const content = document.getElementById('modalContent');
-        content.innerHTML = `
-          <p class="text-sm text-gray-600 mb-4">${item.desc}</p>
-          <div class="grid grid-cols-2 gap-3 text-sm">
-            ${item.amenities.map(a => `<div class="flex items-center gap-2"><i class="fas fa-check text-primary-blue text-xs"></i> ${a}</div>`).join('')}
+    // View More
+    card.querySelector('.view-more-modal').onclick = () => {
+      document.getElementById('modalTitle').textContent = item.name;
+      document.getElementById('modalContent').innerHTML = `
+        <img src="${images[0].startsWith('http') ? images[0] : '/images/rooms/' + images[0]}" class="w-full h-80 object-cover rounded-xl mb-6 shadow-lg">
+        <p class="text-gray-700 text-lg mb-6 leading-relaxed">${item.description || 'No description available.'}</p>
+        <div class="grid grid-cols-2 gap-6 text-lg">
+          <div><strong>Max Guests:</strong> ${item.max_guests || 'N/A'}</div>
+          <div><strong>Price:</strong> ₱${Number(item.price).toLocaleString()}${item.per_night ? ' per night' : ''}</div>
+        </div>
+      `;
+      document.getElementById('viewMoreModal').classList.add('open');
+    };
+
+    // Book Now
+    card.querySelector('.book-now').onclick = () => {
+      const qty = +card.querySelector('.qty-select').value;
+      const guests = +card.querySelector('.guest-select').value;
+      const existing = booking.find(b => b.item.id === item.id);
+      if (existing) {
+        existing.qty += qty;
+        existing.guests = guests;
+      } else {
+        booking.push({ item, qty, guests });
+      }
+      updateSummary();
+      alert(`Added: ${item.name} × ${qty} to your booking!`);
+    };
+
+    return card;
+  }
+
+  // ==================== RENDER CATEGORY ====================
+  function renderCategory(cat) {
+    itemsContainer.innerHTML = '<p class="text-center py-12 text-gray-500">Loading...</p>';
+    setTimeout(() => {
+      itemsContainer.innerHTML = '';
+      const items = allItems[cat] || [];
+      if (items.length === 0) {
+        itemsContainer.innerHTML = `<p class="text-center py-20 text-gray-500 text-xl">No ${cat} available right now.</p>`;
+        return;
+      }
+      items.forEach(item => itemsContainer.appendChild(renderCard(item)));
+      
+      // Trigger reveal animation
+      document.querySelectorAll('.reveal').forEach(el => {
+        new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+            }
+          });
+        }, { threshold: 0.1 }).observe(el);
+      });
+    }, 400);
+  }
+
+  // ==================== BOOKING SUMMARY (same logic, pero fixed field names) ====================
+  function nightsBetween(s, e) { return !s || !e ? 0 : Math.ceil((e - s) / 86400000); }
+
+  function updateSummary() {
+    const box = document.getElementById('bookedRooms');
+    const sub = document.getElementById('subtotal');
+    const tot = document.getElementById('summaryTotal');
+    const empty = document.querySelector('.booking-empty');
+    const nights = nightsBetween(checkIn, checkOut);
+
+    if (booking.length === 0) {
+      box.innerHTML = ''; empty.classList.remove('hidden');
+      sub.textContent = tot.textContent = '₱0';
+      return;
+    }
+
+    empty.classList.add('hidden');
+    let html = '', total = 0;
+
+    booking.forEach(b => {
+      const item = b.item;
+      const isNight = item.per_night !== 0;
+      const lineTotal = isNight && nights ? item.price * b.qty * nights : item.price * b.qty;
+      total += lineTotal;
+
+      html += `
+        <div class="bg-gray-50 p-4 rounded-xl border flex justify-between items-center gap-4">
+          <div class="flex-1">
+            <div class="font-semibold text-primary-blue">${item.name}</div>
+            <div class="text-sm text-gray-600">
+              ${b.qty} × item${isNight && nights ? ` × ${nights} night${nights>1?'s':''}` : ''} • ${b.guests} guest${b.guests>1?'s':''}
+            </div>
           </div>
-          <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-2">
-            ${item.imgs.map(src => `<img src="${src}" alt="${item.name}" class="w-full h-32 object-cover rounded-lg shadow-sm">`).join('')}
-          </div>`;
-        document.getElementById('viewMoreModal').classList.add('open');
-      };
+          <div class="text-right font-bold text-warm-brown">₱${lineTotal.toLocaleString()}</div>
+          <button class="remove-item text-red-600 hover:text-red-800 text-xl" data-id="${item.id}">
+            <i class="fas fa-times-circle"></i>
+          </button>
+        </div>`;
+    });
 
-      // Booking with Guests
-      const qty = card.querySelector('.qty-select');
-      const guests = card.querySelector('.guest-select');
-      card.querySelector('.book-now').onclick = () => {
-        const q = +qty.value;
-        const g = +guests.value;
-        const ex = booking.find(b => b.item.id === item.id);
-        if (ex) { ex.qty += q; ex.guests = g; }
-        else booking.push({item, qty: q, guests: g});
+    box.innerHTML = html;
+    sub.textContent = `₱${total.toLocaleString()}`;
+    tot.textContent = `₱${total.toLocaleString()}`;
+
+    box.querySelectorAll('.remove-item').forEach(btn => {
+      btn.onclick = () => {
+        booking = booking.filter(x => x.item.id !== +btn.dataset.id);
         updateSummary();
       };
+    });
+  }
 
-      return card;
-    }
-
-    // ==== FINAL CHECKOUT — SAVE TO LOCALSTORAGE ====
-     document.getElementById('checkoutBtn').onclick = () => {
-    if (!checkIn || !checkOut) {
-      alert('Please select check-in and check-out dates!');
-      return;
-    }
-    if (booking.length === 0) {
-      alert('Please select at least one room or package!');
-      return;
-    }
+  // Checkout
+  document.getElementById('checkoutBtn').onclick = () => {
+    if (!checkIn || !checkOut) return alert('Please select dates!');
+    if (booking.length === 0) return alert('Add at least one item!');
 
     const nights = nightsBetween(checkIn, checkOut);
     const totalAmount = booking.reduce((sum, b) => {
-      const base = b.item.price * b.qty;
-      return sum + (b.item.perNight ? base * nights : base);
+      return sum + (b.item.per_night ? b.item.price * b.qty * nights : b.item.price * b.qty);
     }, 0);
 
-    const bookingData = {
-      checkIn: checkIn.toISOString(),
-      checkOut: checkOut.toISOString(),
-      nights,
-      adults,
-      children,
-      totalGuests: adults + children,
-      totalAmount,
-      items: booking.map(b => ({
-        id: b.item.id,
-        name: b.item.name,
-        qty: b.qty,
-        guests: b.guests,
-        price: b.item.price,
-        perNight: b.item.perNight,
-        subtotal: b.item.perNight ? b.item.price * b.qty * nights : b.item.price * b.qty
-      }))
-    };
-
-    // SAVE TO LOCALSTORAGE
+    const bookingData = { checkIn, checkOut, nights, adults, children, totalAmount, items: booking };
     localStorage.setItem('eduardosBooking', JSON.stringify(bookingData));
-
-    // GO TO CONFIRMATION PAGE
-    window.location.href = 'confirmationbooking.html';
+    window.location.href = '/confirmationbooking.html';
   };
 
-      // ==== RENDER & SUMMARY ====
-      function renderCategory(cat) {
-        itemsContainer.innerHTML = '';
-        (DATA[cat] || []).forEach(i => itemsContainer.appendChild(renderCard(i)));
-      }
-      function updateSummary() {
-        const box = document.getElementById('bookedRooms'), sub = document.getElementById('subtotal'), tot = document.getElementById('summaryTotal');
-        const empty = document.querySelector('.booking-empty'), nights = updateNightsDisplay();
-        if (!booking.length) {
-          box.innerHTML = ''; empty.classList.remove('hidden'); sub.textContent = tot.textContent = '₱0'; return;
-        }
-        empty.classList.add('hidden');
-        let html = '', total = 0;
-        booking.forEach(b => {
-          const isNight = b.item.perNight, base = b.item.price * b.qty, line = isNight && nights ? base * nights : base;
-          total += line;
-          html += `
-            <div class="bg-gray-50 p-3 rounded-lg border flex justify-between items-start">
-              <div class="flex-1">
-                <div class="font-medium">${b.item.name}</div>
-                <div class="text-xs text-gray-500">
-                  × ${b.qty} ${isNight && nights ? `× ${nights} night${nights>1?'s':''}` : ''} 
-                  <span class="ml-2">• ${b.guests} Guest${b.guests>1?'s':''}</span>
-                </div>
-              </div>
-              <div class="flex items-center gap-2 text-right">
-                <div>
-                  <div class="font-medium">₱${line.toLocaleString()}</div>
-                  ${isNight && nights ? `<div class="text-xs text-gray-500">₱${b.item.price.toLocaleString()}/night</div>` : ''}
-                </div>
-                <button class="remove-item text-red-600 hover:text-red-800 p-1" data-id="${b.item.id}"><i class="fas fa-times"></i></button>
-              </div>
-            </div>`;
-        });
-        box.innerHTML = html; sub.textContent = `₱${total.toLocaleString()}`; tot.textContent = `₱${total.toLocaleString()}`;
-        box.querySelectorAll('.remove-item').forEach(b => b.onclick = e => {
-          booking = booking.filter(x => x.item.id !== e.currentTarget.dataset.id);
-          updateSummary();
-        });
-      }
+  // ==================== DOM LOADED ====================
+  document.addEventListener('DOMContentLoaded', () => {
+    fetchItems();
 
-    // ==== DOM LOADED ====
-    document.addEventListener('DOMContentLoaded', () => {
-      // Sidebar
-      document.getElementById('openSidebar').onclick = () => { document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('open'); };
-      document.getElementById('closeSidebar').onclick = document.getElementById('sidebarOverlay').onclick = () => {
-        document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('open');
+    // Tab switching
+    document.querySelectorAll('#categoryTabs .tab-btn').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('#categoryTabs .tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderCategory(btn.dataset.cat);
+        document.getElementById('currentCategoryLabel').textContent = btn.textContent.trim();
       };
-
-      // Tabs
-      document.querySelectorAll('#categoryTabs .tab-btn').forEach(btn => {
-        btn.onclick = () => {
-          document.querySelectorAll('#categoryTabs .tab-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          renderCategory(btn.dataset.cat);
-          document.getElementById('currentCategoryLabel').textContent = btn.textContent.trim();
-        };
-      });
-
-      // Mobile Search
-      const mobileModify = document.getElementById('mobileModifyBtn');
-      const mobileFields = document.getElementById('mobileSearchFields');
-      const mobileDone = document.getElementById('mobileDoneBtn');
-      mobileModify.onclick = () => mobileFields.classList.toggle('hidden');
-      mobileDone.onclick = () => mobileFields.classList.add('hidden');
-
-      // Modals
-      const closeModal = id => document.getElementById(id).classList.remove('open');
-      document.getElementById('closeViewMore').onclick = () => closeModal('viewMoreModal');
-      document.getElementById('viewMoreModal').onclick = e => e.target === document.getElementById('viewMoreModal') && closeModal('viewMoreModal');
-
-      // Calendar
-      const calModal = document.getElementById('calendarModal');
-      const monthYear = document.getElementById('monthYear');
-      const calendarDays = document.getElementById('calendarDays');
-      let curDate = new Date();
-      const renderCal = () => {
-        calendarDays.innerHTML = '';
-        const y = curDate.getFullYear(), m = curDate.getMonth();
-        monthYear.textContent = curDate.toLocaleString('default', {month:'long', year:'numeric'});
-        const first = new Date(y, m, 1).getDay();
-        const days = new Date(y, m+1, 0).getDate();
-        for (let i = 0; i < first; i++) calendarDays.appendChild(document.createElement('div'));
-        for (let d = 1; d <= days; d++) {
-          const btn = document.createElement('button');
-          btn.textContent = d; btn.className = 'w-9 h-9 rounded-lg text-sm hover:bg-primary-blue hover:text-white transition-colors';
-          const thisDate = new Date(y, m, d);
-          if (checkIn && thisDate.toDateString() === checkIn.toDateString()) btn.classList.add('bg-primary-blue', 'text-white');
-          if (checkOut && thisDate.toDateString() === checkOut.toDateString()) btn.classList.add('bg-primary-blue', 'text-white');
-          if (checkIn && checkOut && thisDate > checkIn && thisDate < checkOut) btn.classList.add('bg-accent-blue/20');
-          btn.onclick = () => {
-            if (!checkIn || (checkIn && checkOut)) { checkIn = thisDate; checkOut = null; }
-            else if (thisDate > checkIn) checkOut = thisDate;
-            else { checkIn = thisDate; checkOut = null; }
-            renderCal(); updateDateText(); updateSummary();
-          };
-          calendarDays.appendChild(btn);
-        }
-      };
-      const updateDateText = () => {
-        const fmt = d => d.toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'});
-        const txt = checkIn && checkOut ? `${fmt(checkIn)} – ${fmt(checkOut)}` : checkIn ? fmt(checkIn) : 'Select Dates';
-        [document.getElementById('dateDisplayDesktop'), document.getElementById('dateDisplayMobile')].forEach(el => el.textContent = txt);
-      };
-      [document.getElementById('dateBtnDesktop'), document.getElementById('dateBtnMobile')].forEach(b => b.onclick = () => { calModal.classList.add('open'); renderCal(); });
-      document.getElementById('closeCalendar').onclick = () => calModal.classList.remove('open');
-      document.getElementById('prevMonth').onclick = () => { curDate.setMonth(curDate.getMonth()-1); renderCal(); };
-      document.getElementById('nextMonth').onclick = () => { curDate.setMonth(curDate.getMonth()+1); renderCal(); };
-      document.getElementById('clearDates').onclick = () => { checkIn = checkOut = null; updateDateText(); updateSummary(); renderCal(); };
-      document.getElementById('applyCalendar').onclick = () => { calModal.classList.remove('open'); updateSummary(); };
-
-      // Guests
-      const guestDisplays = [document.getElementById('guestDisplayDesktop'), document.getElementById('guestDisplayMobile')];
-      const updateGuest = () => {
-        const txt = `${adults} Adult${adults>1?'s':''}${children?`, ${children} Child${children>1?'ren':''}`:''}`;
-        guestDisplays.forEach(el => el.textContent = txt);
-      };
-      [document.getElementById('guestBtnDesktop'), document.getElementById('guestBtnMobile')].forEach(b => b.onclick = () => document.getElementById('guestsModal').classList.add('open'));
-      document.getElementById('closeGuests').onclick = () => document.getElementById('guestsModal').classList.remove('open');
-      document.getElementById('incAdults').onclick = () => { adults++; document.getElementById('adultsCount').textContent = adults; updateGuest(); };
-      document.getElementById('decAdults').onclick = () => { if(adults>1) adults--; document.getElementById('adultsCount').textContent = adults; updateGuest(); };
-      document.getElementById('incChildren').onclick = () => { children++; document.getElementById('childrenCount').textContent = children; updateGuest(); };
-      document.getElementById('decChildren').onclick = () => { if(children>0) children--; document.getElementById('childrenCount').textContent = children; updateGuest(); };
-      document.getElementById('applyGuests').onclick = () => document.getElementById('guestsModal').classList.remove('open');
-
-      // Clear & Init
-      document.getElementById('clearBooking').onclick = () => { booking = []; updateSummary(); };
-      renderCategory('rooms'); updateSummary(); updateGuest(); updateDateText();
-
-      // Scroll Reveal
-      const observer = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }), { threshold: 0.15 });
-      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-      // Header Scroll
-      let lastY = window.scrollY;
-      window.addEventListener('scroll', () => {
-        const header = document.getElementById('siteHeader');
-        if (window.scrollY > lastY && window.scrollY > 100) header.classList.replace('nav-visible', 'nav-hidden');
-        else header.classList.replace('nav-hidden', 'nav-visible');
-        lastY = window.scrollY;
-      });
     });
-  </script>
+
+    // Sidebar (Mobile)
+    document.getElementById('openSidebar').onclick = () => {
+      document.getElementById('sidebar').classList.add('open');
+      document.getElementById('sidebarOverlay').classList.add('open');
+    };
+    document.getElementById('closeSidebar').onclick = document.getElementById('sidebarOverlay').onclick = () => {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').classList.remove('open');
+    };
+
+    // Mobile Search Toggle
+    document.getElementById('mobileModifyBtn').onclick = () => {
+      document.getElementById('mobileSearchFields').classList.toggle('hidden');
+    };
+    document.getElementById('mobileDoneBtn').onclick = () => {
+      document.getElementById('mobileSearchFields').classList.add('hidden');
+    };
+
+    // Calendar Modal (Full Working)
+    const calModal = document.getElementById('calendarModal');
+    const monthYear = document.getElementById('monthYear');
+    const calendarDays = document.getElementById('calendarDays');
+    let curDate = new Date();
+
+    const renderCal = () => {
+      calendarDays.innerHTML = '';
+      const y = curDate.getFullYear(), m = curDate.getMonth();
+      monthYear.textContent = curDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+      const firstDay = new Date(y, m, 1).getDay();
+      const daysInMonth = new Date(y, m + 1, 0).getDate();
+
+      for (let i = 0; i < firstDay; i++) {
+        const empty = document.createElement('div');
+        calendarDays.appendChild(empty);
+      }
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dayBtn = document.createElement('button');
+        dayBtn.textContent = d;
+        dayBtn.className = 'w-10 h-10 rounded-full text-sm hover:bg-primary-blue hover:text-white transition';
+        const thisDate = new Date(y, m, d);
+
+        if (checkIn && thisDate.toDateString() === checkIn.toDateString()) dayBtn.classList.add('bg-primary-blue', 'text-white');
+        if (checkOut && thisDate.toDateString() === checkOut.toDateString()) dayBtn.classList.add('bg-primary-blue', 'text-white');
+        if (checkIn && checkOut && thisDate > checkIn && thisDate < checkOut) dayBtn.classList.add('bg-accent-blue/30');
+
+        dayBtn.onclick = () => {
+          if (!checkIn || (checkIn && checkOut)) { checkIn = thisDate; checkOut = null; }
+          else if (thisDate > checkIn) checkOut = thisDate;
+          else { checkIn = thisDate; checkOut = null; }
+          renderCal();
+          updateDateText();
+          updateSummary();
+        };
+        calendarDays.appendChild(dayBtn);
+      }
+    };
+
+  const updateDateText = () => {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const fmt = d => `${d.getDate()} ${months[d.getMonth()]}`;
+    const txt = checkIn && checkOut 
+      ? `${fmt(checkIn)} – ${checkOut.getDate()} ${months[checkOut.getMonth()]} ${checkOut.getFullYear()}`
+      : checkIn ? fmt(checkIn) : 'Select Dates';
+    
+    document.getElementById('dateDisplayDesktop').textContent = txt;
+    document.getElementById('dateDisplayMobile').textContent = txt;
+  };
+
+    document.querySelectorAll('[id^="dateBtn"]').forEach(b => b.onclick = () => { calModal.classList.add('open'); renderCal(); });
+    document.getElementById('closeCalendar').onclick = () => calModal.classList.remove('open');
+    document.getElementById('prevMonth').onclick = () => { curDate.setMonth(curDate.getMonth() - 1); renderCal(); };
+    document.getElementById('nextMonth').onclick = () => { curDate.setMonth(curDate.getMonth() + 1); renderCal(); };
+    document.getElementById('clearDates').onclick = () => { checkIn = checkOut = null; updateDateText(); updateSummary(); renderCal(); };
+    document.getElementById('applyCalendar').onclick = () => { calModal.classList.remove('open'); updateSummary(); };
+
+    // Guests Modal
+    const updateGuestText = () => {
+      const txt = `${adults} Adult${adults>1?'s':''}${children ? `, ${children} Child${children>1?'ren':''}` : ''}`;
+      document.getElementById('guestDisplayDesktop').textContent = txt;
+      document.getElementById('guestDisplayMobile').textContent = txt;
+    };
+    document.querySelectorAll('[id^="guestBtn"]').forEach(b => b.onclick = () => document.getElementById('guestsModal').classList.add('open'));
+    document.getElementById('closeGuests').onclick = () => document.getElementById('guestsModal').classList.remove('open');
+    document.getElementById('incAdults').onclick = () => { adults++; document.getElementById('adultsCount').textContent = adults; updateGuestText(); };
+    document.getElementById('decAdults').onclick = () => { if(adults>1) adults--; document.getElementById('adultsCount').textContent = adults; updateGuestText(); };
+    document.getElementById('incChildren').onclick = () => { children++; document.getElementById('childrenCount').textContent = children; updateGuestText(); };
+    document.getElementById('decChildren').onclick = () => { if(children>0) children--; document.getElementById('childrenCount').textContent = children; updateGuestText(); };
+    document.getElementById('applyGuests').onclick = () => document.getElementById('guestsModal').classList.remove('open');
+
+    // Clear Booking
+    document.getElementById('clearBooking').onclick = () => { booking = []; updateSummary(); };
+
+    // Close Modals on Overlay Click
+    document.querySelectorAll('.modal').forEach(m => {
+      m.onclick = e => { if (e.target === m) m.classList.remove('open'); };
+    });
+    document.getElementById('closeViewMore').onclick = () => document.getElementById('viewMoreModal').classList.remove('open');
+
+    // Initial States
+    updateSummary();
+    updateGuestText();
+    updateDateText();
+
+    // Scroll Reveal Animation
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Sticky Header
+    let lastY = window.scrollY;
+    window.addEventListener('scroll', () => {
+      const header = document.getElementById('siteHeader');
+      if (window.scrollY > lastY && window.scrollY > 100) {
+        header.classList.replace('nav-visible', 'nav-hidden');
+      } else {
+        header.classList.replace('nav-hidden', 'nav-visible');
+      }
+      lastY = window.scrollY;
+    });
+  });
+</script>
 </body>
 </html>

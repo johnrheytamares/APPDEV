@@ -443,34 +443,55 @@
       payBtn.classList.add('btn-loading');
 
       // Simulate payment processing (2.5s)
-      setTimeout(() => {
-        const final = {
-          ...bookingData,
-          guest: {
-            firstName: document.getElementById('firstName').value,
-            lastName: document.getElementById('lastName').value,
-            adults: +document.getElementById('adultsCount').textContent,
-            children: +document.getElementById('childrenCount').textContent,
-            arrivalTime: document.getElementById('arrivalTime').value,
-            specialRequests: document.getElementById('specialRequests').value,
-            phone: document.getElementById('phone').value,
-            email: document.getElementById('email').value,
-            address: document.getElementById('address').value,
-            city: document.getElementById('city').value,
-            postal: document.getElementById('postal').value
-          },
-          selectedPayment: document.querySelector('.payment-option.selected').dataset.method,
-          total: subtotal,
-          bookingId: 'EDU' + Date.now().toString().slice(-6)
-        };
-        localStorage.setItem('eduardoFinalBooking', JSON.stringify(final));
-        localStorage.removeItem('eduardoBooking');
+payBtn.onclick = async () => {
+  const req = ['firstName','lastName','phone','email','address','city','postal'];
+  for (const id of req) if (!document.getElementById(id).value.trim()) return alert('Fill all required fields.');
+  if (!document.getElementById('terms').checked) return alert('Agree to terms.');
 
-        // Show confirmation
-        document.getElementById('modalEmail').textContent = final.guest.email;
-        document.getElementById('confirmationModal').classList.remove('hidden');
-      }, 2500);
-    };
+  payBtn.classList.add('btn-loading');
+
+  const final = {
+    ...bookingData,
+    guest: {
+      firstName: document.getElementById('firstName').value.trim(),
+      lastName: document.getElementById('lastName').value.trim(),
+      fullName: document.getElementById('firstName').value.trim() + ' ' + document.getElementById('last reçuName').value.trim(),
+      adults: +document.getElementById('adultsCount').textContent,
+      children: +document.getElementById('childrenCount').textContent,
+      arrivalTime: document.getElementById('arrivalTime').value,
+      specialRequests: document.getElementById('specialRequests').value,
+      phone: '+63' + document.getElementById('phone').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      address: document.getElementById('address').value.trim() + ', ' + document.getElementById('city').value.trim() + ' ' + document.getElementById('postal').value.trim(),
+    },
+    selectedPayment: document.querySelector('.payment-option.selected').dataset.method,
+    total: subtotal,
+    bookingId: 'EDU' + Date.now().toString().slice(-8)
+  };
+
+  try {
+    const res = await fetch('http://localhost:3000/api/booking/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(final)
+    });
+
+    const result = await res.json();
+
+    if (res.ok) {
+      localStorage.removeItem('eduardosBooking');
+      document.getElementById('modalEmail').textContent = final.guest.email;
+      document.getElementById('confirmationModal').classList.remove('hidden');
+      console.log('Booking ID:', result.bookingId);
+    } else {
+      alert(result.error || 'Booking failed. Please try again.');
+      payBtn.classList.remove('btn-loading');
+    }
+  } catch (err) {
+    alert('No connection to server. Please check your internet.');
+    payBtn.classList.remove('btn-loading');
+  }};
+};
 
     // Reveal
     const observer = new IntersectionObserver(es => es.forEach(e => {

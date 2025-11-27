@@ -77,6 +77,13 @@ app.get('/admin-dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'admin-dashboard.html'));
 });
 
+app.use(express.static('public'));
+app.use('/api/admin/rooms', require('./routes/admin/room'));
+
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'room_and_cottage.html'));
+});
+
 // ================= CATCH-ALL — ISANG BESSES LANG, HULI TALAGA ‘TO! =================
 // PALITAN MO MUNA ITO (temporary fix para makita natin kung sino talaga ang may sala)
 app.get('/this-is-a-fake-path-that-will-never-be-hit-12345', (req, res) => {

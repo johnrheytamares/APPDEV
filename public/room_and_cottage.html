@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Room & Cottage Management | Eduardo's Resort</title>
+
+  <!-- Icons & Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root {
+      --primary: #2B6CB0;
+      --primary-light: #63B3ED;
+      --primary-lighter: #E8F0EB;
+      --accent: #C2A68C;
+      --accent-light: #F5F1EC;
+      --text-dark: #1A2E28;
+      --text-light: #6B8A7E;
+      --bg-light: #F8F7F4;
+      --white: #FFFFFF;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      height: 100vh;
+    }
+
+    .font-serif { font-family: 'Playfair Display', serif; }
+
+    /* ---------- SIDEBAR (Template) ---------- */
+    .overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(3px); z-index: 40; opacity: 0; visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .overlay.active { opacity: 1; visibility: visible; }
+
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: 260px;
+      height: 100vh;
+      background-color: var(--primary);
+      color: white;
+      z-index: 50;
+      overflow: hidden;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+      transform: translateX(-100%);
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar.active { transform: translateX(0); }
+
+    @media (min-width: 768px) {
+      .sidebar { transform: translateX(0) !important; }
+      .sidebar.collapsed { width: 70px; }
+    }
+
+    .sidebar-header {
+      padding: 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo-container { display: flex; align-items: center; gap: 0.75rem; }
+    .logo-icon {
+      width: 2.5rem; height: 2.5rem;
+      background: rgba(255,255,255,0.1);
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-text { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 600; }
+
+    .collapse-btn {
+      color: white; opacity: 0.7; padding: 0.5rem; border-radius: 0.5rem;
+      transition: all 0.3s;
+    }
+    .collapse-btn:hover { background: rgba(255,255,255,0.1); opacity: 1; }
+    .collapse-btn.collapsed { transform: rotate(180deg); }
+
+    .user-info {
+      padding: 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .user-avatar {
+      width: 3rem; height: 3rem;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-container { flex: 1; overflow-y: auto; padding: 0.75rem; }
+    .nav-list { padding: 0; margin: 0; list-style: none; }
+    .nav-item { margin-bottom: 0.25rem; }
+
+    .nav-link {
+      display: flex; align-items: center;
+      padding: 0.75rem 1.25rem;
+      color: rgba(255,255,255,0.9);
+      text-decoration: none;
+      font-size: 0.9375rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+    .nav-link:hover { background: rgba(255,255,255,0.1); color: white; }
+    .nav-link.active { background: rgba(255,255,255,0.15); }
+
+    .nav-icon { width: 1.25rem; text-align: center; }
+    .nav-text { margin-left: 0.75rem; opacity: 1; transition: opacity 0.2s ease 0.1s; }
+
+    .sidebar.collapsed .nav-text,
+    .sidebar.collapsed .logo-text,
+    .sidebar.collapsed .user-info > div { opacity: 0; visibility: hidden; width: 0; margin: 0; padding: 0; overflow: hidden; }
+    .sidebar.collapsed .logo-text { display: none; }
+
+    .logout-container { padding: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1); }
+
+    /* ---------- MAIN CONTENT (Template) ---------- */
+    .main-content {
+      margin-left: 0;
+      min-height: 100vh;
+      background-color: var(--bg-light);
+      transition: margin-left 0.3s ease;
+      padding: 0.75rem;
+    }
+    @media (min-width: 768px) {
+      .main-content { margin-left: 260px; padding: 1.5rem; }
+      .main-content.shifted { margin-left: 70px; }
+    }
+
+    .page-header {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      padding: 1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header-left { display: flex; align-items: center; gap: 0.75rem; }
+    .mobile-menu-btn { font-size: 1.25rem; color: #374151; }
+
+    .header-title h1 { margin: 0; font-size: 1.25rem; font-weight: 700; color: #111827; }
+    .header-title p { margin: 0; font-size: 0.875rem; color: #6B7280; }
+
+    .header-right { display: flex; align-items: center; gap: 0.75rem; }
+    .notification-bell {
+      position: relative; padding: 0.5rem; border-radius: 50%;
+      color: #6B7280; transition: background 0.2s;
+    }
+    .notification-bell:hover { background: #F3F4F6; }
+    .notification-badge {
+      position: absolute; top: 0.25rem; right: 0.25rem;
+      width: 0.5rem; height: 0.5rem; background: #EF4444; border-radius: 50%;
+    }
+
+    /* ---------- PAGE SPECIFIC STYLES ---------- */
+    .stats-section { display: grid; gap: 1rem; margin-bottom: 1.5rem; }
+    @media (min-width: 768px) { .stats-section { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 767px) { .stats-section { grid-template-columns: 1fr 1fr; } }
+
+    .stat-card {
+      background: white; border-radius: 0.75rem;
+      padding: 1rem; box-shadow: 0 4px 20px rgba(45,74,67,0.08);
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .stat-icon {
+      width: 3.125rem; height: 3.125rem; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
+    }
+    .stat-icon.blue   { background: rgba(125,161,142,0.1); color: var(--primary-light); }
+    .stat-icon.green  { background: rgba(16,185,129,0.1); color: var(--success); }
+    .stat-icon.orange { background: rgba(245,158,11,0.1); color: var(--warning); }
+    .stat-icon.yellow { background: rgba(194,166,140,0.1); color: var(--accent); }
+
+    .page-controls {
+      display: flex; flex-wrap: wrap; gap: 0.75rem;
+      justify-content: space-between; align-items: center; margin-bottom: 1.5rem;
+    }
+    .search-filter { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+    .search-box, .filter-select {
+      padding: 0.625rem 1rem; border: 1px solid #e2e8f0;
+      border-radius: 0.5rem; background: white; font-size: 0.875rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .search-box {
+      width: 20rem; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23718096' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cpath d='m21 21-4.3-4.3'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: 0.9375rem center; padding-left: 2.5rem;
+    }
+
+    .btn {
+      padding: 0.625rem 1rem; border: none; border-radius: 0.625rem;
+      cursor: pointer; font-weight: 500; display: inline-flex;
+      align-items: center; gap: 0.5rem; transition: all 0.3s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .btn-primary   { background: var(--primary); color: white; }
+    .btn-secondary { background: var(--accent); color: var(--text-dark); }
+    .btn-outline   { background: transparent; border: 1px solid #e2e8f0; color: var(--text-light); }
+    .btn-sm { padding: 0.5rem 0.75rem; font-size: 0.8125rem; }
+
+    .room-grid {
+      display: grid; gap: 1.25rem; margin-bottom: 1.5rem;
+      grid-template-columns: repeat(auto-fill, minmax(21.25rem, 1fr));
+    }
+    .room-card {
+      background: white; border-radius: 0.75rem; overflow: hidden;
+      box-shadow: 0 4px 20px rgba(45,74,67,0.08); transition: all 0.3s;
+    }
+    .room-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.12); }
+    .room-image {
+      height: 12.5rem; background-size: cover; background-position: center;
+      position: relative;
+    }
+    .room-promo {
+      position: absolute; top: 0.75rem; right: 0.75rem;
+      background: var(--danger); color: white; padding: 0.375rem 0.75rem;
+      border-radius: 1.25rem; font-size: 0.75rem; font-weight: 600;
+    }
+    .room-details { padding: 1rem; }
+    .room-header { display: flex; justify-content: space-between; margin-bottom: 0.75rem; }
+    .room-title { font-size: 1.125rem; font-weight: 600; color: var(--primary); }
+    .room-type { font-size: 0.875rem; color: var(--text-light); margin-top: 0.25rem; }
+    .room-price { font-size: 1.125rem; font-weight: 700; color: var(--primary); }
+    .room-price span { font-size: 0.8125rem; font-weight: 400; color: var(--text-light); }
+    .room-features { display: flex; gap: 0.75rem; flex-wrap: wrap; color: var(--text-light); margin: 0.75rem 0; }
+    .room-actions { display: flex; gap: 0.625rem; margin-top: 0.75rem; }
+
+    .promo-section { margin-bottom: 1.5rem; }
+    .promo-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+    .promo-list { display: grid; gap: 0.875rem; grid-template-columns: repeat(auto-fill, minmax(18.75rem, 1fr)); }
+    .promo-card {
+      background: white; padding: 0.875rem; border-radius: 0.75rem;
+      box-shadow: 0 4px 20px rgba(45,74,67,0.08); display: flex; flex-direction: column; gap: 0.5rem;
+    }
+    .promo-meta { display: flex; justify-content: space-between; align-items: center; }
+    .promo-title { font-weight: 700; color: var(--primary); }
+    .promo-desc { color: var(--text-light); font-size: 0.9375rem; }
+    .promo-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; }
+    .promo-badge { background: var(--accent); color: var(--text-dark); padding: 0.375rem 0.625rem; border-radius: 0.5rem; font-weight: 600; }
+
+    .modal {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      display: flex; align-items: center; justify-content: center;
+      visibility: hidden; opacity: 0; transition: all 0.3s ease; z-index: 999;
+    }
+    .modal.show { visibility: visible; opacity: 1; }
+    .modal-content {
+      background: white; border-radius: 1rem; width: 92%; max-width: 51.25rem;
+      max-height: 90vh; overflow: hidden; display: flex; flex-direction: column;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .modal-header {
+      padding: 1rem 1.25rem; background: var(--primary); color: white;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .modal-header h3 { margin: 0; font-weight: 600; }
+    .close-modal { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+    .modal-body { padding: 1.125rem; overflow-y: auto; flex: 1; }
+    .modal-footer { padding: 0.75rem 1.125rem; background: #f3f4f6; display: flex; justify-content: flex-end; gap: 0.75rem; }
+
+    .form-group { margin-bottom: 0.875rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-dark); }
+    .form-control {
+      width: 100%; padding: 0.625rem 0.75rem; border: 1px solid #e2e8f0;
+      border-radius: 0.5rem; font-size: 1rem; transition: all 0.3s;
+    }
+    .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(45,74,67,0.08); }
+    .form-row { display: flex; gap: 0.75rem; }
+    .form-row .form-group { flex: 1; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .search-box { width: 100%; }
+      .page-controls { flex-direction: column; align-items: stretch; }
+      .room-grid { grid-template-columns: 1fr; }
+      .promo-list { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Overlay -->
+  <div class="overlay"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-container">
+        <div class="logo-icon"><i class="fas fa-spa"></i></div>
+        <span class="logo-text">Eduardo's Resort</span>
+      </div>
+      <button id="sidebarToggle" class="md:hidden">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+
+    <div class="user-info">
+      <div class="user-avatar"><i class="fas fa-user"></i></div>
+      <div>
+        <div class="font-medium">Admin</div>
+        <div class="text-xs opacity-70">Super Administrator</div>
+      </div>
+    </div>
+
+    <div class="nav-container">
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a href="admin.html" class="nav-link">
+            <i class="fas fa-tachometer-alt nav-icon"></i>
+            <span class="nav-text">Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="reservation_management.html" class="nav-link">
+            <i class="fas fa-calendar-check nav-icon"></i>
+            <span class="nav-text">Reservations</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link active">
+            <i class="fas fa-bed nav-icon"></i>
+            <span class="nav-text">Rooms & Cottages</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="aminities.html" class="nav-link">
+            <i class="fas fa-concierge-bell nav-icon"></i>
+            <span class="nav-text">Amenities</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="usermangement.html" class="nav-link">
+            <i class="fas fa-users nav-icon"></i>
+            <span class="nav-text">User Management</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="reports_analysis.html" class="nav-link">
+            <i class="fas fa-chart-bar nav-icon"></i>
+            <span class="nav-text">Reports & Analytics</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="contentmanagement.html" class="nav-link">
+            <i class="fas fa-cog nav-icon"></i>
+            <span class="nav-text">Site Configuration</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="fas fa-vr-cardboard nav-icon"></i>
+            <span class="nav-text">VR 360° Setup</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="feedback.html" class="nav-link">
+            <i class="fas fa-headset nav-icon"></i>
+            <span class="nav-text">Feedback & Support</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="logout-container">
+      <a href="#" class="nav-link">
+        <i class="fas fa-sign-out-alt nav-icon"></i>
+        <span class="nav-text">Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content" id="mainContent">
+    <!-- Header -->
+    <header class="page-header">
+      <div class="header-left">
+        <button id="mobileMenuBtn" class="mobile-menu-btn md:hidden">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="header-title">
+          <h1>Room & Cottage Configuration</h1>
+        </div>
+      </div>
+      <div class="header-right">
+        <button class="notification-bell">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge"></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Stats -->
+    <div class="stats-section">
+      <div class="stat-card">
+        <div class="stat-icon blue"><i class="fas fa-bed"></i></div>
+        <div class="stat-info"><h3 id="totalRooms">24</h3><p>Total Rooms</p></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+        <div class="stat-info"><h3 id="availableRooms">18</h3><p>Available</p></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon orange"><i class="fas fa-user-friends"></i></div>
+        <div class="stat-info"><h3 id="occupiedRooms">4</h3><p>Occupied</p></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon yellow"><i class="fas fa-tools"></i></div>
+        <div class="stat-info"><h3 id="maintenanceRooms">2</h3><p>Under Maintenance</p></div>
+      </div>
+    </div>
+
+    <!-- Page Controls -->
+    <div class="page-controls">
+      <div class="search-filter">
+        <input type="text" id="globalSearch" class="search-box" placeholder="Search rooms or promos...">
+        <select class="filter-select" id="typeFilter">
+          <option value="all">All Types</option>
+          <option>Standard Room</option>
+          <option>Deluxe Room</option>
+          <option>Cottage</option>
+          <option>Suite</option>
+        </select>
+        <select class="filter-select" id="statusFilter">
+          <option value="all">All Status</option>
+          <option>Available</option>
+          <option>Occupied</option>
+          <option>Maintenance</option>
+        </select>
+      </div>
+      <div style="display:flex; gap:0.625rem; flex-wrap:wrap;">
+        <button class="btn btn-primary" id="addRoomBtn"><i class="fas fa-plus"></i> Add New Room</button>
+        <button class="btn btn-secondary" id="openAddPromo"><i class="fas fa-tag"></i> Add Promo</button>
+        <button class="btn btn-outline" id="openSeasonalBtn"><i class="fas fa-calendar-day"></i> Seasonal Pricing</button>
+      </div>
+    </div>
+
+    <!-- Room Grid -->
+    <div class="room-grid" id="roomGrid">
+      <!-- Room Card 1 -->
+      <div class="room-card" data-title="Ocean View Suite" data-type="Suite" data-status="Available">
+        <div class="room-image" style="background-image:url('https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=600&q=80')">
+          <div class="room-promo">Limited Offer</div>
+        </div>
+        <div class="room-details">
+          <div class="room-header">
+            <div>
+              <div class="room-title">Ocean View Suite</div>
+              <div class="room-type">Suite</div>
+            </div>
+            <div class="room-price">$299<span>/night</span></div>
+          </div>
+          <p>Luxurious suite with panoramic ocean views, king-sized bed, and private balcony.</p>
+          <div class="room-features">
+            <div class="feature"><i class="fas fa-user-friends"></i> 2 Guests</div>
+            <div class="feature"><i class="fas fa-expand-arrows-alt"></i> 650 sqft</div>
+            <div class="feature"><i class="fas fa-image"></i> 5 Photos</div>
+          </div>
+          <div class="room-actions">
+            <button class="btn btn-sm btn-outline edit-room"><i class="fas fa-edit"></i> Edit</button>
+            <button class="btn btn-sm btn-outline"><i class="fas fa-images"></i> Images</button>
+            <button class="btn btn-sm btn-danger delete-room"><i class="fas fa-trash"></i> Delete</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Room Card 2 -->
+      <div class="room-card" data-title="Garden Cottage" data-type="Cottage" data-status="Available">
+        <div class="room-image" style="background-image:url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80')"></div>
+        <div class="room-details">
+          <div class="room-header">
+            <div>
+              <div class="room-title">Garden Cottage</div>
+              <div class="room-type">Cottage</div>
+            </div>
+            <div class="room-price">$189<span>/night</span></div>
+          </div>
+          <p>Charming cottage nestled in our tropical gardens, perfect for a romantic getaway.</p>
+          <div class="room-features">
+            <div class="feature"><i class="fas fa-user-friends"></i> 2 Guests</div>
+            <div class="feature"><i class="fas fa-expand-arrows-alt"></i> 450 sqft</div>
+            <div class="feature"><i class="fas fa-image"></i> 6 Photos</div>
+          </div>
+          <div class="room-actions">
+            <button class="btn btn-sm btn-outline edit-room"><i class="fas fa-edit"></i> Edit</button>
+            <button class="btn btn-sm btn-outline"><i class="fas fa-images"></i> Images</button>
+            <button class="btn btn-sm btn-danger delete-room"><i class="fas fa-trash"></i> Delete</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Room Card 3 -->
+      <div class="room-card" data-title="Family Bungalow" data-type="Cottage" data-status="Occupied">
+        <div class="room-image" style="background-image:url('https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=600&q=80')">
+          <div class="room-promo">Limited Offer</div>
+        </div>
+        <div class="room-details">
+          <div class="room-header">
+            <div>
+              <div class="room-title">Family Bungalow</div>
+              <div class="room-type">Cottage</div>
+            </div>
+            <div class="room-price">$249<span>/night</span></div>
+          </div>
+          <p>Spacious bungalow with two bedrooms, ideal for families or small groups.</p>
+          <div class="room-features">
+            <div class="feature"><i class="fas fa-user-friends"></i> 4 Guests</div>
+            <div class="feature"><i class="fas fa-expand-arrows-alt"></i> 800 sqft</div>
+            <div class="feature"><i class="fas fa-image"></i> 7 Photos</div>
+          </div>
+          <div class="room-actions">
+            <button class="btn btn-sm btn-outline edit-room"><i class="fas fa-edit"></i> Edit</button>
+            <button class="btn btn-sm btn-outline"><i class="fas fa-images"></i> Images</button>
+            <button class="btn btn-sm btn-danger delete-room"><i class="fas fa-trash"></i> Delete</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Room Card 4 -->
+      <div class="room-card" data-title="Deluxe Room" data-type="Room" data-status="Available">
+        <div class="room-image" style="background-image:url('https://images.unsplash.com/photo-1584132915807-fd1f5fbc078f?auto=format&fit=crop&w=600&q=80')"></div>
+        <div class="room-details">
+          <div class="room-header">
+            <div>
+              <div class="room-title">Deluxe Room</div>
+              <div class="room-type">Room</div>
+            </div>
+            <div class="room-price">$159<span>/night</span></div>
+          </div>
+          <p>Comfortable room with premium amenities, garden view, and modern decor.</p>
+          <div class="room-features">
+            <div class="feature"><i class="fas fa-user-friends"></i> 2 Guests</div>
+            <div class="feature"><i class="fas fa-expand-arrows-alt"></i> 350 sqft</div>
+            <div class="feature"><i class="fas fa-image"></i> 4 Photos</div>
+          </div>
+          <div class="room-actions">
+            <button class="btn btn-sm btn-outline edit-room"><i class="fas fa-edit"></i> Edit</button>
+            <button class="btn btn-sm btn-outline"><i class="fas fa-images"></i> Images</button>
+            <button class="btn btn-sm btn-danger delete-room"><i class="fas fa-trash"></i> Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Promo & Pricing Management -->
+    <div class="promo-section" id="promoSection">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.625rem;">
+        <h3 style="color:var(--primary);">Promo & Pricing Management</h3>
+        <small style="color:var(--text-light);">Add discount codes, seasonal pricing, and manage promotions (client-side)</small>
+      </div>
+
+      <div class="promo-actions">
+        <input type="text" id="promoSearch" class="search-box" placeholder="Search promos..." style="width:20rem;">
+        <button class="btn btn-secondary" id="addPromoBtn"><i class="fas fa-plus"></i> New Promo</button>
+      </div>
+
+      <div class="promo-list" id="promoList">
+        <!-- Promo cards rendered via JS -->
+      </div>
+    </div>
+  </main>
+
+  <!-- Modals -->
+  <!-- Add/Edit Room Modal -->
+  <div class="modal" id="roomModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="roomModalTitle">Add New Room</h3>
+        <button class="close-modal" data-close="roomModal">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="roomName">Room Name</label>
+            <input type="text" id="roomName" class="form-control" placeholder="e.g., Ocean View Suite">
+          </div>
+          <div class="form-group">
+            <label for="roomType">Room Type</label>
+            <select id="roomType" class="form-control">
+              <option>Standard Room</option>
+              <option>Deluxe Room</option>
+              <option>Suite</option>
+              <option>Cottage</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="roomCapacity">Capacity</label>
+            <input type="number" id="roomCapacity" class="form-control" placeholder="Number of guests">
+          </div>
+          <div class="form-group">
+            <label for="roomPrice">Price per Night ($)</label>
+            <input type="number" id="roomPrice" class="form-control" placeholder="e.g., 199">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="roomDescription">Description</label>
+          <textarea id="roomDescription" class="form-control" rows="3" placeholder="Describe the room features and amenities"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Room Images</label>
+          <div class="image-upload" style="border:2px dashed #e2e8f0; border-radius:0.5rem; padding:1.5rem; text-align:center; color:#9ca3af;">
+            <i class="fas fa-cloud-upload-alt" style="font-size:2rem;"></i>
+            <p>Drag & drop images here or click to browse</p>
+            <small>Recommended: 5-8 high-quality images (JPEG, PNG)</small>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Amenities</label>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.625rem; margin-top:0.625rem;">
+              <div><input type="checkbox" id="wifi"> <label for="wifi">Wi-Fi</label></div>
+              <div><input type="checkbox" id="ac"> <label for="ac">Air Conditioning</label></div>
+              <div><input type="checkbox" id="tv"> <label for="tv">TV</label></div>
+              <div><input type="checkbox" id="minibar"> <label for="minibar">Minibar</label></div>
+              <div><input type="checkbox" id="balcony"> <label for="balcony">Balcony</label></div>
+              <div><input type="checkbox" id="oceanView"> <label for="oceanView">Ocean View</label></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Promotional Offer</label>
+            <div style="display:flex; align-items:center; gap:0.625rem; margin-top:0.625rem;">
+              <label class="switch">
+                <input type="checkbox" id="promoSwitch">
+                <span class="slider" style="position:relative; display:inline-block; width:40px; height:20px; background:#ccc; border-radius:20px; transition:0.3s;">
+                  <span style="position:absolute; content:''; height:16px; width:16px; left:2px; bottom:2px; background:white; border-radius:50%; transition:0.3s;"></span>
+                </span>
+              </label>
+              <span>Mark as "Limited Offer"</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="roomStatus">Room Status</label>
+            <select id="roomStatus" class="form-control">
+              <option>Available</option>
+              <option>Occupied</option>
+              <option>Under Maintenance</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" data-close="roomModal">Cancel</button>
+        <button class="btn btn-primary" id="saveRoomBtn">Save Room</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add/Edit Promo Modal -->
+  <div class="modal" id="promoModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="promoModalTitle">Add New Promo</h3>
+        <button class="close-modal" data-close="promoModal">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="promoCode">Promo Code</label>
+          <input type="text" id="promoCode" class="form-control" placeholder="e.g., SUMMER25">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="promoType">Type</label>
+            <select id="promoType" class="form-control">
+              <option value="percent">Percentage</option>
+              <option value="fixed">Fixed amount</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="promoValue">Value</label>
+            <input type="number" id="promoValue" class="form-control" placeholder="e.g., 25">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="promoDesc">Description</label>
+          <textarea id="promoDesc" class="form-control" rows="3" placeholder="Details about the promo"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="promoStart">Start Date</label>
+            <input type="date" id="promoStart" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="promoEnd">End Date</label>
+            <input type="date" id="promoEnd" class="form-control">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="promoUsage">Usage Limit (optional)</label>
+          <input type="number" id="promoUsage" class="form-control" placeholder="Total uses allowed">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" data-close="promoModal">Cancel</button>
+        <button class="btn btn-primary" id="savePromoBtn">Save Promo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Seasonal Pricing Modal -->
+  <div class="modal" id="seasonalModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Seasonal Pricing Setup</h3>
+        <button class="close-modal" data-close="seasonalModal">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="seasonName">Season Name</label>
+            <input type="text" id="seasonName" class="form-control" placeholder="e.g., Peak Season">
+          </div>
+          <div class="form-group">
+            <label for="seasonMultiplier">Price Multiplier</label>
+            <input type="number" id="seasonMultiplier" class="form-control" step="0.1" value="1.2" placeholder="e.g., 1.2">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="seasonStart">Start Date</label>
+            <input type="date" id="seasonStart" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="seasonEnd">End Date</label>
+            <input type="date" id="seasonEnd" class="form-control">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="applyToRooms">Apply to room types (comma-separated or 'all')</label>
+          <input type="text" id="applyToRooms" class="form-control" placeholder="e.g., Suite,Cottage or all">
+        </div>
+        <div class="form-group">
+          <small style="color:var(--text-light);">This feature stores seasonal pricing locally so the UI can apply the multiplier when showing prices. Integrate with backend later to persist globally.</small>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" data-close="seasonalModal">Cancel</button>
+        <button class="btn btn-primary" id="saveSeasonBtn">Save Seasonal Pricing</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar + Page JS -->
+  <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const API = '/api/admin/rooms';
+  let rooms = [];
+  let editingId = null;
+
+  const roomGrid = document.getElementById('roomGrid');
+  const addRoomBtn = document.getElementById('addRoomBtn');
+  const saveRoomBtn = document.getElementById('saveRoomBtn');
+  const roomModal = document.getElementById('roomModal');
+  const modalTitle = document.getElementById('roomModalTitle');
+
+  // Form fields
+  const inputs = {
+    name: document.getElementById('roomName'),
+    type: document.getElementById('roomType'),
+    capacity: document.getElementById('roomCapacity'),
+    price: document.getElementById('roomPrice'),
+    description: document.getElementById('roomDescription'),
+    promoSwitch: document.getElementById('promoSwitch'),
+    status: document.getElementById('roomStatus')
+  };
+
+  // Load rooms
+  async function loadRooms() {
+    try {
+      const res = await fetch(API);
+      rooms = await res.json();
+      renderRooms();
+      updateStats();
+    } catch (err) {
+      alert("Server offline. Using demo data.");
+      rooms = [
+        { id: 1, name: "Beachfront Cottage", category: "cottage", price: 8500, max_guests: 4, description: "Direct beach access", images: [{ url: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600", is_primary: 1 }] },
+        { id: 2, name: "Deluxe Room", category: "room", price: 4500, max_guests: 2, description: "Modern comfort", images: [{ url: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600", is_primary: 1 }] }
+      ];
+      renderRooms();
+    }
+  }
+
+  function renderRooms() {
+    roomGrid.innerHTML = rooms.length === 0 
+      ? `<p class="text-center col-span-full py-12 text-gray-500">No rooms yet. Add your first one!</p>`
+      : rooms.map(room => {
+          const img = room.images.find(i => i.is_primary) || room.images[0];
+          return `
+            <div class="room-card" data-id="${room.id}">
+              <div class="room-image" style="background-image:url('${img?.url || '/images/placeholder.jpg'}')">
+                ${room.original_price ? '<div class="room-promo">Limited Offer</div>' : ''}
+              </div>
+              <div class="room-details">
+                <div class="room-header">
+                  <div>
+                    <div class="room-title">${room.name}</div>
+                    <div class="room-type">${room.category}</div>
+                  </div>
+                  <div class="room-price">₱${Number(room.price).toLocaleString()}<span>/night</span></div>
+                </div>
+                <p>${room.description || 'No description'}</p>
+                <div class="room-features">
+                  <div><i class="fas fa-user-friends"></i> ${room.max_guests} Guests</div>
+                  <div><i class="fas fa-image"></i> ${room.images.length} Photos</div>
+                </div>
+                <div class="room-actions">
+                  <button class="btn btn-sm btn-outline edit-room"><i class="fas fa-edit"></i> Edit</button>
+                  <button class="btn btn-sm btn-outline view-images"><i class="fas fa-images"></i> Images</button>
+                  <button class="btn btn-sm btn-danger delete-room"><i class="fas fa-trash"></i> Delete</button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+  }
+
+  function updateStats() {
+    document.getElementById('totalRooms').textContent = rooms.length;
+    document.getElementById('availableRooms').textContent = rooms.filter(r => !r.status || r.status === 'available').length;
+  }
+
+  // Open modal
+  function openModal(room = null) {
+    editingId = room?.id || null;
+    modalTitle.textContent = room ? 'Edit Room/Cottage' : 'Add New Room/Cottage';
+
+    inputs.name.value = room?.name || '';
+    inputs.type.value = room?.category || 'room';
+    inputs.capacity.value = room?.max_guests || 2;
+    inputs.price.value = room?.price || '';
+    inputs.description.value = room?.description || '';
+    inputs.promoSwitch.checked = !!room?.original_price;
+
+    // Image preview
+    const preview = document.getElementById('imagePreview') || createPreviewDiv();
+    preview.innerHTML = room?.images?.map(img => `
+      <div class="relative" data-img-id="${img.id}">
+        <img src="${img.url}" class="w-24 h-24 object-cover rounded-lg border">
+        <button type="button" class="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 text-xs remove-img">×</button>
+      </div>
+    `).join('') || '';
+
+    roomModal.classList.add('show');
+  }
+
+  function createPreviewDiv() {
+    const div = document.createElement('div');
+    div.id = 'imagePreview';
+    div.className = 'flex flex-wrap gap-3 mt-4';
+    document.querySelector('#roomModal .image-upload').appendChild(div);
+    return div;
+  }
+
+  // Save room
+  saveRoomBtn.onclick = async () => {
+    const formData = new FormData();
+    formData.append('name', inputs.name.value.trim());
+    formData.append('category', inputs.type.value);
+    formData.append('price', inputs.price.value);
+    formData.append('max_guests', inputs.capacity.value || 2);
+    formData.append('description', inputs.description.value.trim());
+    formData.append('original_price', inputs.promoSwitch.checked ? Math.round(inputs.price.value * 1.4) : null);
+
+    // Deleted images
+    const deleted = [];
+    document.querySelectorAll('.remove-img').forEach(btn => {
+      const div = btn.closest('div');
+      if (div.dataset.imgId) deleted.push(div.dataset.imgId);
+    });
+    if (deleted.length) formData.append('delete_images', JSON.stringify(deleted));
+
+    // New images
+    const fileInput = document.querySelector('#roomImagesInput') || createFileInput();
+    if (fileInput.files.length) {
+      for (const file of fileInput.files) formData.append('images', file);
+    }
+
+    const method = editingId ? 'PUT' : 'POST';
+    const url = editingId ? `${API}/${editingId}` : API;
+
+    try {
+      const res = await fetch(url, { method, body: formData });
+      const data = await res.json();
+      if (res.ok) {
+        alert(editingId ? "Updated!" : "Added!");
+        roomModal.classList.remove('show');
+        loadRooms();
+      } else {
+        alert("Error: " + data.error);
+      }
+    } catch (err) {
+      alert("Save failed!");
+    }
+  };
+
+  function createFileInput() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.multiple = true;
+    input.accept = 'image/*';
+    input.id = 'roomImagesInput';
+    input.style.display = 'none';
+    document.querySelector('#roomModal .image-upload').appendChild(input);
+    return input;
+  }
+
+  // Event delegation
+  roomGrid.onclick = async (e) => {
+    const card = e.target.closest('.room-card');
+    if (!card) return;
+    const id = card.dataset.id;
+    const room = rooms.find(r => r.id == id);
+
+    if (e.target.closest('.edit-room')) openModal(room);
+    if (e.target.closest('.delete-room')) {
+      if (confirm('Delete this room permanently?')) {
+        await fetch(`${API}/${id}`, { method: 'DELETE' });
+        loadRooms();
+      }
+    }
+  };
+
+  addRoomBtn.onclick = () => openModal();
+
+  // Close modals
+  document.querySelectorAll('[data-close]').forEach(btn => {
+    btn.onclick = () => document.getElementById(btn.dataset.close).classList.remove('show');
+  });
+
+  // Image upload trigger
+  document.addEventListener('click', e => {
+    if (e.target.closest('.image-upload') && !e.target.closest('#imagePreview')) {
+      const input = document.getElementById('roomImagesInput') || createFileInput();
+      input.click();
+      input.onchange = () => {
+        const preview = document.getElementById('imagePreview') || createPreviewDiv();
+        [...input.files].forEach(file => {
+          const reader = new FileReader();
+          reader.onload = ev => {
+            preview.innerHTML += `
+              <div class="relative">
+                <img src="${ev.target.result}" class="w-24 h-24 object-cover rounded-lg border">
+                <button type="button" class="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 text-xs remove-img">×</button>
+              </div>
+            `;
+          };
+          reader.readAsDataURL(file);
+        });
+      };
+    }
+  });
+
+  loadRooms();
+});
+</script>
+</body>
+</html>

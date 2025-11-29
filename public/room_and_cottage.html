@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- <title>Room & Cottage Management | Eduardo's Resort</title>
+  <title>Room & Cottage Management | Eduardo's Resort</title>
 
   <!-- Icons & Fonts -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -264,6 +264,7 @@
     .promo-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; }
     .promo-badge { background: var(--accent); color: var(--text-dark); padding: 0.375rem 0.625rem; border-radius: 0.5rem; font-weight: 600; }
 
+    /* Enhanced Creative Modal Styles */
     .modal {
       position: fixed; inset: 0; background: rgba(0,0,0,0.5);
       display: flex; align-items: center; justify-content: center;
@@ -271,35 +272,318 @@
     }
     .modal.show { visibility: visible; opacity: 1; }
     .modal-content {
-      background: white; border-radius: 1rem; width: 92%; max-width: 51.25rem;
+      background: white; border-radius: 1.5rem; width: 92%; max-width: 700px;
       max-height: 90vh; overflow: hidden; display: flex; flex-direction: column;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(20px); animation: modalSlideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
+
+    @keyframes modalSlideIn {
+      from { opacity: 0; transform: translateY(-30px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
     .modal-header {
-      padding: 1rem 1.25rem; background: var(--primary); color: white;
-      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.5rem 2rem; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white; display: flex; justify-content: space-between; align-items: center;
+      position: relative; overflow: hidden;
     }
-    .modal-header h3 { margin: 0; font-weight: 600; }
-    .close-modal { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
-    .modal-body { padding: 1.125rem; overflow-y: auto; flex: 1; }
-    .modal-footer { padding: 0.75rem 1.125rem; background: #f3f4f6; display: flex; justify-content: flex-end; gap: 0.75rem; }
 
-    .form-group { margin-bottom: 0.875rem; }
-    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-dark); }
+    .modal-header::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+    }
+
+    .modal-header h3 {
+      margin: 0; font-weight: 700; font-size: 1.5rem; display: flex; align-items: center; gap: 0.75rem;
+    }
+
+    .modal-header h3 i { font-size: 1.25rem; }
+
+    .close-modal {
+      background: rgba(255,255,255,0.2); border: none; color: white; font-size: 1.5rem; cursor: pointer;
+      width: 2.5rem; height: 2.5rem; border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; transition: all 0.3s ease; backdrop-filter: blur(10px);
+    }
+
+    .close-modal:hover { background: rgba(255,255,255,0.3); transform: rotate(90deg); }
+
+    .modal-body {
+      padding: 2rem; overflow-y: auto; flex: 1; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    }
+
+    /* Creative Form Sections */
+    .form-section {
+      background: white; border-radius: 1rem; padding: 1.5rem; margin-bottom: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 1px solid rgba(255,255,255,0.2);
+      position: relative; overflow: hidden;
+    }
+
+    .form-section::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    }
+
+    .form-section-header {
+      display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem; border-bottom: 2px solid #f1f5f9;
+    }
+
+    .form-section-header i {
+      color: var(--primary); font-size: 1.25rem; width: 2.5rem; height: 2.5rem;
+      background: rgba(43, 108, 176, 0.1); border-radius: 50%; display: flex;
+      align-items: center; justify-content: center;
+    }
+
+    .form-section-header h4 { margin: 0; font-size: 1.125rem; font-weight: 600; color: var(--text-dark); }
+    .form-section-header p { margin: 0.25rem 0 0 0; font-size: 0.875rem; color: var(--text-light); }
+
+    /* Enhanced Form Controls */
+    .form-group { margin-bottom: 1.25rem; position: relative; }
+    .form-group label {
+      display: block; margin-bottom: 0.75rem; font-weight: 600; color: var(--text-dark);
+      display: flex; align-items: center; gap: 0.5rem; font-size: 0.9375rem;
+    }
+    .form-group label i { color: var(--primary); font-size: 0.9rem; width: 1.25rem; text-align: center; }
+
     .form-control {
-      width: 100%; padding: 0.625rem 0.75rem; border: 1px solid #e2e8f0;
-      border-radius: 0.5rem; font-size: 1rem; transition: all 0.3s;
+      width: 100%; padding: 1rem 1.25rem; border: 2px solid #e2e8f0; border-radius: 0.75rem;
+      font-size: 1rem; transition: all 0.3s ease; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      font-weight: 500;
     }
-    .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(45,74,67,0.08); }
-    .form-row { display: flex; gap: 0.75rem; }
-    .form-row .form-group { flex: 1; }
 
-    /* Responsive */
+    .form-control:focus {
+      outline: none; border-color: var(--primary); box-shadow: 0 4px 15px rgba(43, 108, 176, 0.15);
+      transform: translateY(-1px);
+    }
+
+    .form-control::placeholder { color: #9ca3af; font-weight: 400; }
+
+    /* Creative Input Groups */
+    .input-group { display: flex; gap: 1rem; align-items: flex-end; }
+    .input-group .form-group { flex: 1; margin-bottom: 0; }
+
+    /* Enhanced Select Styles */
+    .select-wrapper { position: relative; }
+    .select-wrapper::after {
+      content: '⌄'; position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);
+      color: var(--text-light); font-size: 1.25rem; pointer-events: none;
+    }
+    .select-wrapper select { appearance: none; background: white; }
+
+    /* Creative Date Inputs */
+    .date-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.75rem; }
+    .date-group {
+      background: white; border: 2px solid #e2e8f0; border-radius: 0.75rem; padding: 1rem;
+      transition: all 0.3s ease;
+    }
+    .date-group:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .date-group label { display: block; font-weight: 600; color: var(--text-dark); margin-bottom: 0.5rem; font-size: 0.875rem; }
+    .date-group input { width: 100%; border: none; background: none; font-size: 1rem; font-weight: 500; color: var(--text-dark); }
+    .date-group input:focus { outline: none; }
+
+    /* Creative Textarea */
+    .textarea-group {
+      background: white; border: 2px solid #e2e8f0; border-radius: 0.75rem; padding: 1rem;
+      transition: all 0.3s ease;
+    }
+    .textarea-group:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .textarea-group textarea {
+      width: 100%; border: none; background: none; resize: vertical; min-height: 80px;
+      font-size: 1rem; font-weight: 500; color: var(--text-dark); line-height: 1.5;
+    }
+    .textarea-group textarea:focus { outline: none; }
+
+    /* Creative Image Upload Section */
+    .image-upload-section {
+      background: white; border-radius: 1rem; padding: 1.5rem; margin-bottom: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 1px solid rgba(255,255,255,0.2);
+      position: relative; overflow: hidden;
+    }
+
+    .image-upload-section::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    }
+
+    .image-upload-area {
+      border: 3px dashed var(--primary-light); border-radius: 1rem; padding: 2.5rem;
+      text-align: center; color: var(--text-light); position: relative; cursor: pointer;
+      transition: all 0.3s ease; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      overflow: hidden; margin-bottom: 1.5rem;
+    }
+
+    .image-upload-area::before {
+      content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(99, 179, 237, 0.1), transparent);
+      transition: left 0.6s;
+    }
+
+    .image-upload-area:hover::before {
+      left: 100%;
+    }
+
+    .image-upload-area:hover {
+      border-color: var(--primary); transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(43, 108, 176, 0.15);
+    }
+
+    .image-upload-area i {
+      font-size: 3rem; margin-bottom: 1rem; color: var(--primary-light);
+      transition: all 0.3s ease;
+    }
+
+    .image-upload-area:hover i {
+      color: var(--primary); transform: scale(1.1);
+    }
+
+    .image-upload-area p {
+      margin: 0.5rem 0; font-size: 1rem; font-weight: 500;
+    }
+
+    .image-upload-area small {
+      font-size: 0.875rem; color: var(--text-light);
+    }
+
+    .image-preview-container {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 1rem; margin-top: 1.5rem;
+    }
+
+    .image-preview {
+      position: relative; border-radius: 0.75rem; overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: all 0.3s ease;
+    }
+
+    .image-preview:hover {
+      transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .image-preview img {
+      width: 100%; height: 100px; object-fit: cover; display: block;
+    }
+
+    .image-preview-actions {
+      position: absolute; top: 0.5rem; right: 0.5rem; display: flex; gap: 0.25rem;
+    }
+
+    .image-preview-btn {
+      width: 2rem; height: 2rem; border: none; border-radius: 50%;
+      background: rgba(0,0,0,0.7); color: white; display: flex;
+      align-items: center; justify-content: center; cursor: pointer;
+      transition: all 0.3s ease; font-size: 0.75rem;
+    }
+
+    .image-preview-btn:hover {
+      background: var(--danger); transform: scale(1.1);
+    }
+
+    .image-preview-btn.set-primary {
+      background: rgba(0,0,0,0.7);
+    }
+
+    .image-preview-btn.set-primary:hover {
+      background: var(--success);
+    }
+
+    .image-preview-btn.set-primary.active {
+      background: var(--success);
+    }
+
+    .primary-badge {
+      position: absolute; top: 0.5rem; left: 0.5rem;
+      background: var(--success); color: white; padding: 0.25rem 0.5rem;
+      border-radius: 0.5rem; font-size: 0.75rem; font-weight: 600;
+    }
+
+    /* Creative Divider */
+    .section-divider {
+      height: 1px; background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+      margin: 1.5rem 0; position: relative;
+    }
+    .section-divider::before {
+      content: '•••'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      background: white; padding: 0 1rem; color: var(--text-light); font-size: 0.75rem;
+    }
+
+    /* Enhanced Modal Footer */
+    .modal-footer {
+      padding: 1.5rem 2rem; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      display: flex; justify-content: flex-end; gap: 1rem; border-top: 1px solid #e2e8f0;
+    }
+
+    /* Creative Buttons */
+    .btn-creative {
+      padding: 0.75rem 1.5rem; border: none; border-radius: 0.75rem; cursor: pointer; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 0.75rem; transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); position: relative; overflow: hidden; font-size: 0.9375rem;
+    }
+    .btn-creative::before {
+      content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); transition: left 0.6s;
+    }
+    .btn-creative:hover::before { left: 100%; }
+    .btn-creative-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white; border: 2px solid transparent;
+    }
+    .btn-creative-primary:hover {
+      transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 25px rgba(43, 108, 176, 0.3);
+    }
+    .btn-creative-outline {
+      background: transparent; border: 2px solid var(--primary); color: var(--primary);
+      backdrop-filter: blur(10px);
+    }
+    .btn-creative-outline:hover {
+      background: var(--primary); color: white; transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(43, 108, 176, 0.3);
+    }
+
+    /* Value Display for Promo */
+    .value-display {
+      background: linear-gradient(135deg, #10b981, #34d399); color: white; padding: 0.5rem 1rem;
+      border-radius: 0.5rem; font-weight: 700; font-size: 1.125rem; text-align: center; margin-top: 0.5rem;
+    }
+
+    /* Creative Room Type Tags */
+    .room-type-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+    .room-type-tag {
+      background: rgba(43, 108, 176, 0.1); color: var(--primary); padding: 0.5rem 1rem;
+      border-radius: 2rem; font-size: 0.875rem; font-weight: 600; border: 2px solid transparent;
+      transition: all 0.3s ease; cursor: pointer;
+    }
+    .room-type-tag:hover { background: var(--primary); color: white; transform: translateY(-2px); }
+    .room-type-tag.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+    /* Switch Styles */
+    .switch-container { padding: 0.75rem; background: #f8fafc; border-radius: 0.75rem; }
+    .switch { position: relative; display: inline-block; width: 4rem; height: 2rem; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%); transition: all 0.4s ease;
+      border-radius: 2rem;
+    }
+    .slider:before {
+      position: absolute; content: ""; height: 1.5rem; width: 1.5rem; left: 0.25rem; bottom: 0.25rem;
+      background: white; transition: all 0.4s ease; border-radius: 50%; box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    input:checked + .slider { background: linear-gradient(135deg, var(--success) 0%, #34d399 100%); }
+    input:checked + .slider:before { transform: translateX(2rem); }
+
+    /* Responsive Design */
     @media (max-width: 768px) {
       .search-box { width: 100%; }
       .page-controls { flex-direction: column; align-items: stretch; }
       .room-grid { grid-template-columns: 1fr; }
       .promo-list { grid-template-columns: 1fr; }
+      .modal-content { width: 95%; margin: 1rem; }
+      .modal-body { padding: 1.5rem; }
+      .input-group { flex-direction: column; gap: 0.5rem; }
+      .date-inputs { grid-template-columns: 1fr; }
+      .form-section { padding: 1rem; }
+      .image-upload-area { padding: 1.5rem; }
+      .image-preview-container { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
     }
   </style>
 </head>
@@ -455,116 +739,14 @@
       </div>
       <div style="display:flex; gap:0.625rem; flex-wrap:wrap;">
         <button class="btn btn-primary" id="addRoomBtn"><i class="fas fa-plus"></i> Add New Room</button>
-        <button class="btn btn-secondary" id="openAddPromo"><i class="fas fa-tag"></i> Add Promo</button>
         <button class="btn btn-outline" id="openSeasonalBtn"><i class="fas fa-calendar-day"></i> Seasonal Pricing</button>
+        <button class="btn btn-secondary" id="addPromoBtn"><i class="fas fa-plus"></i> New Promo</button>
       </div>
     </div>
 
     <!-- Room Grid -->
     <div class="room-grid" id="roomGrid">
-      <!-- Room Card 1 -->
-      <div class="room-card" data-title="Ocean View Suite" data-type="Suite" data-status="Available">
-        <div class="room-image" style="background-image:url('https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=600&q=80')">
-          <div class="room-promo">Limited Offer</div>
-        </div>
-        <div class="room-details">
-          <div class="room-header">
-            <div>
-              <div class="room-title">Ocean View Suite</div>
-              <div class="room-type">Suite</div>
-            </div>
-            <div class="room-price">$299<span>/night</span></div>
-          </div>
-          <p>Luxurious suite with panoramic ocean views, king-sized bed, and private balcony.</p>
-          <div class="room-features">
-            <div class="feature"><i class="fas fa-user-friends"></i> 2 Guests</div>
-            <div class="feature"><i class="fas fa-expand-arrows-alt"></i> 650 sqft</div>
-            <div class="feature"><i class="fas fa-image"></i> 5 Photos</div>
-          </div>
-          <div class="room-actions">
-            <button class="btn btn-sm btn-outline edit-room"><i class="fas fa-edit"></i> Edit</button>
-            <button class="btn btn-sm btn-outline"><i class="fas fa-images"></i> Images</button>
-            <button class="btn btn-sm btn-danger delete-room"><i class="fas fa-trash"></i> Delete</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Room Card 2 -->
-      <div class="room-card" data-title="Garden Cottage" data-type="Cottage" data-status="Available">
-        <div class="room-image" style="background-image:url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80')"></div>
-        <div class="room-details">
-          <div class="room-header">
-            <div>
-              <div class="room-title">Garden Cottage</div>
-              <div class="room-type">Cottage</div>
-            </div>
-            <div class="room-price">$189<span>/night</span></div>
-          </div>
-          <p>Charming cottage nestled in our tropical gardens, perfect for a romantic getaway.</p>
-          <div class="room-features">
-            <div class="feature"><i class="fas fa-user-friends"></i> 2 Guests</div>
-            <div class="feature"><i class="fas fa-expand-arrows-alt"></i> 450 sqft</div>
-            <div class="feature"><i class="fas fa-image"></i> 6 Photos</div>
-          </div>
-          <div class="room-actions">
-            <button class="btn btn-sm btn-outline edit-room"><i class="fas fa-edit"></i> Edit</button>
-            <button class="btn btn-sm btn-outline"><i class="fas fa-images"></i> Images</button>
-            <button class="btn btn-sm btn-danger delete-room"><i class="fas fa-trash"></i> Delete</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Room Card 3 -->
-      <div class="room-card" data-title="Family Bungalow" data-type="Cottage" data-status="Occupied">
-        <div class="room-image" style="background-image:url('https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=600&q=80')">
-          <div class="room-promo">Limited Offer</div>
-        </div>
-        <div class="room-details">
-          <div class="room-header">
-            <div>
-              <div class="room-title">Family Bungalow</div>
-              <div class="room-type">Cottage</div>
-            </div>
-            <div class="room-price">$249<span>/night</span></div>
-          </div>
-          <p>Spacious bungalow with two bedrooms, ideal for families or small groups.</p>
-          <div class="room-features">
-            <div class="feature"><i class="fas fa-user-friends"></i> 4 Guests</div>
-            <div class="feature"><i class="fas fa-expand-arrows-alt"></i> 800 sqft</div>
-            <div class="feature"><i class="fas fa-image"></i> 7 Photos</div>
-          </div>
-          <div class="room-actions">
-            <button class="btn btn-sm btn-outline edit-room"><i class="fas fa-edit"></i> Edit</button>
-            <button class="btn btn-sm btn-outline"><i class="fas fa-images"></i> Images</button>
-            <button class="btn btn-sm btn-danger delete-room"><i class="fas fa-trash"></i> Delete</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Room Card 4 -->
-      <div class="room-card" data-title="Deluxe Room" data-type="Room" data-status="Available">
-        <div class="room-image" style="background-image:url('https://images.unsplash.com/photo-1584132915807-fd1f5fbc078f?auto=format&fit=crop&w=600&q=80')"></div>
-        <div class="room-details">
-          <div class="room-header">
-            <div>
-              <div class="room-title">Deluxe Room</div>
-              <div class="room-type">Room</div>
-            </div>
-            <div class="room-price">$159<span>/night</span></div>
-          </div>
-          <p>Comfortable room with premium amenities, garden view, and modern decor.</p>
-          <div class="room-features">
-            <div class="feature"><i class="fas fa-user-friends"></i> 2 Guests</div>
-            <div class="feature"><i class="fas fa-expand-arrows-alt"></i> 350 sqft</div>
-            <div class="feature"><i class="fas fa-image"></i> 4 Photos</div>
-          </div>
-          <div class="room-actions">
-            <button class="btn btn-sm btn-outline edit-room"><i class="fas fa-edit"></i> Edit</button>
-            <button class="btn btn-sm btn-outline"><i class="fas fa-images"></i> Images</button>
-            <button class="btn btn-sm btn-danger delete-room"><i class="fas fa-trash"></i> Delete</button>
-          </div>
-        </div>
-      </div>
+      <!-- Room cards will be rendered here via JavaScript -->
     </div>
 
     <!-- Promo & Pricing Management -->
@@ -576,7 +758,6 @@
 
       <div class="promo-actions">
         <input type="text" id="promoSearch" class="search-box" placeholder="Search promos..." style="width:20rem;">
-        <button class="btn btn-secondary" id="addPromoBtn"><i class="fas fa-plus"></i> New Promo</button>
       </div>
 
       <div class="promo-list" id="promoList">
@@ -590,113 +771,159 @@
   <div class="modal" id="roomModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 id="roomModalTitle">Add New Room</h3>
+        <h3>
+          <i class="fas fa-bed"></i>
+          <span id="roomModalTitle">Add New Room</span>
+        </h3>
         <button class="close-modal" data-close="roomModal">×</button>
       </div>
       <div class="modal-body">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="roomNumber">Room Number</label>
-            <input type="text" id="roomNumber" class="form-control" placeholder="e.g., 101">
+        <!-- Basic Information Section -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <i class="fas fa-info-circle"></i>
+            <div>
+              <h4>Basic Information</h4>
+              <p>Enter room details and specifications</p>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="roomName">Room Name</label>
-            <input type="text" id="roomName" class="form-control" placeholder="e.g., Ocean View Suite">
+          
+          <div class="input-group">
+            <div class="form-group">
+              <label for="roomNumber"><i class="fas fa-hashtag"></i> Room Number</label>
+              <input type="text" id="roomNumber" class="form-control" placeholder="e.g., 101">
+            </div>
+            <div class="form-group">
+              <label for="roomName"><i class="fas fa-signature"></i> Room Name</label>
+              <input type="text" id="roomName" class="form-control" placeholder="e.g., Ocean View Suite">
+            </div>
           </div>
-          <div class="form-group">
-            <label for="roomType">Room Type</label>
-            <select id="roomType" class="form-control">
-              <option>Standard Room</option>
-              <option>Deluxe Room</option>
-              <option>Suite</option>
-              <option>Cottage</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="categoryType">Category Type</label>
-            <select id="categoryType" class="form-control">
-              <option value="room">Room</option>
-              <option value="cottage">Cottage</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="roomCapacity">Capacity</label>
-            <input type="number" id="roomCapacity" class="form-control" placeholder="Number of guests">
-          </div>
-          <div class="form-group">
-            <label for="roomPrice">Price per Night ($)</label>
-            <input type="number" id="roomPrice" class="form-control" placeholder="e.g., 199">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="roomDescription">Description</label>
-          <textarea id="roomDescription" class="form-control" rows="3" placeholder="Describe the room features and amenities"></textarea>
-        </div>
-
-<div class="form-group">
-  <label>Room Images</label>
-  
-  <div class="image-upload" 
-       style="border:2px dashed #e2e8f0; border-radius:0.5rem; padding:1.5rem; text-align:center; color:#9ca3af; position:relative; cursor:pointer;">
-       
-    <i class="fas fa-cloud-upload-alt" style="font-size:2rem;"></i>
-    <p>Drag & drop images here or click to browse</p>
-    <small>Recommended: 5-8 high-quality images (JPEG, PNG)</small>
-
-    <!--❗ Important: actual file input -->
-    <input type="file" 
-           name="room_images[]" 
-           multiple
-           accept="image/jpeg, image/png"
-           style="position:absolute; inset:0; opacity:0; cursor:pointer;">
-  </div>
-</div>
-
-
-        <div class="form-row">
-          <div class="form-group">
-            <label>Amenities</label>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.625rem; margin-top:0.625rem;">
-              <div><input type="checkbox" id="wifi"> <label for="wifi">Wi-Fi</label></div>
-              <div><input type="checkbox" id="ac"> <label for="ac">Air Conditioning</label></div>
-              <div><input type="checkbox" id="tv"> <label for="tv">TV</label></div>
-              <div><input type="checkbox" id="minibar"> <label for="minibar">Minibar</label></div>
-              <div><input type="checkbox" id="balcony"> <label for="balcony">Balcony</label></div>
-              <div><input type="checkbox" id="oceanView"> <label for="oceanView">Ocean View</label></div>
+          
+          <div class="input-group">
+            <div class="form-group">
+              <label for="roomType"><i class="fas fa-tag"></i> Room Type</label>
+              <div class="select-wrapper">
+                <select id="roomType" class="form-control">
+                  <option>Standard Room</option>
+                  <option>Deluxe Room</option>
+                  <option>Suite</option>
+                  <option>Cottage</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="categoryType"><i class="fas fa-layer-group"></i> Category Type</label>
+              <div class="select-wrapper">
+                <select id="categoryType" class="form-control">
+                  <option value="room">Room</option>
+                  <option value="cottage">Cottage</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label>Promotional Offer</label>
-            <div style="display:flex; align-items:center; gap:0.625rem; margin-top:0.625rem;">
-              <label class="switch">
-                <input type="checkbox" id="promoSwitch">
-                <span class="slider" style="position:relative; display:inline-block; width:40px; height:20px; background:#ccc; border-radius:20px; transition:0.3s;">
-                  <span style="position:absolute; content:''; height:16px; width:16px; left:2px; bottom:2px; background:white; border-radius:50%; transition:0.3s;"></span>
-                </span>
-              </label>
-              <span>Mark as "Limited Offer"</span>
+        <!-- Image Upload Section -->
+        <div class="image-upload-section">
+          <div class="form-section-header">
+            <i class="fas fa-images"></i>
+            <div>
+              <h4>Room Images</h4>
+              <p>Upload high-quality photos of the room</p>
             </div>
           </div>
-          <div class="form-group">
-            <label for="roomStatus">Room Status</label>
-            <select id="roomStatus" class="form-control">
-              <option>Available</option>
-              <option>Occupied</option>
-              <option>Under Maintenance</option>
-            </select>
+          
+          <div class="image-upload-area" id="imageUploadArea">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p>Drag & drop images here or click to browse</p>
+            <small>Recommended: 5-8 high-quality images (JPEG, PNG, WebP)</small>
+            <input type="file" id="roomImageUpload" multiple accept="image/jpeg, image/png, image/webp" style="position:absolute; inset:0; opacity:0; cursor:pointer;">
+          </div>
+
+          <div class="image-preview-container" id="imagePreviewContainer">
+            <!-- Image previews will be added here dynamically -->
+          </div>
+        </div>
+
+        <!-- Pricing & Capacity Section -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <i class="fas fa-money-bill-wave"></i>
+            <div>
+              <h4>Pricing & Capacity</h4>
+              <p>Set room rates and guest limits</p>
+            </div>
+          </div>
+          
+          <div class="input-group">
+            <div class="form-group">
+              <label for="roomCapacity"><i class="fas fa-user-friends"></i> Capacity</label>
+              <input type="number" id="roomCapacity" class="form-control" placeholder="Number of guests">
+            </div>
+            <div class="form-group">
+              <label for="roomPrice"><i class="fas fa-dollar-sign"></i> Price per Night</label>
+              <input type="number" id="roomPrice" class="form-control" placeholder="e.g., 199">
+            </div>
+          </div>
+        </div>
+
+        <!-- Description Section -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <i class="fas fa-align-left"></i>
+            <div>
+              <h4>Description</h4>
+              <p>Describe the room features and amenities</p>
+            </div>
+          </div>
+          <div class="textarea-group">
+            <textarea id="roomDescription" placeholder="Luxurious suite with panoramic ocean views, king-sized bed, and private balcony..."></textarea>
+          </div>
+        </div>
+
+        <!-- Status Section -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <i class="fas fa-toggle-on"></i>
+            <div>
+              <h4>Status & Settings</h4>
+              <p>Configure room availability and promotions</p>
+            </div>
+          </div>
+          
+          <div class="input-group">
+            <div class="form-group">
+              <label for="roomStatus"><i class="fas fa-circle"></i> Room Status</label>
+              <div class="select-wrapper">
+                <select id="roomStatus" class="form-control">
+                  <option>Available</option>
+                  <option>Occupied</option>
+                  <option>Under Maintenance</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-tag"></i> Promotional Offer</label>
+              <div class="switch-container">
+                <label class="switch">
+                  <input type="checkbox" id="promoSwitch">
+                  <span class="slider"></span>
+                </label>
+                <span style="font-weight: 600; color: var(--text-dark);">Mark as "Limited Offer"</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-outline" data-close="roomModal">Cancel</button>
-        <button class="btn btn-primary" id="saveRoomBtn">Save Room</button>
+        <button class="btn-creative btn-creative-outline" data-close="roomModal">
+          <i class="fas fa-times"></i>
+          Cancel
+        </button>
+        <button class="btn-creative btn-creative-primary" id="saveRoomBtn">
+          <i class="fas fa-save"></i>
+          Save Room
+        </button>
       </div>
     </div>
   </div>
@@ -705,49 +932,116 @@
   <div class="modal" id="promoModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 id="promoModalTitle">Add New Promo</h3>
+        <h3>
+          <i class="fas fa-gift"></i>
+          <span id="promoModalTitle">Add New Promo</span>
+        </h3>
         <button class="close-modal" data-close="promoModal">×</button>
       </div>
       <div class="modal-body">
-        <div class="form-group">
-          <label for="promoCode">Promo Code</label>
-          <input type="text" id="promoCode" class="form-control" placeholder="e.g., SUMMER25">
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="promoType">Type</label>
-            <select id="promoType" class="form-control">
-              <option value="percent">Percentage</option>
-              <option value="fixed">Fixed amount</option>
-            </select>
+        <!-- Promo Code Section -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <i class="fas fa-ticket-alt"></i>
+            <div>
+              <h4>Promo Code</h4>
+              <p>Create a unique promotion code</p>
+            </div>
           </div>
           <div class="form-group">
-            <label for="promoValue">Value</label>
-            <input type="number" id="promoValue" class="form-control" placeholder="e.g., 25">
+            <label for="promoCode"><i class="fas fa-hashtag"></i> Code</label>
+            <input type="text" id="promoCode" class="form-control" placeholder="e.g., SUMMER25">
           </div>
         </div>
-        <div class="form-group">
-          <label for="promoDesc">Description</label>
-          <textarea id="promoDesc" class="form-control" rows="3" placeholder="Details about the promo"></textarea>
+
+        <!-- Type & Value Section -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <i class="fas fa-percentage"></i>
+            <div>
+              <h4>Type & Value</h4>
+              <p>Set discount type and amount</p>
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="form-group">
+              <label for="promoType"><i class="fas fa-cog"></i> Type</label>
+              <div class="select-wrapper">
+                <select id="promoType" class="form-control">
+                  <option value="percent">Percentage</option>
+                  <option value="fixed">Fixed amount</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="promoValue"><i class="fas fa-dollar-sign"></i> Value</label>
+              <input type="number" id="promoValue" class="form-control" placeholder="e.g., 25">
+              <div class="value-display" id="valuePreview">25% OFF</div>
+            </div>
+          </div>
         </div>
-        <div class="form-row">
+
+        <!-- Description Section -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <i class="fas fa-align-left"></i>
+            <div>
+              <h4>Description</h4>
+              <p>Details about the promo</p>
+            </div>
+          </div>
+          <div class="textarea-group">
+            <textarea id="promoDesc" placeholder="Summer special discount for all room types..."></textarea>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Date Range Section -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <i class="fas fa-calendar-alt"></i>
+            <div>
+              <h4>Date Range</h4>
+              <p>Set promotion start and end dates</p>
+            </div>
+          </div>
+          <div class="date-inputs">
+            <div class="date-group">
+              <label>Start Date</label>
+              <input type="date" id="promoStart" class="form-control">
+            </div>
+            <div class="date-group">
+              <label>End Date</label>
+              <input type="date" id="promoEnd" class="form-control">
+            </div>
+          </div>
+        </div>
+
+        <!-- Usage Limit Section -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <i class="fas fa-chart-line"></i>
+            <div>
+              <h4>Usage Limit (optional)</h4>
+              <p>Total uses allowed</p>
+            </div>
+          </div>
           <div class="form-group">
-            <label for="promoStart">Start Date</label>
-            <input type="date" id="promoStart" class="form-control">
+            <label for="promoUsage"><i class="fas fa-users"></i> Maximum Uses</label>
+            <input type="number" id="promoUsage" class="form-control" placeholder="Leave empty for unlimited uses">
           </div>
-          <div class="form-group">
-            <label for="promoEnd">End Date</label>
-            <input type="date" id="promoEnd" class="form-control">
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="promoUsage">Usage Limit (optional)</label>
-          <input type="number" id="promoUsage" class="form-control" placeholder="Total uses allowed">
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-outline" data-close="promoModal">Cancel</button>
-        <button class="btn btn-primary" id="savePromoBtn">Save Promo</button>
+        <button class="btn-creative btn-creative-outline" data-close="promoModal">
+          <i class="fas fa-times"></i>
+          Cancel
+        </button>
+        <button class="btn-creative btn-creative-primary" id="savePromoBtn">
+          <i class="fas fa-save"></i>
+          Save Promo
+        </button>
       </div>
     </div>
   </div>
@@ -756,216 +1050,792 @@
   <div class="modal" id="seasonalModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>Seasonal Pricing Setup</h3>
+        <h3>
+          <i class="fas fa-calendar-day"></i>
+          Seasonal Pricing Setup
+        </h3>
         <button class="close-modal" data-close="seasonalModal">×</button>
       </div>
       <div class="modal-body">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="seasonName">Season Name</label>
-            <input type="text" id="seasonName" class="form-control" placeholder="e.g., Peak Season">
+        <!-- Season Details Section -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <i class="fas fa-sun"></i>
+            <div>
+              <h4>Season Details</h4>
+              <p>Configure seasonal pricing parameters</p>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="seasonMultiplier">Price Multiplier</label>
-            <input type="number" id="seasonMultiplier" class="form-control" step="0.1" value="1.2" placeholder="e.g., 1.2">
+          <div class="input-group">
+            <div class="form-group">
+              <label for="seasonName"><i class="fas fa-signature"></i> Season Name</label>
+              <input type="text" id="seasonName" class="form-control" placeholder="e.g., Peak Season">
+            </div>
+            <div class="form-group">
+              <label for="seasonMultiplier"><i class="fas fa-chart-line"></i> Price Multiplier</label>
+              <input type="number" id="seasonMultiplier" class="form-control" step="0.1" value="1.2" placeholder="e.g., 1.2">
+            </div>
           </div>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="seasonStart">Start Date</label>
-            <input type="date" id="seasonStart" class="form-control">
+
+        <!-- Date Range Section -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <i class="fas fa-calendar-range"></i>
+            <div>
+              <h4>Date Range</h4>
+              <p>Set seasonal period</p>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="seasonEnd">End Date</label>
-            <input type="date" id="seasonEnd" class="form-control">
+          <div class="date-inputs">
+            <div class="date-group">
+              <label>Start Date</label>
+              <input type="date" id="seasonStart" class="form-control">
+            </div>
+            <div class="date-group">
+              <label>End Date</label>
+              <input type="date" id="seasonEnd" class="form-control">
+            </div>
           </div>
         </div>
-        <div class="form-group">
-          <label for="applyToRooms">Apply to room types (comma-separated or 'all')</label>
-          <input type="text" id="applyToRooms" class="form-control" placeholder="e.g., Suite,Cottage or all">
+
+        <!-- Room Types Section -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <i class="fas fa-bed"></i>
+            <div>
+              <h4>Apply To Room Types</h4>
+              <p>Select which room types this affects</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-layer-group"></i> Room Types</label>
+            <input type="text" id="applyToRooms" class="form-control" placeholder="e.g., Suite,Cottage or all">
+            <div class="room-type-tags">
+              <span class="room-type-tag" data-type="all">All Rooms</span>
+              <span class="room-type-tag" data-type="suite">Suite</span>
+              <span class="room-type-tag" data-type="cottage">Cottage</span>
+              <span class="room-type-tag" data-type="deluxe">Deluxe Room</span>
+              <span class="room-type-tag" data-type="standard">Standard Room</span>
+            </div>
+          </div>
         </div>
-        <div class="form-group">
-          <small style="color:var(--text-light);">This feature stores seasonal pricing locally so the UI can apply the multiplier when showing prices. Integrate with backend later to persist globally.</small>
+
+        <!-- Info Section -->
+        <div class="form-section" style="background: linear-gradient(135deg, #f0f9ff, #e0f2fe);">
+          <div class="form-section-header">
+            <i class="fas fa-info-circle"></i>
+            <div>
+              <h4>Information</h4>
+              <p>How seasonal pricing works</p>
+            </div>
+          </div>
+          <p style="color: var(--text-light); font-size: 0.875rem; line-height: 1.5; margin: 0;">
+            This feature stores seasonal pricing locally so the UI can apply the multiplier when showing prices. 
+            Integrate with backend later to persist globally.
+          </p>
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-outline" data-close="seasonalModal">Cancel</button>
-        <button class="btn btn-primary" id="saveSeasonBtn">Save Seasonal Pricing</button>
+        <button class="btn-creative btn-creative-outline" data-close="seasonalModal">
+          <i class="fas fa-times"></i>
+          Cancel
+        </button>
+        <button class="btn-creative btn-creative-primary" id="saveSeasonBtn">
+          <i class="fas fa-save"></i>
+          Save Seasonal Pricing
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- Sidebar + Page JS -->
-<script>
-document.addEventListener('DOMContentLoaded', async () => {
-  const API_BASE = '/api/admin/rooms';  // ← TAMA NA ‘TO KAPAG SAME SERVER!
-  let rooms = [];
-
-  const roomGrid = document.getElementById('roomGrid');
-  const addRoomBtn = document.getElementById('addRoomBtn');
-  const saveRoomBtn = document.getElementById('saveRoomBtn');
-  const roomModal = document.getElementById('roomModal');
-  const modalTitle = document.getElementById('roomModalTitle');
-
-  async function loadRooms() {
-    try {
-      const res = await fetch(API_BASE);
-      if (!res.ok) throw new Error('Failed');
-      rooms = await res.json();
-
-      // Normalize images
-      rooms.forEach(room => {
-        if (typeof room.images === 'string') {
-          try { room.images = JSON.parse(room.images); }
-          catch { room.images = []; }
-        }
-        if (!Array.isArray(room.images)) room.images = [];
-      });
-
-      renderRooms();
-      updateStats();
-    } catch (err) {
-      alert('Check if server is running on port 3000');
-      console.error(err);
-    }
-  }
-
-  function renderRooms() {
-    if (rooms.length === 0) {
-      roomGrid.innerHTML = `<p class="text-center text-gray-500 py-10 text-xl">No rooms found. Add one now!</p>`;
-      return;
-    }
-
-    roomGrid.innerHTML = rooms.map(room => {
-      const firstImg = room.images.length > 0 
-        ? room.images[0] 
-        : 'https://via.placeholder.com/600x400?text=No+Image';
-
-      return `
-        <div class="room-card" data-id="${room.id}">
-          <div class="room-image" style="background-image:url('${firstImg}')">
-            ${room.status === 'maintenance' ? '<div class="room-promo bg-orange-600">MAINTENANCE</div>' : ''}
-          </div>
-          <div class="room-details">
-            <div class="room-header">
-              <div>
-                <div class="room-title">${room.name || room.room_name || 'Unnamed Room'}</div>
-                <div class="room-type capitalize text-sm">${room.category || room.room_type || 'standard'}</div>
-                ${room.room_number ? `<div class="text-xs text-gray-500 mt-1">#${room.room_number}</div>` : ''}
-              </div>
-              <div class="room-price text-right">
-                <div class="text-xl font-bold">₱${Number(room.price || room.price_per_night || 0).toLocaleString()}</div>
-                <span class="text-sm text-gray-500">/night</span>
-              </div>
-            </div>
-            <p class="text-gray-600 text-sm mt-2">${room.description || room.room_description || room.category_label || 'No description available.'}</p>
-            <div class="room-features text-sm text-gray-600 mt-3">
-              <span><i class="fas fa-user-friends"></i> ${room.max_guests || room.capacity || 2} Guests</span>
-              <span class="ml-4"><i class="fas fa-image"></i> ${room.images.length} Photos</span>
-              <span class="ml-4"><i class="fas fa-circle ${room.available === 1 ? 'text-green-500' : 'text-red-500'}"></i> ${room.status || (room.available === 1 ? 'Available' : 'Occupied')}</span>
-            </div>
-            <div class="room-actions mt-4">
-              <button class="btn btn-sm btn-outline edit-room"><i class="fas fa-edit"></i> Edit</button>
-              <button class="btn btn-sm btn-danger delete-room"><i class="fas fa-trash"></i> Delete</button>
-            </div>
-          </div>
-        </div>
-      `;
-    }).join('');
-  }
-
-  function updateStats() {
-    document.getElementById('totalRooms').textContent = rooms.length;
-    document.getElementById('availableRooms').textContent = rooms.filter(r => r.available === 1).length;
-    document.getElementById('occupiedRooms').textContent = rooms.filter(r => r.status === 'occupied' || r.available === 0).length;
-    document.getElementById('maintenanceRooms').textContent = rooms.filter(r => r.status === 'maintenance').length;
-  }
-
-  // Open Modal
-  function openModal(room = null) {
-    editingId = room?.id || null;
-    modalTitle.textContent = room ? 'Edit Room' : 'Add New Room';
-
-    document.getElementById('roomNumber').value = room?.room_number || '';
-    document.getElementById('roomName').value = room?.name || room?.room_name || '';
-    document.getElementById('roomType').value = room?.category || room?.room_type || 'standard room';
-    document.getElementById('categoryType').value = room?.category_type || 'room';
-    document.getElementById('roomCapacity').value = room?.max_guests || room?.capacity || 2;
-    document.getElementById('roomPrice').value = room?.price || room?.price_per_night || '';
-    document.getElementById('roomDescription').value = room?.description || room?.room_description || '';
-    document.getElementById('roomStatus').value = room?.status || (room?.available === 1 ? 'available' : 'occupied');
-
-    roomModal.classList.add('show');
-  }
-
-  let editingId = null;
-
-  // Save Room
-  saveRoomBtn.onclick = async () => {
-    const data = {
-      category_type: document.getElementById('categoryType').value, 
-      room_number: document.getElementById('roomNumber').value.trim(),
-      name: document.getElementById('roomName').value.trim(),
-      category: document.getElementById('roomType').value,
-      max_guests: parseInt(document.getElementById('roomCapacity').value) || 2,
-      price: parseFloat(document.getElementById('roomPrice').value) || 0,
-      description: document.getElementById('roomDescription').value.trim(),
-      status: document.getElementById('roomStatus').value
-    };
-
-    if (!data.name || !data.price) return alert('Name and Price required!');
-
-    try {
-      const method = editingId ? 'PUT' : 'POST';
-      const url = editingId ? `${API_BASE}/update/${editingId}` : `${API_BASE}/create`;
-
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-
-      if (res.ok) {
-        alert(editingId ? 'Updated!' : 'Created!');
-        roomModal.classList.remove('show');
-        loadRooms();
-      } else {
-        alert('Save failed');
-      }
-    } catch (err) {
-      alert('Network error');
-    }
-  };
-
-  // Edit & Delete
-  roomGrid.onclick = e => {
-    const card = e.target.closest('.room-card');
-    if (!card) return;
-    const room = rooms.find(r => r.id == card.dataset.id);
-
-    if (e.target.closest('.edit-room')) openModal(room);
-    if (e.target.closest('.delete-room')) {
-      if (confirm('Delete forever?')) {
-        fetch(`${API_BASE}/delete/${room.id}`, { method: 'DELETE' })
-          .then(() => loadRooms());
-      }
-    }
-  };
-
-  addRoomBtn.onclick = () => openModal();
-
-  // Close modal
-  document.querySelectorAll('[data-close]').forEach(b => 
-    b.onclick = () => document.getElementById(b.dataset.close).classList.remove('show')
-  );
-
-  // START
-  loadRooms();
-});
-</script>
-
-  <!-- Sidebar Toggle JS -->
+  <!-- JavaScript -->
   <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Initialize data
+      let rooms = JSON.parse(localStorage.getItem('resortRooms')) || [];
+      let promos = JSON.parse(localStorage.getItem('resortPromos')) || [];
+      let seasonalPricing = JSON.parse(localStorage.getItem('resortSeasonalPricing')) || [];
+      let currentRoomImages = [];
+      let primaryImageIndex = 0;
+
+      // DOM Elements
+      const roomGrid = document.getElementById('roomGrid');
+      const addRoomBtn = document.getElementById('addRoomBtn');
+      const saveRoomBtn = document.getElementById('saveRoomBtn');
+      const roomModal = document.getElementById('roomModal');
+      const modalTitle = document.getElementById('roomModalTitle');
+      const imageUploadArea = document.getElementById('imageUploadArea');
+      const roomImageUpload = document.getElementById('roomImageUpload');
+      const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+      
+      // Promo Elements
+      const addPromoBtn = document.getElementById('addPromoBtn');
+      const savePromoBtn = document.getElementById('savePromoBtn');
+      const promoModal = document.getElementById('promoModal');
+      const promoModalTitle = document.getElementById('promoModalTitle');
+      const promoList = document.getElementById('promoList');
+      
+      // Seasonal Pricing Elements
+      const openSeasonalBtn = document.getElementById('openSeasonalBtn');
+      const saveSeasonBtn = document.getElementById('saveSeasonBtn');
+      const seasonalModal = document.getElementById('seasonalModal');
+
+      // Initialize the page
+      initializePage();
+
+      function initializePage() {
+        // If no rooms in localStorage, use demo data
+        if (rooms.length === 0) {
+          rooms = getDemoRooms();
+          saveRoomsToLocalStorage();
+        }
+        
+        renderRooms();
+        updateStats();
+        renderPromos();
+        
+        // Setup promo value preview
+        setupPromoPreview();
+        
+        // Setup image upload
+        setupImageUpload();
+      }
+
+      function getDemoRooms() {
+        return [
+          {
+            id: 1,
+            name: "Ocean View Suite",
+            room_number: "101",
+            category: "Suite",
+            price: 299,
+            max_guests: 2,
+            description: "Luxurious suite with panoramic ocean views, king-sized bed, and private balcony.",
+            status: "Available",
+            available: 1,
+            images: ["https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=600&q=80"],
+            primaryImageIndex: 0
+          },
+          {
+            id: 2,
+            name: "Garden Cottage",
+            room_number: "201",
+            category: "Cottage",
+            price: 189,
+            max_guests: 2,
+            description: "Charming cottage nestled in our tropical gardens, perfect for a romantic getaway.",
+            status: "Available",
+            available: 1,
+            images: ["https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80"],
+            primaryImageIndex: 0
+          }
+        ];
+      }
+
+      function setupImageUpload() {
+        // Handle file selection
+        roomImageUpload.addEventListener('change', handleImageUpload);
+        
+        // Handle drag and drop
+        imageUploadArea.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          imageUploadArea.style.borderColor = 'var(--primary)';
+          imageUploadArea.style.background = 'rgba(99, 179, 237, 0.1)';
+        });
+        
+        imageUploadArea.addEventListener('dragleave', () => {
+          imageUploadArea.style.borderColor = 'var(--primary-light)';
+          imageUploadArea.style.background = 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)';
+        });
+        
+        imageUploadArea.addEventListener('drop', (e) => {
+          e.preventDefault();
+          imageUploadArea.style.borderColor = 'var(--primary-light)';
+          imageUploadArea.style.background = 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)';
+          
+          const files = e.dataTransfer.files;
+          handleFiles(files);
+        });
+      }
+
+      function handleImageUpload(e) {
+        const files = e.target.files;
+        handleFiles(files);
+      }
+
+      function handleFiles(files) {
+        const validImageTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        
+        for (let file of files) {
+          if (!validImageTypes.includes(file.type)) {
+            alert('Please upload only JPEG, PNG, or WebP images.');
+            continue;
+          }
+          
+          if (file.size > 5 * 1024 * 1024) { // 5MB limit
+            alert('Image size should be less than 5MB.');
+            continue;
+          }
+          
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            currentRoomImages.push(e.target.result);
+            renderImagePreviews();
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+
+      function renderImagePreviews() {
+        imagePreviewContainer.innerHTML = '';
+        
+        if (currentRoomImages.length === 0) {
+          imagePreviewContainer.innerHTML = `
+            <div class="text-center text-gray-500 py-4 col-span-full">
+              <i class="fas fa-images text-3xl mb-2"></i>
+              <p>No images uploaded yet</p>
+            </div>
+          `;
+          return;
+        }
+        
+        currentRoomImages.forEach((image, index) => {
+          const isPrimary = index === primaryImageIndex;
+          const preview = document.createElement('div');
+          preview.className = 'image-preview';
+          preview.innerHTML = `
+            <img src="${image}" alt="Room image ${index + 1}">
+            ${isPrimary ? '<div class="primary-badge">Primary</div>' : ''}
+            <div class="image-preview-actions">
+              <button class="image-preview-btn set-primary ${isPrimary ? 'active' : ''}" 
+                      onclick="setPrimaryImage(${index})" title="Set as primary">
+                <i class="fas fa-star"></i>
+              </button>
+              <button class="image-preview-btn" onclick="removeImage(${index})" title="Remove image">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          `;
+          imagePreviewContainer.appendChild(preview);
+        });
+      }
+
+      // Global functions for image actions
+      window.setPrimaryImage = (index) => {
+        primaryImageIndex = index;
+        renderImagePreviews();
+      };
+
+      window.removeImage = (index) => {
+        currentRoomImages.splice(index, 1);
+        if (primaryImageIndex >= index) {
+          primaryImageIndex = Math.max(0, primaryImageIndex - 1);
+        }
+        renderImagePreviews();
+      };
+
+      function renderRooms() {
+        if (rooms.length === 0) {
+          roomGrid.innerHTML = `<p class="text-center text-gray-500 py-10 text-xl">No rooms found. Add one now!</p>`;
+          return;
+        }
+
+        roomGrid.innerHTML = rooms.map(room => {
+          const firstImg = room.images && room.images.length > 0 
+            ? room.images[room.primaryImageIndex || 0] 
+            : 'https://via.placeholder.com/600x400?text=No+Image';
+
+          // Apply seasonal pricing if available
+          const finalPrice = applySeasonalPricing(room.price, room.category);
+          const hasSeasonalPricing = finalPrice !== room.price;
+
+          return `
+            <div class="room-card" data-id="${room.id}">
+              <div class="room-image" style="background-image:url('${firstImg}')">
+                ${room.status === 'Under Maintenance' ? '<div class="room-promo" style="background: var(--warning)">MAINTENANCE</div>' : ''}
+                ${hasSeasonalPricing ? '<div class="room-promo" style="background: var(--success)">SEASONAL</div>' : ''}
+                ${room.promo ? '<div class="room-promo">Limited Offer</div>' : ''}
+              </div>
+              <div class="room-details">
+                <div class="room-header">
+                  <div>
+                    <div class="room-title">${room.name}</div>
+                    <div class="room-type capitalize text-sm">${room.category}</div>
+                    ${room.room_number ? `<div class="text-xs text-gray-500 mt-1">#${room.room_number}</div>` : ''}
+                  </div>
+                  <div class="room-price text-right">
+                    <div class="text-xl font-bold">$${finalPrice}</div>
+                    ${hasSeasonalPricing ? 
+                      `<div class="text-sm text-gray-500 line-through">$${room.price}</div>` : 
+                      `<span class="text-sm text-gray-500">/night</span>`
+                    }
+                  </div>
+                </div>
+                <p class="text-gray-600 text-sm mt-2">${room.description}</p>
+                <div class="room-features text-sm text-gray-600 mt-3">
+                  <span><i class="fas fa-user-friends"></i> ${room.max_guests} Guests</span>
+                  <span class="ml-4"><i class="fas fa-image"></i> ${room.images ? room.images.length : 0} Photos</span>
+                  <span class="ml-4"><i class="fas fa-circle ${room.status === 'Available' ? 'text-green-500' : room.status === 'Occupied' ? 'text-red-500' : 'text-orange-500'}"></i> ${room.status}</span>
+                </div>
+                <div class="room-actions mt-4">
+                  <button class="btn btn-sm btn-outline edit-room"><i class="fas fa-edit"></i> Edit</button>
+                  <button class="btn btn-sm btn-outline view-images"><i class="fas fa-images"></i> Images</button>
+                  <button class="btn btn-sm btn-danger delete-room"><i class="fas fa-trash"></i> Delete</button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      function updateStats() {
+        const totalRooms = rooms.length;
+        const availableRooms = rooms.filter(r => r.status === 'Available').length;
+        const occupiedRooms = rooms.filter(r => r.status === 'Occupied').length;
+        const maintenanceRooms = rooms.filter(r => r.status === 'Under Maintenance').length;
+
+        document.getElementById('totalRooms').textContent = totalRooms;
+        document.getElementById('availableRooms').textContent = availableRooms;
+        document.getElementById('occupiedRooms').textContent = occupiedRooms;
+        document.getElementById('maintenanceRooms').textContent = maintenanceRooms;
+      }
+
+      // Promo Management Functions
+      function renderPromos() {
+        if (promos.length === 0) {
+          promoList.innerHTML = `
+            <div class="promo-card text-center py-8">
+              <i class="fas fa-tag text-4xl text-gray-300 mb-4"></i>
+              <p class="text-gray-500">No promotions yet. Add your first promo!</p>
+            </div>
+          `;
+          return;
+        }
+
+        promoList.innerHTML = promos.map(promo => {
+          const isActive = new Date(promo.endDate) >= new Date();
+          const usageText = promo.usageLimit ? `${promo.used || 0}/${promo.usageLimit} uses` : 'Unlimited uses';
+          
+          return `
+            <div class="promo-card" data-id="${promo.id}">
+              <div class="promo-meta">
+                <div class="promo-title">${promo.code}</div>
+                <div class="promo-badge" style="background: ${isActive ? 'var(--success)' : '#e5e7eb'}; color: ${isActive ? 'white' : '#6b7280'}; padding: 0.375rem 0.625rem; border-radius: 0.5rem; font-weight: 600;">
+                  ${isActive ? 'Active' : 'Expired'}
+                </div>
+              </div>
+              <div class="promo-desc">${promo.description}</div>
+              <div class="promo-footer">
+                <span class="text-sm font-semibold">
+                  ${promo.type === 'percent' ? `${promo.value}% OFF` : `$${promo.value} OFF`}
+                </span>
+                <div class="flex gap-2">
+                  <button class="text-xs text-blue-600 edit-promo">Edit</button>
+                  <button class="text-xs text-red-600 delete-promo">Delete</button>
+                </div>
+              </div>
+              <div class="text-xs text-gray-500 mt-2">
+                ${new Date(promo.startDate).toLocaleDateString()} - ${new Date(promo.endDate).toLocaleDateString()} • ${usageText}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      function setupPromoPreview() {
+        const promoType = document.getElementById('promoType');
+        const promoValue = document.getElementById('promoValue');
+        const valuePreview = document.getElementById('valuePreview');
+
+        function updatePreview() {
+          const type = promoType.value;
+          const value = promoValue.value || 0;
+          valuePreview.textContent = type === 'percent' ? `${value}% OFF` : `$${value} OFF`;
+        }
+
+        promoType.addEventListener('change', updatePreview);
+        promoValue.addEventListener('input', updatePreview);
+      }
+
+      function savePromoToLocalStorage() {
+        localStorage.setItem('resortPromos', JSON.stringify(promos));
+      }
+
+      // Seasonal Pricing Functions
+      function applySeasonalPricing(basePrice, roomType) {
+        const now = new Date();
+        const activeSeason = seasonalPricing.find(season => {
+          const start = new Date(season.startDate);
+          const end = new Date(season.endDate);
+          const appliesTo = season.applyTo === 'all' || season.applyTo.split(',').map(s => s.trim()).includes(roomType);
+          return now >= start && now <= end && appliesTo;
+        });
+
+        return activeSeason ? Math.round(basePrice * activeSeason.multiplier) : basePrice;
+      }
+
+      function saveSeasonalToLocalStorage() {
+        localStorage.setItem('resortSeasonalPricing', JSON.stringify(seasonalPricing));
+      }
+
+      function saveRoomsToLocalStorage() {
+        localStorage.setItem('resortRooms', JSON.stringify(rooms));
+      }
+
+      // Modal Management
+      function openModal(modalId) {
+        document.getElementById(modalId).classList.add('show');
+      }
+
+      function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove('show');
+      }
+
+      function resetRoomForm() {
+        currentRoomImages = [];
+        primaryImageIndex = 0;
+        renderImagePreviews();
+        
+        document.getElementById('roomNumber').value = '';
+        document.getElementById('roomName').value = '';
+        document.getElementById('roomType').value = 'Standard Room';
+        document.getElementById('categoryType').value = 'room';
+        document.getElementById('roomCapacity').value = '2';
+        document.getElementById('roomPrice').value = '';
+        document.getElementById('roomDescription').value = '';
+        document.getElementById('roomStatus').value = 'Available';
+        document.getElementById('promoSwitch').checked = false;
+        
+        roomImageUpload.value = '';
+      }
+
+      function resetPromoForm() {
+        document.getElementById('promoCode').value = '';
+        document.getElementById('promoType').value = 'percent';
+        document.getElementById('promoValue').value = '';
+        document.getElementById('promoDesc').value = '';
+        
+        // Set default dates (today and 30 days from now)
+        const today = new Date().toISOString().split('T')[0];
+        const futureDate = new Date();
+        futureDate.setDate(futureDate.getDate() + 30);
+        const futureDateStr = futureDate.toISOString().split('T')[0];
+        
+        document.getElementById('promoStart').value = today;
+        document.getElementById('promoEnd').value = futureDateStr;
+        document.getElementById('promoUsage').value = '';
+        promoModalTitle.textContent = 'Add New Promo';
+        editingPromoId = null;
+        
+        // Update preview
+        document.getElementById('valuePreview').textContent = '0% OFF';
+      }
+
+      function resetSeasonalForm() {
+        document.getElementById('seasonName').value = '';
+        document.getElementById('seasonMultiplier').value = '1.2';
+        
+        // Set default dates
+        const today = new Date().toISOString().split('T')[0];
+        const futureDate = new Date();
+        futureDate.setDate(futureDate.getDate() + 90);
+        const futureDateStr = futureDate.toISOString().split('T')[0];
+        
+        document.getElementById('seasonStart').value = today;
+        document.getElementById('seasonEnd').value = futureDateStr;
+        document.getElementById('applyToRooms').value = 'all';
+      }
+
+      // Event Listeners for Room Button
+      addRoomBtn.addEventListener('click', () => {
+        resetRoomForm();
+        modalTitle.textContent = 'Add New Room';
+        openModal('roomModal');
+      });
+
+      // Event Listeners for Promo Button
+      addPromoBtn.addEventListener('click', () => {
+        resetPromoForm();
+        openModal('promoModal');
+      });
+
+      savePromoBtn.addEventListener('click', () => {
+        const promoData = {
+          code: document.getElementById('promoCode').value.trim(),
+          type: document.getElementById('promoType').value,
+          value: parseFloat(document.getElementById('promoValue').value),
+          description: document.getElementById('promoDesc').value.trim(),
+          startDate: document.getElementById('promoStart').value,
+          endDate: document.getElementById('promoEnd').value,
+          usageLimit: document.getElementById('promoUsage').value ? parseInt(document.getElementById('promoUsage').value) : null,
+          used: 0
+        };
+
+        // Validation
+        if (!promoData.code || !promoData.value || !promoData.startDate || !promoData.endDate) {
+          alert('Please fill in all required fields');
+          return;
+        }
+
+        if (new Date(promoData.startDate) > new Date(promoData.endDate)) {
+          alert('End date must be after start date');
+          return;
+        }
+
+        if (promoData.value <= 0) {
+          alert('Promo value must be greater than 0');
+          return;
+        }
+
+        if (editingPromoId) {
+          // Update existing promo
+          const index = promos.findIndex(p => p.id === editingPromoId);
+          promos[index] = { ...promos[index], ...promoData };
+        } else {
+          // Add new promo
+          promoData.id = Date.now().toString();
+          promos.push(promoData);
+        }
+
+        savePromoToLocalStorage();
+        renderPromos();
+        closeModal('promoModal');
+        alert(`Promo ${editingPromoId ? 'updated' : 'added'} successfully!`);
+      });
+
+      // Event Listeners for Seasonal Pricing
+      openSeasonalBtn.addEventListener('click', () => {
+        resetSeasonalForm();
+        openModal('seasonalModal');
+      });
+
+      saveSeasonBtn.addEventListener('click', () => {
+        const seasonalData = {
+          name: document.getElementById('seasonName').value.trim(),
+          multiplier: parseFloat(document.getElementById('seasonMultiplier').value),
+          startDate: document.getElementById('seasonStart').value,
+          endDate: document.getElementById('seasonEnd').value,
+          applyTo: document.getElementById('applyToRooms').value.trim().toLowerCase()
+        };
+
+        // Validation
+        if (!seasonalData.name || !seasonalData.startDate || !seasonalData.endDate || !seasonalData.applyTo) {
+          alert('Please fill in all required fields');
+          return;
+        }
+
+        if (new Date(seasonalData.startDate) > new Date(seasonalData.endDate)) {
+          alert('End date must be after start date');
+          return;
+        }
+
+        if (seasonalData.multiplier <= 0) {
+          alert('Multiplier must be greater than 0');
+          return;
+        }
+
+        seasonalData.id = Date.now().toString();
+        seasonalPricing.push(seasonalData);
+        saveSeasonalToLocalStorage();
+        renderRooms(); // Refresh rooms to show seasonal pricing
+        closeModal('seasonalModal');
+        alert('Seasonal pricing added successfully!');
+      });
+
+      // Save Room Button Event Listener
+      saveRoomBtn.addEventListener('click', () => {
+        const roomData = {
+          room_number: document.getElementById('roomNumber').value.trim(),
+          name: document.getElementById('roomName').value.trim(),
+          category: document.getElementById('roomType').value,
+          category_type: document.getElementById('categoryType').value,
+          max_guests: parseInt(document.getElementById('roomCapacity').value) || 2,
+          price: parseFloat(document.getElementById('roomPrice').value) || 0,
+          description: document.getElementById('roomDescription').value.trim(),
+          status: document.getElementById('roomStatus').value,
+          available: document.getElementById('roomStatus').value === 'Available' ? 1 : 0,
+          promo: document.getElementById('promoSwitch').checked,
+          images: [...currentRoomImages],
+          primaryImageIndex: primaryImageIndex
+        };
+
+        if (!roomData.name || !roomData.price) {
+          alert('Room Name and Price are required!');
+          return;
+        }
+
+        if (!roomData.room_number) {
+          alert('Room Number is required!');
+          return;
+        }
+
+        if (roomData.images.length === 0) {
+          alert('Please upload at least one room image!');
+          return;
+        }
+
+        try {
+          if (editingRoomId) {
+            // Update existing room
+            const index = rooms.findIndex(r => r.id === editingRoomId);
+            if (index !== -1) {
+              rooms[index] = { ...rooms[index], ...roomData };
+            }
+          } else {
+            // Add new room
+            roomData.id = Date.now();
+            rooms.push(roomData);
+          }
+
+          saveRoomsToLocalStorage();
+          renderRooms();
+          updateStats();
+          closeModal('roomModal');
+          alert(`Room ${editingRoomId ? 'updated' : 'added'} successfully!`);
+        } catch (err) {
+          alert('Error saving room: ' + err.message);
+        }
+      });
+
+      // Room management functions
+      let editingRoomId = null;
+      let editingPromoId = null;
+
+      function openRoomModal(room = null) {
+        editingRoomId = room?.id || null;
+        modalTitle.textContent = room ? 'Edit Room' : 'Add New Room';
+
+        // Set form values
+        document.getElementById('roomNumber').value = room?.room_number || '';
+        document.getElementById('roomName').value = room?.name || '';
+        document.getElementById('roomType').value = room?.category || 'Standard Room';
+        document.getElementById('categoryType').value = room?.category_type || 'room';
+        document.getElementById('roomCapacity').value = room?.max_guests || 2;
+        document.getElementById('roomPrice').value = room?.price || '';
+        document.getElementById('roomDescription').value = room?.description || '';
+        document.getElementById('roomStatus').value = room?.status || 'Available';
+        document.getElementById('promoSwitch').checked = room?.promo || false;
+
+        // Set images
+        currentRoomImages = room?.images ? [...room.images] : [];
+        primaryImageIndex = room?.primaryImageIndex || 0;
+        renderImagePreviews();
+
+        openModal('roomModal');
+      }
+
+      // Room grid event delegation
+      roomGrid.addEventListener('click', (e) => {
+        const card = e.target.closest('.room-card');
+        if (!card) return;
+        
+        const roomId = parseInt(card.dataset.id);
+        const room = rooms.find(r => r.id === roomId);
+
+        if (!room) return;
+
+        if (e.target.closest('.edit-room')) {
+          openRoomModal(room);
+        }
+        
+        if (e.target.closest('.delete-room')) {
+          if (confirm('Are you sure you want to delete this room?')) {
+            rooms = rooms.filter(r => r.id !== roomId);
+            saveRoomsToLocalStorage();
+            renderRooms();
+            updateStats();
+            alert('Room deleted successfully!');
+          }
+        }
+      });
+
+      // Promo List Management
+      promoList.addEventListener('click', (e) => {
+        const promoCard = e.target.closest('.promo-card');
+        if (!promoCard) return;
+        
+        const promoId = promoCard.dataset.id;
+        const promo = promos.find(p => p.id === promoId);
+
+        if (e.target.classList.contains('edit-promo')) {
+          editingPromoId = promoId;
+          promoModalTitle.textContent = 'Edit Promo';
+          
+          document.getElementById('promoCode').value = promo.code;
+          document.getElementById('promoType').value = promo.type;
+          document.getElementById('promoValue').value = promo.value;
+          document.getElementById('promoDesc').value = promo.description;
+          document.getElementById('promoStart').value = promo.startDate;
+          document.getElementById('promoEnd').value = promo.endDate;
+          document.getElementById('promoUsage').value = promo.usageLimit || '';
+          
+          // Update preview
+          document.getElementById('valuePreview').textContent = 
+            promo.type === 'percent' ? `${promo.value}% OFF` : `$${promo.value} OFF`;
+          
+          openModal('promoModal');
+        }
+
+        if (e.target.classList.contains('delete-promo')) {
+          if (confirm('Are you sure you want to delete this promo?')) {
+            promos = promos.filter(p => p.id !== promoId);
+            savePromoToLocalStorage();
+            renderPromos();
+            alert('Promo deleted successfully!');
+          }
+        }
+      });
+
+      // Room Type Tags
+      document.querySelectorAll('.room-type-tag').forEach(tag => {
+        tag.addEventListener('click', () => {
+          const type = tag.dataset.type;
+          const input = document.getElementById('applyToRooms');
+          
+          if (type === 'all') {
+            input.value = 'all';
+          } else {
+            const currentValue = input.value;
+            if (currentValue === 'all') {
+              input.value = type;
+            } else {
+              const types = currentValue.split(',').map(t => t.trim());
+              if (types.includes(type)) {
+                // Remove if already exists
+                input.value = types.filter(t => t !== type).join(',');
+                tag.classList.remove('active');
+              } else {
+                // Add if not exists
+                types.push(type);
+                input.value = types.join(',');
+                tag.classList.add('active');
+              }
+            }
+          }
+        });
+      });
+
+      // Close modal handlers
+      document.querySelectorAll('[data-close]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const modalId = btn.getAttribute('data-close');
+          closeModal(modalId);
+        });
+      });
+
+      // Close modals when clicking outside
+      document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            closeModal(modal.id);
+          }
+        });
+      });
+    });
+
+    // Sidebar Toggle JS
     document.addEventListener('DOMContentLoaded', () => {
       const sidebar = document.getElementById('sidebar');
       const mainContent = document.getElementById('mainContent');
@@ -974,13 +1844,42 @@ document.addEventListener('DOMContentLoaded', async () => {
       const overlay = document.querySelector('.overlay');
 
       function toggleSidebar() {
-        sidebar.classList.toggle('hidden');
+        sidebar.classList.toggle('active');
         overlay.classList.toggle('active');
+        
+        // Toggle main content margin for mobile
+        if (window.innerWidth < 768) {
+          if (sidebar.classList.contains('active')) {
+            mainContent.style.marginLeft = '0';
+          } else {
+            mainContent.style.marginLeft = '0';
+          }
+        }
       }
 
-      sidebarToggle.onclick = toggleSidebar;
-      mobileMenuBtn.onclick = toggleSidebar;
-      overlay.onclick = toggleSidebar;
+      // Event listeners
+      if (sidebarToggle) {
+        sidebarToggle.onclick = toggleSidebar;
+      }
+      
+      if (mobileMenuBtn) {
+        mobileMenuBtn.onclick = toggleSidebar;
+      }
+      
+      if (overlay) {
+        overlay.onclick = toggleSidebar;
+      }
+
+      // Handle window resize
+      window.addEventListener('resize', () => {
+        if (window.innerWidth >= 768) {
+          sidebar.classList.remove('active');
+          overlay.classList.remove('active');
+          mainContent.style.marginLeft = '260px';
+        } else {
+          mainContent.style.marginLeft = '0';
+        }
+      });
     });
   </script>
 </body>

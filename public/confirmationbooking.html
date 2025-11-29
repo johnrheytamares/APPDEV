@@ -366,10 +366,10 @@
       <h3 class="text-xl font-bold text-text-dark mb-2">Payment Confirmed!</h3>
       <p class="text-sm text-text-muted mb-5">Your booking is secured. A confirmation email has been sent to <span id="modalEmail" class="font-medium text-text-dark"></span>.</p>
       <div class="space-y-2">
-        <a href="confirmation.html" class="block w-full py-2.5 bg-primary-blue text-white rounded-lg font-medium text-sm hover:bg-accent-blue transition">
+        <a href="/confirmation" class="block w-full py-2.5 bg-primary-blue text-white rounded-lg font-medium text-sm hover:bg-accent-blue transition">
           View Booking Details
         </a>
-        <a href="home4.html" class="block w-full py-2.5 border border-primary-blue text-primary-blue rounded-lg font-medium text-sm hover:bg-blue-50 transition">
+        <a href="/" class="block w-full py-2.5 border border-primary-blue text-primary-blue rounded-lg font-medium text-sm hover:bg-blue-50 transition">
           Back to Home
         </a>
       </div>
@@ -377,6 +377,7 @@
   </div>
 
   <script>
+
   // Load booking data
   const bookingData = JSON.parse(localStorage.getItem('eduardosBooking') || '{}');
   const { items = [], checkIn, checkOut, selectedPayment = 'gcash' } = bookingData;
@@ -458,26 +459,28 @@
     payBtn.disabled = true;
 
     // Build final data
-    const finalBooking = {
-      ...bookingData,
-      guest: {
-        firstName: document.getElementById('firstName').value.trim(),
-        lastName: document.getElementById('lastName').value.trim(),
-        fullName: document.getElementById('firstName').value.trim() + ' ' + document.getElementById('lastName').value.trim(),
-        adults: +document.getElementById('adultsCount').textContent,
-        children: +document.getElementById('childrenCount').textContent,
-        arrivalTime: document.getElementById('arrivalTime').value,
-        specialRequests: document.getElementById('specialRequests').value || '',
-        phone: '+63' + document.getElementById('phone').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        address: document.getElementById('address').value.trim() + ', ' + 
-                 document.getElementById('city').value.trim() + ' ' + 
-                 document.getElementById('postal').value.trim(),
-      },
-      selectedPayment: document.querySelector('.payment-option.selected')?.dataset.method || 'gcash',
-      total: subtotal,
-      bookingId: 'EDU' + Date.now().toString().slice(-8)
-    };
+const finalBooking = {
+  ...bookingData,
+  userId: +loggedInUserId,  // safe now, always exists
+  guest: {
+    firstName: document.getElementById('firstName').value.trim(),
+    lastName: document.getElementById('lastName').value.trim(),
+    fullName: document.getElementById('firstName').value.trim() + ' ' + document.getElementById('lastName').value.trim(),
+    adults: +document.getElementById('adultsCount').textContent,
+    children: +document.getElementById('childrenCount').textContent,
+    arrivalTime: document.getElementById('arrivalTime').value,
+    specialRequests: document.getElementById('specialRequests').value || '',
+    phone: '+63' + document.getElementById('phone').value.trim(),
+    email: document.getElementById('email').value.trim(),
+    address: document.getElementById('address').value.trim() + ', ' + 
+             document.getElementById('city').value.trim() + ' ' + 
+             document.getElementById('postal').value.trim(),
+  },
+  selectedPayment: document.querySelector('.payment-option.selected')?.dataset.method || 'gcash',
+  total: subtotal,
+  bookingId: 'EDU' + Date.now().toString().slice(-8)
+};
+
 
     try {
       const res = await fetch('http://localhost:3000/api/bookings/create', {  // FIXED: booking, hindi bookinsg

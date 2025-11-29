@@ -330,7 +330,7 @@
     </div>
 
     <div class="logout-container">
-      <a href="#" class="nav-link"><i class="fas fa-sign-out-alt nav-icon"></i><span class="nav-text">Logout</span></a>
+      <a href="/login" class="nav-link"><i class="fas fa-sign-out-alt nav-icon"></i><span class="nav-text">Logout</span></a>
     </div>
   </aside>
 
@@ -401,6 +401,7 @@
             <th>Name</th>
             <th>Email</th>
             <th>Role</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -432,6 +433,13 @@
             <option>Admin</option>
             <option>Staff</option>
             <option>Customer</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="editStatus">Status</label>
+          <select id="editStatus" class="form-control">
+            <option value="active">Active</option>
+            <option value="deactivated">Deactivated</option>
           </select>
         </div>
       </div>
@@ -588,8 +596,27 @@
             </select>
           </td>
           <td>
+            <span class="px-3 py-1 rounded-full text-xs font-medium
+              ${u.status === 'active' ? 'bg-green-100 text-green-800' : 
+                u.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
+                u.status === 'inactive' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'}">
+              ${u.status || 'unknown'}
+            </span>
+          </td>
+          <td>
             <div class="action-buttons">
               <div class="action-btn edit-btn" data-id="${u.id}" title="Edit"><i class="fas fa-edit"></i></div>
+              ${u.status === 'active' ? 
+              `<div class="action-btn bg-orange-100 text-orange-700 hover:bg-orange-600 hover:text-white" 
+                  data-id="${u.id}" data-action="deactivate" title="Deactivate">
+                <i class="fas fa-ban"></i>
+              </div>` :
+              u.status === 'pending' || u.status === 'inactive' ?
+                `<div class="action-btn bg-green-100 text-green-700 hover:bg-green-600 hover:text-white" 
+                    data-id="${u.id}" data-action="activate" title="Activate">
+                  <i class="fas fa-check-circle"></i>
+                </div>` : ''
+                }
               <div class="action-btn delete-btn" data-id="${u.id}" title="Deactivate"><i class="fas fa-trash"></i></div>
             </div>
           </td>
@@ -660,6 +687,28 @@
         };
       });
 
+      document.querySelectorAll('[data-action="activate"], [data-action="deactivate"]').forEach(btn => {
+      btn.onclick = async () => {
+        const id = btn.dataset.id;
+        const action = btn.dataset.action;
+        const newStatus = action === 'activate' ? 'active' : 'inactive';
+
+        if (confirm(`Are you sure you want to ${action} this user?`)) {
+          try {
+            await fetch(`${API_URL}/${id}/toggle-status`,
+            {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json'},
+              body: JSON.stringify({ newStatus })
+            });
+            fetchUsers();
+          } catch (err) {
+            alert('Failed to update status');
+          }
+        }
+      };
+    });
+
       // Edit
       document.querySelectorAll('.edit-btn').forEach(btn => {
         btn.onclick = () => openEditModal(btn.dataset.id);
@@ -726,7 +775,7 @@
         return;
       }
 
-      const body = { FirstName: firstName, LastName: lastName, Email: email, role };
+      const body = { FirstName: firstName, LastName: lastName, Email: email, role, status: document.getElementById('editStatus').value };
 
       try {
         if (editingId) {

@@ -22,7 +22,16 @@ const transporter = nodemailer.createTransport({
   },
   tls: { rejectUnauthorized: false }
 });
+router.post('/', async (req, res) => {
+  res.json({ message: 'Bookings API is working!' });
+});
 
+
+router.get('/test', (req, res) => {
+  res.json({ message: 'Reservation route is working!' });
+});
+
+// ==================== CREATE BOOKING ====================
 router.post('/create', async (req, res) => {
   let connection;
   try {
@@ -31,7 +40,12 @@ router.post('/create', async (req, res) => {
 
     const data = req.body;
 
-    // Calculate nights (kung wala sa frontend)
+    // Make sure userId exists
+    if (!data.userId) {
+      return res.status(400).json({ error: 'Missing userId for this booking' });
+    }
+
+    // Calculate nights (if not provided)
     const checkInDate = new Date(data.checkIn);
     const checkOutDate = new Date(data.checkOut);
     const nights = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
@@ -39,16 +53,17 @@ router.post('/create', async (req, res) => {
     // INSERT BOOKING
     const [result] = await connection.query(
       `INSERT INTO bookings 
-      (booking_id, guest_name, email, phone, check_in, check_out, nights, adults, children, total_amount, items, payment_method, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'confirmed')`,
+      (user_id, booking_id, guest_name, email, phone, check_in, check_out, nights, adults, children, total_amount, items, payment_method, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'confirmed')`,
       [
+        data.userId,               // ← USER ID NOW SAVED
         data.bookingId,
         data.guest.fullName,
         data.guest.email,
         data.guest.phone,
         data.checkIn.split('T')[0],
         data.checkOut.split('T')[0],
-        nights,                                 // ← FIXED! May value na
+        nights,
         data.guest.adults,
         data.guest.children,
         data.total,
@@ -57,17 +72,16 @@ router.post('/create', async (req, res) => {
       ]
     );
 
-    // GENERATE QR CODE (NASA LOOB NA NG TRY!)
+    // GENERATE QR CODE
     const qrData = `https://eduardosresort.com/checkin?booking=${data.bookingId}`;
     const qrPath = path.join(qrDir, `${data.bookingId}.png`);
-
     await QRCode.toFile(qrPath, qrData, {
       width: 300,
       margin: 2,
       color: { dark: '#2B6CB0', light: '#FFFFFF' }
     });
 
-    // Update QR path sa DB
+    // Update QR path in DB
     await connection.query(
       'UPDATE bookings SET qr_code = ? WHERE booking_id = ?',
       [`/qr/${data.bookingId}.png`, data.bookingId]
@@ -101,24 +115,24 @@ router.post('/create', async (req, res) => {
       from: `"System" <${process.env.GMAIL_USER}>`,
       to: 'eduardosresort.official@gmail.com',
       subject: `NEW BOOKING: ${data.bookingId}`,
-      text: `New booking from ${data.guest.fullName}\nTotal: ₱${data.total}\nEmail: ${data.guest.email}\nPhone: ${data.guest.phone}\n\nFull Data:\n${JSON.stringify(data, null, 2)}`
+      text: `New booking from ${data.guest.fullName}\nUserID: ${data.userId}\nTotal: ₱${data.total}\nEmail: ${data.guest.email}\nPhone: ${data.guest.phone}\n\nFull Data:\n${JSON.stringify(data, null, 2)}`
     });
 
     await connection.commit();
     res.json({ success: true, bookingId: data.bookingId });
 
   } catch (err) {
-  console.error('BOOKING ERROR:', err);
-  console.error('FULL ERROR:', err.stack);
-  res.status(500).json({ 
-    error: 'Failed to confirm booking', 
-    details: err.message,
-    code: err.code || 'UNKNOWN'
-  });
-  if (connection) await connection.rollback();
+    console.error('BOOKING ERROR:', err);
+    if (connection) await connection.rollback();
+    res.status(500).json({ 
+      error: 'Failed to confirm booking', 
+      details: err.message,
+      code: err.code || 'UNKNOWN'
+    });
   } finally {
     if (connection) connection.release();
   }
 });
+
 
 module.exports = router;

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customer Dashboard | Eduardo's Resort</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .active { background-color: #1E40AF !important; color: #fff !important; } /* blue-900 */
+    .menu-item:hover { background-color: #1D4ED8; color: #fff; } /* blue-700 */
+    .sidebar { background: linear-gradient(135deg, #1E3A8A 0%, #1E40AF 100%); }
+    .btn-blue { @apply bg-blue-700 hover:bg-blue-800 text-white font-medium px-5 py-2.5 rounded-lg transition; }
+    .text-blue-accent { color: #3B82F6; }
+    .bg-blue-accent { background-color: #3B82F6; }
+  </style>
+</head>
+<body class="flex bg-gray-50 min-h-screen">
+
+  <!-- Sidebar -->
+  <aside class="w-64 sidebar text-white flex flex-col justify-between">
+    <div>
+      <div class="px-6 py-5 text-center border-b border-blue-800">
+        <h1 class="text-2xl font-semibold">Eduardo's Resort</h1>
+        <p class="text-blue-200 text-sm mt-1" id="userName">Loading...</p>
+      </div>
+
+      <nav class="mt-6">
+        <ul class="space-y-1">
+        <li><a href="#" data-section="dashboard" class="menu-item flex items-center gap-3 px-6 py-3 rounded-md active"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li><a href="#" data-section="book" class="menu-item flex items-center gap-3 px-6 py-3 rounded-md"><i class="fas fa-bed"></i> Book a Room</a></li>
+        <li><a href="#" data-section="reservations" class="menu-item flex items-center gap-3 px-6 py-3 rounded-md"><i class="fas fa-calendar-alt"></i> My Reservations</a></li>
+      </ul>
+    </nav>
+    </div>
+
+    <div class="border-t border-blue-800 px-6 py-4">
+      <button onclick="logout()" class="flex items-center gap-3 text-red-300 hover:text-white transition w-full">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-8 overflow-y-auto">
+
+    <!-- Dashboard Section -->
+    <section id="dashboard" class="content-section">
+      <h2 class="text-3xl font-semibold text-gray-800 mb-2">Welcome Back, <span id="welcomeName">Guest</span>!</h2>
+      <p class="text-gray-500 mb-6">Here’s an overview of your stay experience and recent activity.</p>
+
+      <!-- Summary Cards -->
+      <div class="grid md:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded-xl shadow-sm p-6 border">
+          <h3 class="text-gray-800 font-semibold text-lg">Upcoming Stay</h3>
+          <p class="text-blue-accent text-2xl font-bold mt-3" id="upcomingNights">0 Nights</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm p-6 border">
+          <h3 class="text-gray-800 font-semibold text-lg">Total Bookings</h3>
+          <p class="text-blue-accent text-2xl font-bold mt-3" id="totalBookings">0</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm p-6 border">
+          <h3 class="text-gray-800 font-semibold text-lg">Loyalty Points</h3>
+          <p class="text-blue-accent text-2xl font-bold mt-3">340</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm p-6 border">
+          <h3 class="text-gray-800 font-semibold text-lg">Unread Messages</h3>
+          <p class="text-blue-accent text-2xl font-bold mt-3">3</p>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="bg-white p-6 rounded-xl shadow-sm border mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+          <i class="fas fa-clock text-blue-600"></i> Recent Bookings
+        </h3>
+        <div id="recentTable" class="overflow-x-auto">
+          <table class="w-full border-collapse text-left">
+            <thead class="bg-blue-700 text-white">
+              <tr>
+                <th class="px-4 py-3">Date</th>
+                <th class="px-4 py-3">Booking</th>
+                <th class="px-4 py-3">Status</th>
+              </tr>
+            </thead>
+            <tbody id="recentBody">
+              <!-- JS will fill -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Recommended Rooms -->
+      <div>
+        <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+          <i class="fas fa-star text-blue-600"></i> Recommended for You
+        </h3>
+        <div id="recommendedRooms" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- JS will load rooms -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Book a Room Section -->
+    <section id="book" class="content-section hidden">
+      <h2 class="text-3xl font-semibold text-gray-800 mb-2">Book a Room</h2>
+      <p class="text-gray-500 mb-6">Select from our luxurious room types below.</p>
+
+      <div id="roomsGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- JS will load available rooms -->
+        <div class="text-center py-20 text-gray-500">Loading rooms...</div>
+      </div>
+    </section>
+
+    <!-- My Reservations Section -->
+    <section id="reservations" class="content-section hidden">
+      <h2 class="text-3xl font-semibold text-gray-800 mb-2">My Reservations</h2>
+      <p class="text-gray-500 mb-6">View all your current and past bookings.</p>
+
+      <div class="bg-white shadow-sm rounded-xl border overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead class="bg-blue-700 text-white">
+              <tr>
+                <th class="px-6 py-3">Reservation Code</th>
+                <th class="px-6 py-3">Room Type</th>
+                <th class="px-6 py-3">Check-in</th>
+                <th class="px-6 py-3">Check-out</th>
+                <th class="px-6 py-3">Total</th>
+                <th class="px-6 py-3">Status</th>
+              </tr>
+            </thead>
+            <tbody id="reservationsBody">
+              <!-- JS will fill -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // === USER CHECK ===
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (!user?.id) {
+      Swal.fire('Not Logged In', 'Redirecting to login...', 'warning').then(() => {
+        window.location.href = 'login.html';
+      });
+    }
+
+    document.getElementById('userName').textContent = user.name || 'Guest';
+    document.getElementById('welcomeName').textContent = user.name?.split(' ')[0] || 'Guest';
+
+    const API_URL = '/api/reservations';
+
+    // === MENU SWITCHING ===
+    const menuItems = document.querySelectorAll('.menu-item');
+    const sections = document.querySelectorAll('.content-section');
+
+    menuItems.forEach(item => {
+      item.addEventListener('click', e => {
+        e.preventDefault();
+        menuItems.forEach(i => i.classList.remove('active'));
+        sections.forEach(s => s.classList.add('hidden'));
+        item.classList.add('active');
+        const section = document.getElementById(item.dataset.section);
+        section.classList.remove('hidden');
+
+        // Load data when section is opened
+        if (item.dataset.section === 'dashboard') loadDashboard();
+        if (item.dataset.section === 'book') loadRooms();
+        if (item.dataset.section === 'reservations') loadReservations();
+      });
+    });
+
+    // === LOAD DASHBOARD DATA ===
+    async function loadDashboard() {
+      try {
+        const res = await fetch(`${API_URL}/`);
+        const bookings = await res.json();
+
+        // Stats
+        document.getElementById('totalBookings').textContent = bookings.length;
+        const upcoming = bookings.filter(b => new Date(b.check_out) > new Date());
+        document.getElementById('upcomingNights').textContent = upcoming.reduce((a, b) => a + b.nights, 0) + ' Nights';
+
+        // Recent Table
+        const tbody = document.getElementById('recentBody');
+        tbody.innerHTML = bookings.slice(0, 5).map(b => `
+          <tr class="border-b hover:bg-gray-50">
+            <td class="px-4 py-3">${new Date(b.created_at).toLocaleDateString()}</td>
+            <td class="px-4 py-3">Booked ${b.guest_name}'s stay</td>
+            <td class="px-4 py-3">
+              <span class="font-semibold ${b.status === 'confirmed' ? 'text-green-600' : b.status === 'pending' ? 'text-yellow-600' : 'text-gray-600'}">
+                ${b.status.replace('_', ' ').toUpperCase()}
+              </span>
+            </td>
+          </tr>
+        `).join('') || '<tr><td colspan="3" class="text-center py-8 text-gray-500">No recent activity</td></tr>';
+
+        // Recommended Rooms
+        const recommended = document.getElementById('recommendedRooms');
+        const roomsRes = await fetch(`${API_URL}/rooms`);
+        const rooms = await roomsRes.json();
+        recommended.innerHTML = rooms.slice(0, 3).map(room => `
+          <div class="bg-white border rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition transform hover:-translate-y-1">
+            <img src="${room.image || 'https://images.unsplash.com/photo-1611892440504-42a792e24d32'}" class="w-full h-40 object-cover" />
+            <div class="p-5">
+              <h4 class="text-lg font-bold text-gray-800">${room.name}</h4>
+              <p class="text-gray-600 text-sm mt-1">₱${room.price}/night</p>
+              <button onclick="bookNow(${room.id})" class="mt-4 w-full btn-blue">
+                Book Now
+              </button>
+            </div>
+          </div>
+        `).join('');
+
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // === LOAD ROOMS FOR BOOKING ===
+    async function loadRooms() {
+      const container = document.getElementById('roomsGrid');
+      try {
+        const res = await fetch(`/api/admin/rooms`);
+        const rooms = await res.json();
+        container.innerHTML = rooms.map(room => `
+          <div class="bg-white border rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition transform hover:-translate-y-1">
+            <img src="${room.image || 'https://images.unsplash.com/photo-1611892440504-42a792e24d32'}" class="w-full h-48 object-cover" />
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-gray-800">${room.name}</h3>
+              <p class="text-gray-600 mt-2">Capacity: ${room.capacity} guests</p>
+              <div class="flex justify-between items-end mt-6">
+                <div>
+                  <p class="text-2xl font-bold text-blue-700">₱${room.price}</p>
+                  <p class="text-sm text-gray-500">per night</p>
+                </div>
+                <button onclick="bookNow(${room.id})" class="btn-blue px-6">
+                  Book Now
+                </button>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        container.innerHTML = '<p class="text-red-600 text-center col-span-3">Failed to load rooms.</p>';
+      }
+    }
+
+    // === LOAD MY RESERVATIONS ===
+    async function loadReservations() {
+      const tbody = document.getElementById('reservationsBody');
+      try {
+        const res = await fetch(`${API_URL}/`);
+        const bookings = await res.json();
+
+        tbody.innerHTML = bookings.map(b => {
+          const statusColor = {
+            confirmed: 'text-green-600',
+            pending: 'text-yellow-600',
+            cancelled: 'text-red-600',
+            checked_in: 'text-blue-600',
+            checked_out: 'text-gray-600',
+            no_show: 'text-purple-600'
+          }[b.status] || 'text-gray-600';
+
+          return `
+            <tr class="border-b hover:bg-gray-50">
+              <td class="px-6 py-4 font-mono">${b.reservation_code || 'N/A'}</td>
+              <td class="px-6 py-4 font-medium">${b.room_name || 'Standard Room'}</td>
+              <td class="px-6 py-4">${new Date(b.check_in).toLocaleDateString()}</td>
+              <td class="px-6 py-4">${new Date(b.check_out).toLocaleDateString()}</td>
+              <td class="px-6 py-4 font-bold text-blue-700">₱${Number(b.total_amount || b.subtotal).toLocaleString()}</td>
+              <td class="px-6 py-4"><span class="font-bold ${statusColor}">${b.status.replace('_', ' ').toUpperCase()}</span></td>
+            </tr>
+          `;
+        }).join('') || '<tr><td colspan="6" class="text-center py-12 text-gray-500">No reservations yet</td></tr>';
+      } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-red-600 text-center">Error loading data</td></tr>';
+      }
+    }
+
+    // === BOOK NOW BUTTON ===
+    function bookNow(roomId) {
+      window.location.href = `reservation.html?room=${roomId}`;
+    }
+
+    // === LOGOUT ===
+    function logout() {
+      localStorage.removeItem('user');
+      localStorage.removeItem('isLoggedIn');
+      Swal.fire('Logged Out', 'See you soon!', 'success').then(() => {
+        window.location.href = 'login.html';
+      });
+    }
+
+    // === INITIAL LOAD ===
+    loadDashboard(); // Dashboard loads first
+  </script>
+</body>
+</html>

@@ -6,7 +6,7 @@ const pool = require('../db');
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-  service: 'smtp.ethereal.email',
+  service: 'gmail',
   port: 587,
   auth: {
     user: process.env.GMAIL_USER,     // ← from .env

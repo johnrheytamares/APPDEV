@@ -37,7 +37,7 @@ app.use(express.json());                                      // ← para sa JSO
 app.use(express.urlencoded({ extended: true }));              // ← para sa form data
 
 // 4. Serve static files (images, css, js, html)
-app.use(express.static(path.join(__dirname, '..', 'public')));
+
 
 // ================= API ROUTES =================
 const resortRoutes  = require('./routes/resort.js');
@@ -45,6 +45,12 @@ const contactRoutes = require('./routes/contact.js');
 const authRoutes    = require('./routes/auth.js');
 const userRoutes    = require('./routes/users.js'); // assuming meron kang users.js
 const roomRoutes    = require('./routes/admin/room.js'); // assuming may ganito ka
+const customerRoutes = require('./routes/customer.js');
+const reservationRoutes = require('./routes/reservation.js');
+
+app.use('/api/reservations', reservationRoutes);
+
+app.use('/api/customers', customerRoutes);
 
 app.use('/api/users', userRoutes);
 app.use('/api/resort',   resortRoutes);
@@ -74,6 +80,9 @@ app.get('/admin-dashboard', sendPage('admin-dashboard.html'));
 app.get('/admin',      sendPage('room_and_cottage.html'));
 app.get('/confirmationbooking', sendPage('confirmationbooking.html'));
 app.get('/user', sendPage('usermangement.html'));
+app.get('/customerdashboard', sendPage('customer.html'));
+app.get('/adminreservations', sendPage('reservation_management.html'));
+
 app.get('/logout', (req, res) => {
   req.session.destroy(err => {
     if (err) { 

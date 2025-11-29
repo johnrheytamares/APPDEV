@@ -36,8 +36,8 @@ router.post('/register', async (req, res) => {
 
     // Insert user
     const [result] = await pool.query(
-      `INSERT INTO users (FirstName, LastName, Email, Password, role, is_verified) 
-       VALUES (?, ?, ?, ?, 'customer', 1)`,
+      `INSERT INTO users (FirstName, LastName, Email, Password, role, is_verified, status) 
+       VALUES (?, ?, ?, ?, 'customer', 1, 'pending')`,
       [firstName, lastName, email, hashedPassword]
     );
 
@@ -71,31 +71,61 @@ router.post('/register', async (req, res) => {
 });
 
 // TAMA NA ‘TO — WALANG /login KASI app.use('/api/auth', authRoutes)
+// ==================== LOGIN (POST /api/auth) ====================
 router.post('/', async (req, res) => {
   try {
     const { Email, Password } = req.body;
 
-    const [rows] = await pool.execute('SELECT * FROM users WHERE Email = ?', [Email]);
-    if (rows.length === 0) return res.status(400).json({ error: 'Invalid credentials' });
+    if (!Email || !Password) {
+      return res.status(400).json({ error: 'Email and password are required' });
+    }
+
+    // FIXED: Dapat .query() hindi .execute() kapag may placeholder
+    const [rows] = await pool.query('SELECT * FROM users WHERE Email = ?', [Email]);
+
+    if (rows.length === 0) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
 
     const user = rows[0];
-    const match = await bcrypt.compare(Password, user.Password);
-    if (!match) return res.status(400).json({ error: 'Invalid credentials' });
 
-    req.session.user = {
-      UserID: user.UserID,
-      name: `${user.FirstName} ${user.LastName}`,
-      email: user.Email,
+    // === STATUS CHECK (ito ang kulang mo!) ===
+    if (user.status === 'pending' || user.status === 'pending') {
+      return res.status(403).json({ 
+        error: 'Your account is pending admin approval. Please wait.' 
+      });
+    }
+    if (user.status === 'inactive' || user.status === 'suspended') {
+      return res.status(403).json({ 
+        error: 'Your account has been deactivated. Contact admin.' 
+      });
+    }
+    if (user.status === 'deleted') {
+      return res.status(403).json({ error: 'Account no longer exists.' });
+    }
+
+    // Compare password
+    const isMatch = await bcrypt.compare(Password, user.Password);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    // SUCCESS! Return user data (hindi mo kailangan session kung frontend-based ka)
+    const userData = {
+      id: user.UserID,
+      name: `${user.FirstName || ''} ${user.LastName || ''}`.trim() || 'User',
+      Email: user.Email,
       role: user.role || 'customer'
     };
 
     res.json({
+      success: true,
       message: 'Login successful!',
-      user: req.session.user
+      user: userData
     });
 
   } catch (err) {
-    console.error(err);
+    console.error('LOGIN ERROR:', err);
     res.status(500).json({ error: 'Server error' });
   }
 });

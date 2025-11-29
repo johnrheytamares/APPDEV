@@ -62,6 +62,10 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/test', async (_req, res) => {
+  res.json({ message: 'Users route is working!' });
+});
+
 // GET single user
 router.get('/:id', async (req, res) => {
   try {

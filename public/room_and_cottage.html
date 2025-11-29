@@ -337,7 +337,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="reservation_management.html" class="nav-link">
+          <a href="/adminreservations" class="nav-link">
             <i class="fas fa-calendar-check nav-icon"></i>
             <span class="nav-text">Reservations</span>
           </a>
@@ -637,14 +637,25 @@
           <textarea id="roomDescription" class="form-control" rows="3" placeholder="Describe the room features and amenities"></textarea>
         </div>
 
-        <div class="form-group">
-          <label>Room Images</label>
-          <div class="image-upload" style="border:2px dashed #e2e8f0; border-radius:0.5rem; padding:1.5rem; text-align:center; color:#9ca3af;">
-            <i class="fas fa-cloud-upload-alt" style="font-size:2rem;"></i>
-            <p>Drag & drop images here or click to browse</p>
-            <small>Recommended: 5-8 high-quality images (JPEG, PNG)</small>
-          </div>
-        </div>
+<div class="form-group">
+  <label>Room Images</label>
+  
+  <div class="image-upload" 
+       style="border:2px dashed #e2e8f0; border-radius:0.5rem; padding:1.5rem; text-align:center; color:#9ca3af; position:relative; cursor:pointer;">
+       
+    <i class="fas fa-cloud-upload-alt" style="font-size:2rem;"></i>
+    <p>Drag & drop images here or click to browse</p>
+    <small>Recommended: 5-8 high-quality images (JPEG, PNG)</small>
+
+    <!--❗ Important: actual file input -->
+    <input type="file" 
+           name="room_images[]" 
+           multiple
+           accept="image/jpeg, image/png"
+           style="position:absolute; inset:0; opacity:0; cursor:pointer;">
+  </div>
+</div>
+
 
         <div class="form-row">
           <div class="form-group">

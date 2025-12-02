@@ -306,13 +306,13 @@
     <div class="nav-container">
       <ul class="nav-list">
         <li class="nav-item">
-          <a href="admin.html" class="nav-link active">
+          <a href="index.html" class="nav-link active">
             <i class="fas fa-tachometer-alt nav-icon"></i>
             <span class="nav-text">Dashboard</span>
           </a>
         </li>
         <li class="nav-item">
-          <a href="reservation_management.html" class="nav-link">
+          <a href="reservation.html" class="nav-link">
             <i class="fas fa-calendar-check nav-icon"></i>
             <span class="nav-text">Reservations</span>
           </a>
@@ -324,13 +324,13 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="aminities.html" class="nav-link">
+          <a href="amenities.html" class="nav-link">
             <i class="fas fa-concierge-bell nav-icon"></i>
             <span class="nav-text">Amenities</span>
           </a>
         </li>
         <li class="nav-item">
-          <a href="usermangement.html" class="nav-link">
+          <a href="usermanagement.html" class="nav-link">
             <i class="fas fa-users nav-icon"></i>
             <span class="nav-text">User Management</span>
           </a>
@@ -372,413 +372,304 @@
 
   <!-- Main Content -->
   <main class="main-content" id="mainContent">
-    <!-- Header -->
-    <header class="page-header">
-      <div class="header-left">
-        <button id="mobileMenuBtn" class="mobile-menu-btn md:hidden">
-          <i class="fas fa-bars"></i>
-        </button>
-        <div class="header-title">
-          <h1>Dashboard</h1>
-          <p>Welcome back, Admin</p>
-        </div>
-      </div>
-      <div class="header-right">
-        <button class="notification-bell">
-          <i class="fas fa-bell"></i>
-          <span class="notification-badge"></span>
-        </button>
-        <div class="user-initial">A</div>
-      </div>
-    </header>
 
-    <!-- Stats -->
+      <!-- Stats Cards -->
     <div class="stats-grid">
       <div class="stat-card revenue">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-xs text-gray-500 font-medium">Total Revenue</p>
-            <h3 class="text-xl font-bold text-gray-800 mt-1">₱1.25M</h3>
-            <p class="text-success text-xs font-medium mt-1 flex items-center">
-              <i class="fas fa-arrow-up mr-1"></i>12.5%
-            </p>
-          </div>
-          <div class="p-2 rounded-lg bg-green-50 text-green-600">
-            <i class="fas fa-dollar-sign"></i>
-          </div>
+        <small>Total Revenue</small>
+        <h3>₱1,250,000</h3>
+        <div class="progress-bar mt-2">
+          <div class="progress-fill" style="width: 75%;"></div>
         </div>
       </div>
-
       <div class="stat-card bookings">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-xs text-gray-500 font-medium">Active Bookings</p>
-            <h3 class="text-xl font-bold text-gray-800 mt-1">42</h3>
-            <p class="text-[#7DA18E] text-xs font-medium mt-1 flex items-center">
-              <i class="fas fa-calendar-check mr-1"></i>8 today
-            </p>
-          </div>
-          <div class="p-2 rounded-lg bg-blue-50 text-blue-600">
-            <i class="fas fa-calendar-alt"></i>
-          </div>
+        <small>Bookings</small>
+        <h3>350</h3>
+        <div class="progress-bar mt-2">
+          <div class="progress-fill" style="width: 65%;"></div>
         </div>
       </div>
-
       <div class="stat-card occupancy">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-xs text-gray-500 font-medium">Occupancy</p>
-            <h3 class="text-xl font-bold text-gray-800 mt-1">78%</h3>
-            <p class="text-[#C2A68C] text-xs font-medium mt-1 flex items-center">
-              <i class="fas fa-bed mr-1"></i>12 available
-            </p>
-          </div>
-          <div class="p-2 rounded-lg bg-amber-50 text-amber-600">
-            <i class="fas fa-chart-pie"></i>
-          </div>
+        <small>Occupancy</small>
+        <h3>78%</h3>
+        <div class="progress-bar mt-2">
+          <div class="progress-fill" style="width: 78%;"></div>
         </div>
       </div>
-
       <div class="stat-card guests">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-xs text-gray-500 font-medium">Total Guests</p>
-            <h3 class="text-xl font-bold text-gray-800 mt-1">126</h3>
-            <p class="text-warning text-xs font-medium mt-1 flex items-center">
-              <i class="fas fa-users mr-1"></i>24 arriving
-            </p>
-          </div>
-          <div class="p-2 rounded-lg bg-purple-50 text-purple-600">
-            <i class="fas fa-user-friends"></i>
-          </div>
+        <small>Guests</small>
+        <h3>280</h3>
+        <div class="progress-bar mt-2">
+          <div class="progress-fill" style="width: 70%;"></div>
         </div>
       </div>
     </div>
 
-    <!-- Action Buttons -->
-    <div class="flex flex-col gap-3 mb-6 md:flex-row md:justify-end">
-      <button id="reportBtn" class="btn"><i class="fas fa-chart-line"></i> Booking Trends</button>
-      <button id="exportBtn" class="btn"><i class="fas fa-file-export"></i> Export Data</button>
-    </div>
-
-    <!-- Charts & Recent Activity -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-      <div class="dashboard-card p-5 lg:col-span-2">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-lg font-bold text-gray-800">Revenue Overview</h2>
-          <div class="flex space-x-1">
-            <button class="text-xs px-3 py-1 rounded-full bg-[#E8F0EB] text-[#2D4A43] font-medium">Monthly</button>
-            <button class="text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-600 font-medium">Quarterly</button>
-            <button class="text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-600 font-medium">Yearly</button>
-          </div>
-        </div>
-        <div class="chart-container" style="height:280px;">
-          <canvas id="revenueChart"></canvas>
-        </div>
-      </div>
-
+    <!-- Charts -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
       <div class="dashboard-card p-5">
-        <h2 class="text-lg font-bold text-gray-800 mb-4">Recent Activity</h2>
-        <div class="space-y-3 text-sm">
-          <div class="flex items-start space-x-3">
-            <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600 mt-1">
-              <i class="fas fa-check text-xs"></i>
-            </div>
-            <div>
-              <p class="font-medium text-gray-800">New booking confirmed</p>
-              <p class="text-xs text-gray-500">Mahogany Villa • 2 guests</p>
-              <p class="text-xs text-gray-400">10 min ago</p>
-            </div>
-          </div>
-          <div class="flex items-start space-x-3">
-            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mt-1">
-              <i class="fas fa-user text-xs"></i>
-            </div>
-            <div>
-              <p class="font-medium text-gray-800">Guest checked in</p>
-              <p class="text-xs text-gray-500">Ocean View Suite • Maria S.</p>
-              <p class="text-xs text-gray-400">1 hour ago</p>
-            </div>
-          </div>
-        </div>
+        <h2 class="text-lg font-bold mb-2">Revenue Chart</h2>
+        <canvas id="revenueChart"></canvas>
       </div>
-    </div>
-
-    <!-- Room Occupancy & Quick Actions -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
       <div class="dashboard-card p-5">
-        <h2 class="text-lg font-bold text-gray-800 mb-4">Room Occupancy</h2>
-        <div class="space-y-3">
-          <div>
-            <div class="flex justify-between text-xs text-gray-600 mb-1">
-              <span>Mahogany Villas</span><span>85%</span>
-            </div>
-            <div class="progress-bar"><div class="progress-fill" style="width:85%"></div></div>
-          </div>
-          <div>
-            <div class="flex justify-between text-xs text-gray-600 mb-1">
-              <span>Ocean View Suites</span><span>72%</span>
-            </div>
-            <div class="progress-bar"><div class="progress-fill" style="width:72%"></div></div>
-          </div>
-          <div>
-            <div class="flex justify-between text-xs text-gray-600 mb-1">
-              <span>Garden Cottages</span><span>64%</span>
-            </div>
-            <div class="progress-bar"><div class="progress-fill" style="width:64%"></div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="dashboard-card p-5">
-        <h2 class="text-lg font-bold text-gray-800 mb-4">Quick Actions</h2>
-        <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
-          <a href="#" class="quick-action bg-[#E8F0EB] text-[#2D4A43] hover:bg-[#2D4A43] hover: text-white">
-            <i class="fas fa-plus-circle text-xl mb-1"></i><span>New Booking</span>
-          </a>
-          <a href="#" class="quick-action bg-green-50 text-green-600 hover:bg-green-600 hover:text-white">
-            <i class="fas fa-bed text-xl mb-1"></i><span>Manage Rooms</span>
-          </a>
-          <a href="#" class="quick-action bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white">
-            <i class="fas fa-chart-bar text-xl mb-1"></i><span>View Reports</span>
-          </a>
-          <a href="#" class="quick-action bg-purple-50 text-purple-600 hover:bg-purple-600 hover:text-white">
-            <i class="fas fa-cog text-xl mb-1"></i><span>Settings</span>
-          </a>
-        </div>
+        <h2 class="text-lg font-bold mb-2">Bookings Chart</h2>
+        <canvas id="bookingsChart"></canvas>
       </div>
     </div>
 
-    <!-- Mobile Cards -->
-    <div class="mobile-cards">
-      <h2 class="text-lg font-bold text-gray-800 mb-3">Recent Bookings</h2>
-      <div class="booking-card">
-        <div class="flex justify-between items-start mb-2">
-          <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-full bg-[#7DA18E] flex items-center justify-center text-white text-sm font-medium">JS</div>
-            <div>
-              <div class="font-medium text-gray-800">John Smith</div>
-              <div class="text-xs text-gray-500">john@example.com</div>
-            </div>
-          </div>
-          <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-700">Confirmed</span>
-        </div>
-        <div class="grid grid-cols-2 gap-2 text-sm">
-          <div><span class="label">Room</span><div class="value">Mahogany Villa</div></div>
-          <div><span class="label">Amount</span><div class="value">₱32,200</div></div>
-          <div><span class="label">Check-in</span><div class="value">Oct 25</div></div>
-          <div><span class="label">Check-out</span><div class="value">Oct 27</div></div>
-        </div>
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+      <div class="quick-action bg-white">
+        <i class="fas fa-calendar-check fa-2x text-blue-500 mb-2"></i>
+        New Reservation
       </div>
-      <div class="booking-card">
-        <div class="flex justify-between items-start mb-2">
-          <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-full bg-[#C2A68C] flex items-center justify-center text-white text-sm font-medium">MS</div>
-            <div>
-              <div class="font-medium text-gray-800">Maria Santos</div>
-              <div class="text-xs text-gray-500">maria@example.com</div>
-            </div>
-          </div>
-          <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-700">Checked In</span>
-        </div>
-        <div class="grid grid-cols-2 gap-2 text-sm">
-          <div><span class="label">Room</span><div class="value">Ocean View Suite</div></div>
-          <div><span class="label">Amount</span><div class="value">₱15,500</div></div>
-          <div><span class="label">Check-in</span><div class="value">Today</div></div>
-          <div><span class="label">Check-out</span><div class="value">Oct 26</div></div>
-        </div>
+      <div class="quick-action bg-white">
+        <i class="fas fa-bed fa-2x text-green-500 mb-2"></i>
+        Add Room
+      </div>
+      <div class="quick-action bg-white">
+        <i class="fas fa-users fa-2x text-purple-500 mb-2"></i>
+        Add User
+      </div>
+      <div class="quick-action bg-white">
+        <i class="fas fa-file-alt fa-2x text-yellow-500 mb-2"></i>
+        Generate Report
       </div>
     </div>
 
-    <!-- Desktop Table -->
-    <div class="desktop-table dashboard-card p-5 overflow-x-auto">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-lg font-bold text-gray-800">Recent Bookings</h2>
-        <a href="#" class="text-[#2D4A43] text-sm hover:underline">View All</a>
+    <!-- Prediction UI -->
+    <div class="dashboard-card p-5 mb-6">
+      <h2 class="text-lg font-bold">Booking Forecast</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-3">
+        <div>
+          <label class="text-sm">Select Date</label>
+          <input id="predictDate" type="date" class="border rounded px-3 py-2 w-full">
+        </div>
+
+        <div>
+          <label class="text-sm">Today's Bookings</label>
+          <input id="todayBookings" type="number" class="border rounded px-3 py-2 w-full">
+        </div>
+
+        <div class="flex items-end">
+          <button id="predictBtn" class="btn w-full">
+            <i class="fas fa-cloud-sun"></i> Generate Forecast
+          </button>
+        </div>
       </div>
-      <table class="w-full min-w-[600px]">
-        <thead>
-          <tr class="text-left text-xs font-medium text-gray-500 border-b">
-            <th class="pb-3 px-2">Guest</th>
-            <th class="pb-3 px-2">Room</th>
-            <th class="pb-3 px-2">Check-In</th>
-            <th class="pb-3 px-2">Check-Out</th>
-            <th class="pb-3 px-2">Status</th>
-            <th class="pb-3 px-2">Amount</th>
-            <th class="pb-3 px-2">Actions</th>
+
+      <div id="predictionResult" class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 rounded"></div>
+
+      <h3 class="mt-5">7-Day Forecast</h3>
+      <div id="forecast7" class="grid grid-cols-7 gap-2 mt-2"></div>
+
+      <h3 class="mt-6 font-semibold text-lg">Predicted Data Details</h3>
+      <div id="predictionTable" class="mt-3 p-3 bg-gray-50 rounded border"></div>
+    </div>
+
+    <!-- Recent Bookings Table -->
+    <div class="dashboard-card p-5 mb-6">
+      <h2 class="text-lg font-bold mb-3">Recent Bookings</h2>
+      <table class="w-full text-sm text-left border-collapse">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="p-2 border">Booking ID</th>
+            <th class="p-2 border">Guest</th>
+            <th class="p-2 border">Room</th>
+            <th class="p-2 border">Check-in</th>
+            <th class="p-2 border">Check-out</th>
+            <th class="p-2 border">Status</th>
           </tr>
         </thead>
-        <tbody class="divide-y">
-          <tr class="hover:bg-gray-50">
-            <td class="py-3 px-2">
-              <div class="flex items-center space-x-2">
-                <div class="w-8 h-8 rounded-full bg-[#7DA18E] flex items-center justify-center text-white text-xs">JS</div>
-                <div class="text-sm">
-                  <div class="font-medium">John Smith</div>
-                  <div class="text-xs text-gray-500">john@example.com</div>
-                </div>
-              </div>
-            </td>
-            <td class="py-3 px-2 text-sm">Mahogany Villa</td>
-            <td class="py-3 px-2 text-sm">Oct 25</td>
-            <td class="py-3 px-2 text-sm">Oct 27</td>
-            <td class="py-3 px-2"><span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-700">Confirmed</span></td>
-            <td class="py-3 px-2 text-sm font-medium">₱32,200</td>
-            <td class="py-3 px-2"><button class="text-[#2D4A43] hover:text-[#1A2E28]"><i class="fas fa-edit"></i></button></td>
+        <tbody>
+          <tr>
+            <td class="p-2 border">#001</td>
+            <td class="p-2 border">John Doe</td>
+            <td class="p-2 border">Deluxe Room</td>
+            <td class="p-2 border">2025-12-01</td>
+            <td class="p-2 border">2025-12-03</td>
+            <td class="p-2 border text-green-600 font-semibold">Confirmed</td>
           </tr>
-          <tr class="hover:bg-gray-50">
-            <td class="py-3 px-2">
-              <div class="flex items-center space-x-2">
-                <div class="w-8 h-8 rounded-full bg-[#C2A68C] flex items-center justify-center text-white text-xs">MS</div>
-                <div class="text-sm">
-                  <div class="font-medium">Maria Santos</div>
-                  <div class="text-xs text-gray-500">maria@example.com</div>
-                </div>
-              </div>
-            </td>
-            <td class the="py-3 px-2 text-sm">Ocean View Suite</td>
-            <td class="py-3 px-2 text-sm">Today</td>
-            <td class="py-3 px-2 text-sm">Oct 26</td>
-            <td class="py-3 px-2"><span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-700">Checked In</span></td>
-            <td class="py-3 px-2 text-sm font-medium">₱15,500</td>
-            <td class="py-3 px-2"><button class="text-[#2D4A43] hover:text-[#1A2E28]"><i class="fas fa-edit"></i></button></td>
+          <tr>
+            <td class="p-2 border">#002</td>
+            <td class="p-2 border">Jane Smith</td>
+            <td class="p-2 border">Cottage A</td>
+            <td class="p-2 border">2025-12-02</td>
+            <td class="p-2 border">2025-12-04</td>
+            <td class="p-2 border text-yellow-500 font-semibold">Pending</td>
+          </tr>
+          <tr>
+            <td class="p-2 border">#003</td>
+            <td class="p-2 border">Alice Johnson</td>
+            <td class="p-2 border">Suite Room</td>
+            <td class="p-2 border">2025-12-03</td>
+            <td class="p-2 border">2025-12-05</td>
+            <td class="p-2 border text-red-500 font-semibold">Cancelled</td>
           </tr>
         </tbody>
       </table>
     </div>
+
   </main>
 
-  <!-- Modal -->
-  <div id="reportModal" class="modal">
-    <div class="modal-content">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-lg font-bold text-[#2D4A43]">Booking Trends Report</h2>
-        <button id="closeModal" class="text-gray-500 hover:text-gray-700">
-          <i class="fas fa-times text-xl"></i>
-        </button>
-      </div>
-      <canvas id="bookingTrendsChart" height="250"></canvas>
-    </div>
-  </div>
+<script>
+  // Sidebar toggle
+  const sidebar = document.getElementById("sidebar");
+  const mainContent = document.getElementById("mainContent");
+  const toggleBtn = document.getElementById("sidebarToggle");
+  const overlay = document.querySelector(".overlay");
 
-  <!-- Sidebar + Dashboard JS -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const sidebar = document.getElementById('sidebar');
-      const mainContent = document.getElementById('mainContent');
-      const overlay = document.querySelector('.overlay');
-      const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-      const sidebarToggle = document.getElementById('sidebarToggle');
-      const collapseBtn = document.getElementById('collapseBtn');
+  toggleBtn.addEventListener("click", () => {
+    sidebar.classList.toggle("active");
+    overlay.classList.toggle("active");
+  });
+  overlay.addEventListener("click", () => {
+    sidebar.classList.remove("active");
+    overlay.classList.remove("active");
+  });
 
-      // Mobile open/close
-      [mobileMenuBtn, sidebarToggle].forEach(btn => {
-        btn?.addEventListener('click', () => {
-          sidebar.classList.toggle('active');
-          overlay.classList.toggle('active');
-        });
-      });
-      overlay.addEventListener('click', () => {
-        sidebar.classList.remove('active');
-        overlay.classList.remove('active');
-      });
+  // Revenue Chart
+  const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+  const revenueChart = new Chart(revenueCtx, {
+    type: 'line',
+    data: {
+      labels: ['Dec 1','Dec 2','Dec 3','Dec 4','Dec 5','Dec 6','Dec 7'],
+      datasets: [{
+        label: 'Revenue',
+        data: [12000, 15000, 10000, 18000, 20000, 22000, 25000],
+        borderColor: '#2B6CB0',
+        backgroundColor: 'rgba(43,108,176,0.1)',
+        tension: 0.3,
+        fill: true,
+      }]
+    },
+    options: { responsive: true, plugins: { legend: { display: false } } }
+  });
 
-      // Desktop collapse
-      collapseBtn?.addEventListener('click', () => {
-        sidebar.classList.toggle('collapsed');
-        mainContent.classList.toggle('shifted');
-        collapseBtn.classList.toggle('collapsed');
-      });
+  // Bookings Chart
+  const bookingsCtx = document.getElementById('bookingsChart').getContext('2d');
+  const bookingsChart = new Chart(bookingsCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Deluxe','Suite','Cottage','Standard','Villa'],
+      datasets: [{
+        label: 'Bookings',
+        data: [50, 70, 30, 90, 40],
+        backgroundColor: '#63B3ED',
+        borderRadius: 5
+      }]
+    },
+    options: { responsive: true, plugins: { legend: { display: false } } }
+  });
 
-      // Close mobile menu on resize
-      window.addEventListener('resize', () => {
-        if (window.innerWidth >= 768) {
-          sidebar.classList.remove('active');
-          overlay.classList.remove('active');
-        }
-      });
+document.getElementById("predictBtn").addEventListener("click", async () => {
+  const date = document.getElementById("predictDate").value;
+  const todayBookings = Number(document.getElementById("todayBookings").value);
 
-      // Swipe support
-      let startX = 0, isDragging = false;
-      const EDGE = 60, MIN_SWIPE = 80;
-      document.addEventListener('touchstart', e => {
-        startX = e.touches[0].clientX;
-        isDragging = startX <= EDGE || sidebar.classList.contains('active');
-      }, { passive: true });
-      document.addEventListener('touchmove', e => {
-        if (!isDragging) return;
-        const delta = e.touches[0].clientX - startX;
-        if (Math.abs(delta) > 10) e.preventDefault();
-      }, { passive: false });
-      document.addEventListener('touchend', e => {
-        if (!isDragging) return;
-        const delta = e.changedTouches[0].clientX - startX;
-        if (Math.abs(delta) >= MIN_SWIPE) {
-          if (delta > 0 && startX <= EDGE) {
-            sidebar.classList.add('active');
-            overlay.classList.add('active');
-          } else if (delta < 0 && sidebar.classList.contains('active')) {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-          }
-        }
-        isDragging = false;
-      });
+  if (!date) return alert("Please select a date");
+  if (!todayBookings && todayBookings !== 0) return alert("Enter today's bookings");
 
-      /* ---------- Dashboard Specific JS ---------- */
-      // Revenue Chart
-      const revenueCtx = document.getElementById('revenueChart')?.getContext('2d');
-      if (revenueCtx) {
-        new Chart(revenueCtx, {
-          type: 'line',
-          data: {
-            labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
-            datasets: [{
-              data: [650,590,800,810,860,850,930,1020,980,1240,1150,1300],
-              borderColor: '#2D4A43',
-              backgroundColor: 'rgba(45,74,67,0.1)',
-              fill: true,
-              tension: 0.4
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-              y: { beginAtZero: true, ticks: { callback: v => '₱' + v + 'K' } },
-              x: { grid: { display: false } }
-            }
-          }
-        });
-      }
-
-      // Modal + Booking Trends Chart
-      const modal = document.getElementById('reportModal');
-      document.getElementById('reportBtn')?.addEventListener('click', () => {
-        modal.classList.add('show');
-        const ctx = document.getElementById('bookingTrendsChart').getContext('2d');
-        new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: ['Jan','Feb','Mar','Apr','May','Jun'],
-            datasets: [{ data: [32,45,50,60,58,70], backgroundColor: '#2D4A43', borderRadius: 6 }]
-          },
-          options: { responsive: true, plugins: { legend: { display: false } } }
-        });
-      });
-      document.getElementById('closeModal')?.addEventListener('click', () => modal.classList.remove('show'));
-      window.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('show'); });
-
-      // Export PDF
-      document.getElementById('exportBtn')?.addEventListener('click', () => {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        doc.text("SereneStay Booking Report", 14, 15);
-        doc.autoTable({ html: '.desktop-table table' });
-        doc.save("serenestay_bookings.pdf");
-      });
+  try {
+    const res = await fetch("http://127.0.0.1:5000/predict", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ date, today_bookings: todayBookings })
     });
-  </script>
+
+    const data = await res.json();
+    if (data.error) return alert("Prediction error: " + data.error);
+
+    // MAIN PREDICTION
+    document.getElementById("predictionResult").innerHTML = `
+      <strong>For ${data.prediction_for ?? "N/A"}:</strong>
+      <div class="text-xl font-bold text-blue-700 mt-1">${Math.round(data.prediction ?? 0)} bookings</div>
+      <div class="text-sm mt-1 text-gray-500">
+        MAE: ${data.mae?.toFixed(2) ?? "-"} |
+        RMSE: ${data.rmse?.toFixed(2) ?? "-"} |
+        R²: ${data.r2?.toFixed(2) ?? "-"}
+      </div>
+    `;
+
+    // 7-DAY FORECAST (safely)
+    const f7 = document.getElementById("forecast7");
+    f7.innerHTML = "";
+    if (Array.isArray(data["7day_forecast"])) {
+      data["7day_forecast"].forEach(item => {
+        f7.innerHTML += `
+          <div class="bg-white p-2 text-center rounded shadow">
+            <div class="text-xs text-gray-500">${item.date ?? "-"}</div>
+            <div class="text-lg font-bold text-blue-700">${Math.round(item.pred ?? 0)} bookings</div>
+            <div class="text-xs text-gray-400">predicted</div>
+          </div>
+        `;
+      });
+    } else {
+      f7.innerHTML = `<div class="text-gray-500 text-sm">No 7-day forecast available.</div>`;
+    }
+
+    // PREDICTION TABLE
+    document.getElementById("predictionTable").innerHTML = `
+      <div class="text-sm">
+        <h4 class="font-bold mb-1">Actual vs Predicted</h4>
+        <pre class="bg-white p-2 rounded border text-xs">${JSON.stringify(data.actual_vs_pred ?? {}, null, 2)}</pre>
+
+        <h4 class="font-bold mt-3 mb-1">Weekly Summary</h4>
+        <pre class="bg-white p-2 rounded border text-xs">${JSON.stringify(data.weekly ?? {}, null, 2)}</pre>
+
+        <h4 class="font-bold mt-3 mb-1">Monthly Summary</h4>
+        <pre class="bg-white p-2 rounded border text-xs">${JSON.stringify(data.monthly ?? {}, null, 2)}</pre>
+
+        <h4 class="font-bold mt-3 mb-1">Yearly Summary</h4>
+        <pre class="bg-white p-2 rounded border text-xs">${JSON.stringify(data.yearly ?? {}, null, 2)}</pre>
+      </div>
+    `;
+  } catch (err) {
+    alert("Error fetching prediction: " + err.message);
+  }
+
+  // 🎯 MAIN PREDICTION
+  document.getElementById("predictionResult").innerHTML = `
+    <strong>For ${data.prediction_for}:</strong>
+    <div class="text-xl font-bold text-blue-700 mt-1">${Math.round(data.prediction)} bookings</div>
+    <div class="text-sm mt-1 text-gray-500">
+      MAE: ${data.mae?.toFixed(2) ?? "-"} |
+      RMSE: ${data.rmse?.toFixed(2) ?? "-"} |
+      R²: ${data.r2?.toFixed(2) ?? "-"}
+    </div>
+  `;
+
+  // 🎯 7-DAY TEXT FORECAST (NO WEATHER ICONS)
+  const f7 = document.getElementById("forecast7");
+  f7.innerHTML = "";
+  data["7day_forecast"].forEach(item => {
+    f7.innerHTML += `
+      <div class="bg-white p-2 text-center rounded shadow">
+        <div class="text-xs text-gray-500">${item.date}</div>
+        <div class="text-lg font-bold text-blue-700">${Math.round(item.pred)} bookings</div>
+        <div class="text-xs text-gray-400">predicted</div>
+      </div>
+    `;
+  });
+
+  // 🎯 REPLACEMENT TABLE (same as before)
+  document.getElementById("predictionTable").innerHTML = `
+    <div class="text-sm">
+      <h4 class="font-bold mb-1">Actual vs Predicted</h4>
+      <pre class="bg-white p-2 rounded border text-xs">${JSON.stringify(data.actual_vs_pred, null, 2)}</pre>
+
+      <h4 class="font-bold mt-3 mb-1">Weekly Summary</h4>
+      <pre class="bg-white p-2 rounded border text-xs">${JSON.stringify(data.weekly, null, 2)}</pre>
+
+      <h4 class="font-bold mt-3 mb-1">Monthly Summary</h4>
+      <pre class="bg-white p-2 rounded border text-xs">${JSON.stringify(data.monthly, null, 2)}</pre>
+
+      <h4 class="font-bold mt-3 mb-1">Yearly Summary</h4>
+      <pre class="bg-white p-2 rounded border text-xs">${JSON.stringify(data.yearly, null, 2)}</pre>
+    </div>
+  `;
+});
+
+</script>
 </body>
 </html>

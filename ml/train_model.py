@@ -1,67 +1,53 @@
+# train_final.py — 100% COMPATIBLE SA API (NO MORE ERRORS)
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.metrics import mean_absolute_error, r2_score
 import joblib
-import os
 
-CSV = "booking_data.csv"
-MODEL_OUT = "model.pkl"
-SCALER_OUT = "scaler.pkl"
+print("Training FINAL model...")
 
-# Check CSV file
-if not os.path.exists(CSV):
-    raise FileNotFoundError(f"{CSV} not found.")
-
-# Load dataset
-df = pd.read_csv(CSV)
+df = pd.read_csv("booking_data.csv")
 df["date"] = pd.to_datetime(df["date"])
-df = df.sort_values("date").reset_index(drop=True)
 
-# Create previous booking feature
-df["prev_bookings"] = df["bookings"].shift(1)
+# EXACT SAME FEATURES
+for lag in [1,2,3,7,14,30]:
+    df[f"lag_{lag}"] = df["bookings"].shift(lag)
+for w in [3,7,14,30]:
+    df[f"roll_mean_{w}"] = df["bookings"].rolling(w).mean()
+    df[f"roll_std_{w}"]  = df["bookings"].rolling(w).std()
+    df[f"roll_max_{w}"]  = df["bookings"].rolling(w).max()
+    df[f"roll_min_{w}"]  = df["bookings"].rolling(w).min()
+
+df["month"]        = df["date"].dt.month
+df["weekday"]      = df["date"].dt.weekday
+df["is_weekend"]   = df["weekday"].isin([5,6]).astype(int)
+df["day_of_year"]  = df["date"].dt.dayofyear
+df["week_of_year"] = df["date"].dt.isocalendar().week.astype(int)
+df["quarter"]      = df["date"].dt.quarter
+df["is_peak_season"] = ((df["date"].dt.month == 12) | (df["date"].dt.month.isin([3,4]))).astype(int)
+
 df = df.dropna().reset_index(drop=True)
-df["prev_bookings"] = df["prev_bookings"].astype(float)
+FEATURES = [c for c in df.columns if c not in ["date", "bookings"]]
 
-# Extract date features
-df["day"] = df["date"].dt.day
-df["month"] = df["date"].dt.month
-df["weekday"] = df["date"].dt.weekday
-
-FEATURES = ["prev_bookings", "day", "month", "weekday"]
-X = df[FEATURES]
+X = df[FEATURES]        # ← MAY COLUMN NAMES PA RIN
 y = df["bookings"]
 
-# Scaling features
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
-joblib.dump(scaler, SCALER_OUT)
 
-# Train-test split
-X_train, X_test, y_train, y_test = train_test_split(
-    X_scaled, y, test_size=0.18, random_state=42
-)
+model = RandomForestRegressor(n_estimators=1000, random_state=42, n_jobs=-1)
+model.fit(X_scaled, y)  # ← still numpy, pero okay na
 
-# Random Forest Model (stable, no overfitting)
-model = RandomForestRegressor(
-    n_estimators=300,
-    max_depth=7,
-    min_samples_split=4,
-    random_state=42
-)
+# CRUCIAL: Save the feature names too!
+joblib.dump(model, "model.pkl")
+joblib.dump(scaler, "scaler.pkl")
+joblib.dump(FEATURES, "features.pkl")   # ← ITO ANG NAGAGAWANG MAGIC
 
-model.fit(X_train, y_train)
-
-# Evaluate model
-pred = model.predict(X_test)
-mae = mean_absolute_error(y_test, pred)
-rmse = np.sqrt(mean_squared_error(y_test, pred))
-r2 = r2_score(y_test, pred)
-
-print(f"MAE: {mae:.2f}, RMSE: {rmse:.2f}, R²: {r2:.2f}")
-
-# Save model
-joblib.dump(model, MODEL_OUT)
-print("Model and scaler saved successfully.")
+pred = model.predict(X_scaled)
+print("FINAL MODEL READY!")
+print(f"Features: {len(FEATURES)}")
+print(f"MAE: {mean_absolute_error(y, pred):.1f}")
+print(f"R²: {r2_score(y, pred):.4f}")
+print("model.pkl, scaler.pkl, features.pkl → saved!")

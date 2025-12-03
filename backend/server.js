@@ -76,7 +76,7 @@ app.get('/login',      sendPage('login.html'));
 app.get('/signup',     sendPage('registration.html'));
 app.get('/registration', sendPage('registration.html'));
 app.get('/reservation', sendPage('reservation.html'));
-app.get('/admin-dashboard', sendPage('admin-dashboard.html'));
+app.get('/admin-dashboard', sendPage('admindashboard.html'));
 app.get('/admin',      sendPage('room_and_cottage.html'));
 app.get('/confirmationbooking', sendPage('confirmationbooking.html'));
 app.get('/user', sendPage('usermangement.html'));
